@@ -1,0 +1,39 @@
+BODY {
+	color: #111111;
+	background-color: #EEEEEE;
+}
+PRE {
+	color: #00FF00;
+	background-color: #001100;
+	margin: 20px;
+	padding: 20px;
+}
+.toc {
+	color: #000000;
+	background-color: #DDDDDD;
+	width: 100%;
+}
+table.note td {
+	vertical-allign: top;
+}
+
+table.normal {
+ border: 1px solid #ddd;
+}
+
+table.normal tr {
+ border: 1px solid #ddd;
+}
+table.normal td {
+ border: 1px solid #ddd;
+}
+
+.side {
+	font-size: 50%;
+}
+.left {
+	font-size: 80%;
+}
+.fixed {
+	font-family:courier, "courier new", monospace;
+}
