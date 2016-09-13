@@ -3,6 +3,7 @@
 #__IN__CONFIGURE__
 #VERSION 3
 
+
 banner in3 >> Makefile
 PWD=`pwd`
 WD=`basename $PWD`
