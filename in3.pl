@@ -495,6 +495,7 @@ for (@input){
 		push @thislist,$_;
 	}
 	elsif (/^	/){
+		if ($intable==0){close_alinea;}
 		$intable=1;
 		push @thistable,$_;
 	}
@@ -564,7 +565,7 @@ for (@input){
 		inpush ("{LINK}$1 $2");
 		debug ($TAGS,"Link: $1 $2");
 	}
-	elsif (/^\.map ([^ ]+) (.*)/){
+	elsif (/^\.map ([^ ]+) +(.*)/){
 		my $submap=$1;
 		my $args=$2;
 		if ($1 eq 'image') {$inmap=1; $mappict=$2;}

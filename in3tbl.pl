@@ -217,7 +217,7 @@ for (@in3){
 			
 	}
 	elsif (/^{ALINEAEND}/){
-		if ($alineatype<0){}
+		if ($alineatype<0){$alineatype=0;}
 		elsif ($alineatype==0){
 			pushout(".P");
 		}
@@ -539,7 +539,10 @@ if ($variables{'interpret'}==2){
 
 for (@output){
 	if (/^ \./){}
-	elsif (/^{LITTERAL}/){s/^{LITTERAL}//;}
+	elsif (/^{LITTERAL}/){
+		s/^{LITTERAL}//;
+		s/^\./\\&./;
+	}
 	else { s/^ *//;}
 	if (/==>/){
 		$qis=s/=/=/g;
