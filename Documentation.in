@@ -25,6 +25,8 @@ in3. You can download the code from github
 .link https://github.com/ljmdullaart/in3
 or do 
 .fix git clone https://github.com/ljmdullaart/in3.git
+to get a clone of the sourcecode.
+
 
 .h2 History
 In was a run-off format for web-pages. It was meant to create web pages 
