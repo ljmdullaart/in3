@@ -20,7 +20,6 @@ sub debug {
 
 @in3=<>;
 
-
 my $alineatype=-1;
 debug($DEB_ALINEA,"Initial alinea=-1");
 	#	-1	No alinea is open.
