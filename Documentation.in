@@ -1,7 +1,32 @@
 .header
-.title "IN-3 Documentation"
 .author LJM Dullaart
-.h1 History
+.img in3logo.png
+.h1 Intro
+
+.h2 "My personal itch"
+
+Writing this kind of software is considered as "scratching your personal itch".
+My personal itches for this project were twofold.
+
+First, I needed something that produces consistent results for both PDF and 
+HTML without too much manual intervention. Libreoffice does this, but delivered
+just not exactly the type of webpages that I wanted. Dumping webpages to PDF
+consistenly gave half lines on the bottom and top. Groff's webpages are just
+not good enough for me.
+
+Secondly, I needed something that allows me to have notes in the right margin
+of the text. This is something that you commonly see in school books. I did not
+find anything that could do that in an easy way. Publishing software require
+too many mouse cliicks to get the work done.
+
+.h2 Downloading
+At this moment, there is not a neatly packaged 
+in3. You can download the code from github
+.link https://github.com/ljmdullaart/in3
+or do 
+.fix git clone https://github.com/ljmdullaart/in3.git
+
+.h2 History
 In was a run-off format for web-pages. It was meant to create web pages 
 of different formats. It worked quite well as long as the text was kept simple.
 
@@ -22,6 +47,8 @@ a document. It also describes the in input language, the in3 intermediate langua
 and what in does or doesn't do. In general, the real formatting is left to the
 output-processor (either the formatting of the web page or Groff).
 
+I do not follow all the priciples of 'clean code'. Thinking about how it
+shoudld be written has however made my code much more maintanable.
 
 .h1 How to look at a document
 
@@ -84,6 +111,7 @@ Some chararacters have a special meaning.
 	#	beginning of line or after tab(s)	list item in a numbered-list
 	@	beginning of line or after tab(s)	list item in a alpha-list
 
+
 .h2 Implemented requests
 
 	%*request%*	%*argument%*	%*meaning%*
@@ -99,12 +127,15 @@ Some chararacters have a special meaning.
 	b	text	text must be written in bold
 	back	none	Ends a section with left notes
 	br	none	force a line break
+	fix	text	fixed font text
 	global	variable value	set the variable to value globally
 	h{0-5}	text	create a chapter/section/... title
 	header	none	include the file header if that seems appropriate
 	hr	none	horizontal line
+	hu	test	Header, unnumbered
 	i	text	italized text
 	img	image	include an image here
+	link	link text	provide a link
 	map	image  image_file	Map creates a clickable map in HTML or an image in PDF.
 	map	field link coordinates	Creates a click-field on the current map.
 	note	text	text is a footnote
@@ -112,6 +143,7 @@ Some chararacters have a special meaning.
 	set	variable value	set the variable to value from now on
 	side	side note text	Specifies a referal to sidenotes
 	u	text	Underline text
+
 
 Tables, maps and lists are defined as block requests. They should start on a new alinea
 and end with an alinea (i.e. a blank line).
@@ -157,6 +189,7 @@ should be fairly readable. The following tags are used:
 	IMAGE	filename	Include an image here
 	LEFTNOTE	leftnote text 	start of the left note part
 	LINE	 	Draw a horizintal line
+	LINK	destination text	Generate a hyperlink, if applicable
 	LINEBREAK	 	Forced line break
 	LISTALPHAEND	 level	End alpha list
 	LISTALPHASTART	level	Start a alpha-list
@@ -187,6 +220,8 @@ should be fairly readable. The following tags are used:
 	TEXTITALIC	text	Text to be written in italic
 	TEXTUNDERLINE	text	Text to be underlined
 	TEXTNORMAL	text	Normal text as part of the alinea body
+	TITLE	text	The title of this document
+
 
 .h1 Stylesheets
 
@@ -238,7 +273,8 @@ table.normal td {
 
 .h2 Groff style sheet
 .pre
-
-  .ds Licon "Table of Contents"
-
+.ds Licon "Table of Contents"
 .pre
+
+The definitions from the stylesheet are executed before the text.
+

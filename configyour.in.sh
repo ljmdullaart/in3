@@ -213,7 +213,7 @@ else
  #   #     #  #     #  #     #  #        #     #  
 ###  #     #  #     #   #####   #######   #####   
 	
-	cat $INFILES | sed -n 's/^.img //p' |
+	cat $INFILES | sed -n 's/^\.img //p' |
 	while read IMAGE; do
 		BASEIMAGE=${IMAGE%.*}
 		ALLIMAGE="$ALLIMAGE $IMAGE"
@@ -230,6 +230,8 @@ else
 			echo "$IMAGE">>$UPLOADFILE
 		fi
 	done
+	sed -n  's/^.map *image *//p' *in >>$UPLOADFILE
+	sed -n  's/^\.img *//p' *in >>$UPLOADFILE
 	IMGFILES=`cat $INFILES | sed -n 's/^.img //p' | paste -sd ' '`
 	echo "tag/in3.img: $IMGFILES |tag" >> Makefile
 	echo "	touch tag/in3.img" >> Makefile
@@ -288,7 +290,11 @@ else
 		if [ -f stylesheet.css ] ; then
 			echo stylesheet.css >> $UPLOADFILE
 		fi
-		UPLOADFILES=`cat $UPLOADFILE | paste -sd' '`
+		if [ -f UPLOAD ] ; then
+			UPLOADFILES=`cat $UPLOADFILE UPLOAD | paste -sd' '`
+		else
+			UPLOADFILES=`cat $UPLOADFILE | paste -sd' '`
+		fi
 		echo "tag/upload.in: $UPLOADFILES |tag">>Makefile
 		echo "	upload_all $UPLOADFILES">>Makefile
 		echo "	touch tag/upload.in">>Makefile
