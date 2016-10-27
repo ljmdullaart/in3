@@ -98,13 +98,13 @@ if ($like>0){
 sub alineatabstart {
 	debug($DEB_ALINEA,"ALINEA START; alineatype=$alineatype;");
 	if ($alineatype==0){
-		pushout ( "<p>");
+		pushout ( "<p><div class=\"alinea\">");
 	}
 	elsif ($alineatype==1){
 		pushout ( "<table class=note><tr><td style=\"width:15%\">");
 	}
 	elsif ($alineatype==2){
-		pushout ( "<table class=note><tr><td>");
+		pushout ( "<table class=note><tr><td><div class=\"alinea\">");
 	}
 	elsif ($alineatype==3){
 		pushout ( "<table class=note><tr><td style=\"width:15%\">");
@@ -113,10 +113,10 @@ sub alineatabstart {
 sub alineatabend {
 	debug($DEB_ALINEA,"ALINEA END; alineatype=$alineatype;");
 	if ($alineatype==0){
-		pushout ( "</p>");
+		pushout ( "</div>/p>");
 	}
 	elsif ($alineatype>0){
-		#pushout ( "</td></tr></table>");
+		#pushout ( "</div></td></tr></table>");
 		pushout ( "</table>");
 	}
 	$alineatype=-1;
@@ -159,20 +159,20 @@ for (@in3){
 			alineatabstart;
 		}
 		else {
-			if ($alineatype==0){pushout("<p>")}
+			if ($alineatype==0){pushout("<p><div class=\"alinea\">")}
 			# below, sizes of the columns must be given
-			elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\">");}
-			elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\">");}
-			elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\">");}
+			elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\">");}
+			elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\">");}
+			elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\">");}
 		}
 	}
 	elsif (/^{ALINEAEND}/){
 		if ($alineatype<0){}
 		elsif ($alineatype==0){
-			pushout("</p>");
+			pushout("</div></p>");
 		}
 		elsif ($alineatype>0){
-			pushout("</td></tr>")
+			pushout("</div></td></tr>")
 		}
 	}
 	elsif (/^{INCLUDE}(.*)/){
@@ -244,7 +244,7 @@ for (@in3){
 	}
 	elsif (/^{LISTALPHAITEM}(.*)/){
 		pushout("<li>");
-		pushout("$1");
+		pushout("<div class=\"list\">$1</div>");
 		pushout("</li>");
 	}
 	elsif (/^{LISTALPHASTART}/){
@@ -255,7 +255,7 @@ for (@in3){
 	}
 	elsif (/^{LISTDASHITEM}(.*)/){
 		pushout("<li>");
-		pushout("$1");
+		pushout("<div class=\"list\">$1</div>");
 		pushout("</li>");
 	}
 	elsif (/^{LISTDASHSTART}/){
@@ -266,7 +266,7 @@ for (@in3){
 	}
 	elsif (/^{LISTNUMITEM}(.*)/){
 		pushout("<li>");
-		pushout("$1");
+		pushout("<div class=\"list\">$1</div>");
 		pushout("</li>");
 	}
 	elsif (/^{LISTNUMSTART}/){
@@ -329,11 +329,11 @@ for (@in3){
 				$colspan=" colspan=\"$1\"";
 				$text=~s/<cs=[0-9]*>//;
 			}
-			pushout ("<td$colspan$rowspan>$text</td>");
+			pushout ("<td$colspan$rowspan><div class=\"cel\">$text</div></td>");
 		}
 		elsif ($text=~/<.SPAN>/){}
 		else {
-			pushout ("<td>$text</td>");
+			pushout ("<td><dic class=\"cel\">$text</div></td>");
 		}
 	}
 	elsif (/^{TABLEROW}/){
