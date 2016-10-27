@@ -15,7 +15,9 @@ consistenly gave half lines on the bottom and top. Groff's webpages are just
 not good enough for me.
 
 Secondly, I needed something that allows me to have notes in the right margin
-of the text. This is something that you commonly see in school books. I did not
+of the text.
+.side Like this
+This is something that you commonly see in school books. I did not
 find anything that could do that in an easy way. Publishing software require
 too many mouse cliicks to get the work done.
 
@@ -231,52 +233,37 @@ In3 supports stylesheets per output-type.
 
 .h2  HTML style sheet
 
-.pre
-BODY {
-	color: #111111;
-	background-color: #EEEEEE;
-}
-PRE {
-	color: #00FF00;
-	background-color: #001100;
-	margin: 20px;
-	padding: 20px;
-}
-.toc {
-	color: #000000;
-	background-color: #DDDDDD;
-	width: 100%;
-}
-table.note td {
-	vertical-allign: top;
-}
+If a
+.fix stylesheet.css
+exists in the current directory, it is called in the HTML code. You can 
+create styles for all the normal HTML elements.
+Example:
 
+.pre
 table.normal {
  border: 1px solid #ddd;
 }
-
-table.normal tr {
- border: 1px solid #ddd;
-}
-table.normal td {
- border: 1px solid #ddd;
-}
-
-.side {
-	font-size: 50%;
-}
-.left {
-	font-size: 80%;
-}
-.fixed {
-	font-family:courier, "courier new", monospace;
-}
 .pre
 
+In addition, 
+.fix in3html
+creates div-containers for specific text-elements:
+
+	class/style	text element	example
+	alinea	standard alinea	.alinea { background-color: #DDDD00; }
+	fixed	font for fixed character-width	.fixed { font-family:courier, "courier new", monospace; }
+	cel	cel in a normal table	.cel { background-color: #DD00DD; }
+	left	left notes	.left { font-size: 80%; }
+	list	format for all lists	.list { background-color: #00DDDD; }
+	side	side notes (right hand side)	.side { font-size: 50%; background-color: #DD0000; }
+	table.note the layout of notes; mostly used to align notes	table.note td { vertical-allign: top; }
+	toc	Table of contents	.toc { color: #000000; background-color: #DDDDDD; width: 100%; } 
+
 .h2 Groff style sheet
+
 .pre
 .ds Licon "Table of Contents"
 .pre
 
-The definitions from the stylesheet are executed before the text.
-
+In general, in2tbl does not invoke specific styles. The style-sheet allows you to redefine some 
+of the standard texts.
