@@ -29,7 +29,7 @@ debug($DEB_ALINEA,"Initial alinea=-1");
 	#	3	left and side note.
 
 
-@headnum=(0,0,0,0,0,0,0);
+@headnum=(0,0,0,0,0,0,0,0,0,0,0,0);
 $notenum=1;
 my $tablestate=0;
 my $title='';
@@ -68,6 +68,10 @@ for (@in3){
 		elsif ($1 eq 'H3'){ $val=$2-1; $headnum[3]=$val;}
 		elsif ($1 eq 'H4'){ $val=$2-1; $headnum[4]=$val;}
 		elsif ($1 eq 'H5'){ $val=$2-1; $headnum[5]=$val;}
+		elsif ($1 eq 'H6'){ $val=$2-1; $headnum[6]=$val;}
+		elsif ($1 eq 'H7'){ $val=$2-1; $headnum[7]=$val;}
+		elsif ($1 eq 'H8'){ $val=$2-1; $headnum[8]=$val;}
+		elsif ($1 eq 'H9'){ $val=$2-1; $headnum[9]=$val;}
 	}
 }
 
@@ -113,7 +117,7 @@ sub alineatabstart {
 sub alineatabend {
 	debug($DEB_ALINEA,"ALINEA END; alineatype=$alineatype;");
 	if ($alineatype==0){
-		pushout ( "</div>/p>");
+		pushout ( "</div></p>");
 	}
 	elsif ($alineatype>0){
 		#pushout ( "</div></td></tr></table>");
