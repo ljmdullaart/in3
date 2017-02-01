@@ -7,8 +7,8 @@
 â	\[^a]	&acirc;
 À	\(`A	&Agrave;
 à	\(`a	&agrave;
-Ä	\[:A]	$Auml;
-ä	\[:a]	$auml;
+Ä	\[:A]	&Auml;
+ä	\[:a]	&auml;
 Ç	\[,C]	&Ccedil;
 ç	\[,c]	&ccedil;
 É	\('E	&Eacute;
@@ -37,3 +37,4 @@
 û	\[:u]	&uuml;
 &uml;	\[ad]	&uml;
 “	"	"
+§	\[sc]	&sect;
