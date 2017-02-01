@@ -151,7 +151,7 @@ if ($coversheet > 0){
 			pushout(".ps +12");
 			pushout(".ce 1");
 			pushout("$title");
-			pushout(".ps -12");
+			pushout(".ps +0");
 			pushout(".P");
 
 		}
@@ -161,7 +161,7 @@ if ($coversheet > 0){
 			pushout(".SP 2c");
 			pushout(".ce 1");
 			pushout("$title");
-			pushout(".ps -10");
+			pushout(".ps +0");
 			pushout(".P");
 
 		}
@@ -171,7 +171,7 @@ if ($coversheet > 0){
 			pushout(".SP 3c");
 			pushout(".ce 1");
 			pushout("$title");
-			pushout(".ps -10");
+			pushout(".ps +0");
 			pushout(".P");
 
 		}
@@ -187,7 +187,7 @@ for (@in3){
                   pushout(".P");
                   pushout(".B1");
                   pushout(".ft CR");
-                  pushout(".ps -2");
+                  pushout(".ps +0");
                   for my $i (0..$#litblock){
                   	pushout(".br");
 				pushout("{LITTERAL}$litblock[$i]");
@@ -256,10 +256,10 @@ for (@in3){
 		pushout(".HU \"$text\"");
 		if ($level<2){
 			pushout(".P");
-			pushout(".ps -12");
+			pushout(".ps +0");
 		}
 		else{
-			pushout(".ps -10");
+			pushout(".ps +0");
 		}
 	}
 	elsif (/^{IMAGE}(.*)/){
@@ -429,8 +429,8 @@ for (@in3){
 				$text=$_;
 				if (/<br>/){
 					$text=~s/<br>/\n.br\n/g;
-					$text="T{\n$text\nT}";
 				}
+				$text="T{\n$text\nT}";
 
 					
 				if ($frst==1){$frst=0;$outline = "$text";} else {$outline .= "	$text";}
@@ -455,7 +455,7 @@ for (@in3){
 		pushout(".ft CR");
 		pushout(".ps -2");
 		pushout("$1");
-		pushout(".ps +2");
+		pushout(".ps +0");
 		pushout(".ft");
 	}
 	elsif (/^{TEXTNORMAL}(.*)/){
@@ -467,7 +467,9 @@ for (@in3){
 		}
 	}
 	elsif (/^{TEXTITALIC}(.*)/){
-		pushout(".I \" $1 \"");
+		s/^{TEXTITALIC}//;
+		s/"/\\[rq]/g;
+		pushout(".I \" $_ \"");
 	}
 	elsif (/^{TEXTUNDERLINE}(.*)/){
 		pushout(".underline \" $1 \"");
