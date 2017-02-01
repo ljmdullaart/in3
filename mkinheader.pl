@@ -48,7 +48,12 @@ elsif ($type eq 'index'){
 	if ($tot_title ne '' ){print ".title $tot_title\n";}
 	if ($sub_title ne '' ){print ".subtitle $sub_title\n";}
 	if ($author ne ''){print ".author $author\n";}
-	if ( -f "index.top"){ if (open(IT,"index.top")){while (<IT>){print;}}}
+	if ( -f "index.top"){
+		if (open(IT,"index.top")){
+			while (<IT>){print;}
+			close IT;
+		}
+	}
 }
 
 if ($type eq 'header'){print "<table CLASS=\"toc\">\n";}
@@ -150,5 +155,16 @@ if ($VERBOSE>0){print "#chapter:$c file:$file level:$level title:$title\n";}
 		}
 	}
 }
-if ($type eq 'header'){print "</table>\n";}
-else { print "\n.br\n.link total.pdf PDF\n";}
+if ($type eq 'header'){
+	print "</table>\n";
+}
+else {
+	print "\n.br\n.link total.pdf PDF\n";
+	if ( -f "index.bottom"){
+		if (open(IT,"index.bottom")){
+			while (<IT>){print;}
+			close IT;
+		}
+	}
+	
+}
