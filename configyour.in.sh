@@ -105,14 +105,17 @@ else
  #   #    ##  #     #  #         #   #   
 ###  #     #  ######   #######  #     #  
 
-	echo "index.in: $INFILES" >> Makefile
+	echo "index.in: $INFILES_noindex" >> Makefile
 	echo "	mkinheader -i > index.in" >> Makefile
 	echo "header: $INFILES" >> Makefile
 	echo "	mkinheader -h > header" >> Makefile
 	echo 'index.in'>>$CLEANFILE
 	echo "index.htm: $INFILES" >> Makefile
 	echo "	mkinheader -h > index.htm" >> Makefile
+	echo "index.html: $INFILES" >> Makefile
+	echo "	mkinheader  > index.html" >> Makefile
 	echo 'index.htm'>>$CLEANFILE
+	echo 'index.html'>>$CLEANFILE
 ###  #     #   ###   
  #   ##    #  #   #  
  #   # #   #      #  
