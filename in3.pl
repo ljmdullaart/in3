@@ -84,7 +84,7 @@ sub debug{
 #     #  #     #   #####    #####  
 
 if ($#ARGV<0){
-	 @input=<>;
+	@input=<>;
 }
 else {
 	$what='';
@@ -168,6 +168,11 @@ sub inpush{
 	debug ($IN3PUSH,"PUSH $line");
 	push @in3,$line;
 }
+sub inappend {
+	(my $line)=@_;
+	$in3[$#in3]=$in3[$#in3].' '.$line;
+	debug ($IN3PUSH,"APPEND $#in3 $line -> $in3[$#in3]");
+}
 ########################################################
 
 #        ###   #####   #######   #####   
@@ -215,10 +220,14 @@ sub close_list {
 				elsif ($types[$listlevel] eq '@'){ inpush("{LISTALPHAEND}$listlevel");}
 				$listlevel--;
 			}
-			s/^[-#@	 ]*//;
-			if ($types[$listlevel] eq '-'){ inpush("{LISTDASHITEM}$_");}
-				elsif ($types[$listlevel] eq '#'){ inpush("{LISTNUMITEM}$_");}
-				elsif ($types[$listlevel] eq '@'){ inpush("{LISTALPHAITEM}$_");}
+			debug ($LISTS,"list line before push logic: $_");
+			if (/^\.i / )                    { s/^\.i *//;       inpush ("{TEXTITALIC}$_"); }
+			elsif (/^\.b / )                 { s/^\.b *//;       inpush ("{TEXTBOLD}$_"); }
+			elsif (/^\.u / )                 { s/^\.u *//;       inpush ("{TEXTUNDERLINE}$_"); }
+			elsif (!(/^[-#@ 	]/))           {                   inpush("{TEXTNORMAL}$_"); }
+			elsif ($types[$listlevel] eq '-'){s/^[-#@ 	]*//;inpush("{LISTDASHITEM}$_");}
+			elsif ($types[$listlevel] eq '#'){s/^[-#@ 	]*//;inpush("{LISTNUMITEM}$_");}
+			elsif ($types[$listlevel] eq '@'){s/^[-#@ 	]*//;inpush("{LISTALPHAITEM}$_");}
 		}
 		$target=0;
 		while ($listlevel>$target){
@@ -549,20 +558,41 @@ for (@input){
 		$variables{'notes'}=$variables{'notes'}&2;
 	
 	}
+	elsif (/^\.h([0-9])/){
+		$level=$1;
+		$bodytext=$2;
+		close_alinea;
+		inpush("{HEADER $level}");
+		debug($TAGS,"Header line: $_");
+		$variables{'notes'}=$variables{'notes'}&2;
+	
+	}
 	elsif (/^\.i (.*)/){
 		my $textbody=$1;
 		start_alinea;
 		debug ($TAGS,"Italic request");
-		inpush ("{TEXTITALIC}$textbody");
+		if ($inlist>0) {
+			push @thislist,$_;
+		}
+		else {
+			inpush ("{TEXTITALIC}$textbody");
+		}
 	}
 	elsif (/^\.img /) {
 		debug($TAGS,"Image tag: $_");
 		s/^\.img *//;
 		inpush "{IMAGE}$_";
 	}
-	elsif (/^\.link ([^ ]*) (.*)/){
-		inpush ("{LINK}$1 $2");
-		debug ($TAGS,"Link: $1 $2");
+	elsif (/^\.link /){
+		if (/^\.link ([^ ]*) (.*)/){
+			inpush ("{LINK}$1 $2");
+			debug ($TAGS,"Link: $1 $2");
+		}
+		elsif (/^\.link ([^ ]*)/){
+			inpush ("{LINK}$1 $1");
+			debug ($TAGS,"Link: $1 $1");
+		}
+		else { print STDERR "Unknown link command $_\n"; }
 	}
 	elsif (/^\.map ([^ ]+) +(.*)/){
 		my $submap=$1;
@@ -629,7 +659,7 @@ for (@input){
 		if ($level eq ''){
 			if (/\.like/){}
 			else {
-				 inpush("{HEADER 0}$text");
+				inpush("{HEADER 0}$text");
 			}
 		}
 		elsif ($level==1){
@@ -652,10 +682,15 @@ for (@input){
 		print STDERR "Unknown request $_\n";
 	}
 	else {
-		start_alinea;
 		debug($TAGS,"Normal text $_");
 		s/ *$//;
-		inpush("{TEXTNORMAL}$_");
+		if ($inlist>0){
+			push @thislist,$_;
+		}
+		else {
+			start_alinea;
+			inpush("{TEXTNORMAL}$_");
+		}
 	}
 }
 
