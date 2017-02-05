@@ -147,32 +147,39 @@ if ($coversheet > 0){
 			$title=$1;
 			pushout(".bp");
 			pushout(" ");
-			pushout(".SP 2c");
-			pushout(".ps +12");
+			pushout(".sp 2c");
+			pushout(".ls 3");
+			pushout(".ps +16");
 			pushout(".ce 1");
 			pushout("$title");
-			pushout(".ps +0");
+			pushout(".ps");
 			pushout(".P");
+			pushout(".ls 1");
+			pushout(".sp 2c");
 
 		}
 		if (/^{SUBTITLE}(.*)/){
 			$title=$1;
 			pushout(".ps +8");
-			pushout(".SP 2c");
+			pushout(".ls 2");
 			pushout(".ce 1");
 			pushout("$title");
-			pushout(".ps +0");
+			pushout(".ps");
 			pushout(".P");
+			pushout(".ls 1");
+			pushout(".sp 3c");
 
 		}
 		if (/^{AUTHOR}(.*)/){
 			$title=$1;
-			pushout(".ps +6");
-			pushout(".SP 3c");
+			pushout(".sp 1c");
+			pushout(".ps +10");
+			pushout(".ls 2");
 			pushout(".ce 1");
 			pushout("$title");
-			pushout(".ps +0");
+			pushout(".ps");
 			pushout(".P");
+			pushout(".ls 1");
 
 		}
 	}
@@ -246,20 +253,31 @@ for (@in3){
 		alineatabend;
 		pushout(".nr Hu $level");
 		if ($level<2){
-			pushout(".P");
 			pushout(".bp");
 			pushout(".ps +12");
+			pushout(".ls 3");
+			pushout(".P");
+			pushout("");
 		}
 		else{
 			pushout(".ps +10");
+			pushout(".ls 2");
+			pushout(".P");
+			pushout("");
 		}
 		pushout(".HU \"$text\"");
 		if ($level<2){
 			pushout(".P");
 			pushout(".ps +0");
+			pushout(".ls 1");
+			pushout(".P");
+			pushout("");
 		}
 		else{
+			pushout(".ls 1");
 			pushout(".ps +0");
+			pushout(".P");
+			pushout("");
 		}
 	}
 	elsif (/^{IMAGE}(.*)/){
