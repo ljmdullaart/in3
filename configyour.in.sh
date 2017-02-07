@@ -216,7 +216,7 @@ else
  #   #     #  #     #  #     #  #        #     #  
 ###  #     #  #     #   #####   #######   #####   
 	
-	cat $INFILES | sed -n 's/^\.img //p' |
+	cat $INFILES | sed -n 's/^\.img *//p' | sed 's/ .*//'|
 	while read IMAGE; do
 		BASEIMAGE=${IMAGE%.*}
 		ALLIMAGE="$ALLIMAGE $IMAGE"
@@ -234,8 +234,8 @@ else
 		fi
 	done
 	sed -n  's/^.map *image *//p' *in >>$UPLOADFILE
-	sed -n  's/^\.img *//p' *in >>$UPLOADFILE
-	IMGFILES=`cat $INFILES | sed -n 's/^.img //p' | paste -sd ' '`
+	sed -n  's/^\.img *//p' *in | sed 's/ .*//' >>$UPLOADFILE
+	IMGFILES=`cat $INFILES | sed -n 's/^.img //p'  | sed 's/ .*//'| paste -sd ' '`
 	echo "tag/in3.img: $IMGFILES |tag" >> Makefile
 	echo "	touch tag/in3.img" >> Makefile
 	echo "tag/in3.img">>$CLEANFILE
