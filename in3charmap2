@@ -1,5 +1,7 @@
 #INSTALL@ /usr/local/share/in3charmap2
 #char	groff	html
+œ	\[oe]	&oelig;
+Œ	\[OE]	&OElig;
 <-	\(<-	&#8592;
 \^\|	\(ua	&#8593;
 ->	\(->	&#8594;
@@ -20,7 +22,7 @@
 ®	\[rg]	&reg;
 ¯	\[a-]	&hibar;
 °	\[ao]	&deg;
-±	&plusmn;	\[+-]
+±	\[+-]	&plusmn;
 ²	\[S2]	&sup2;
 ³	\[S3]	&sup3;
 µ	\[*m]	&micro;
