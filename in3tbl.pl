@@ -570,6 +570,9 @@ for (@output){
 		$repl='\~'x$qis;
 		s/===*>/$repl/;
 	}
+	if (/^'/){
+		s/^'/ '/;
+	}
 }
 for (@charmap){
 	chomp;
