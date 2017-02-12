@@ -18,7 +18,50 @@ sub debug {
 	}
 }
 
-@in3=<>;
+sub hellup {
+	print STDERR "
+NAME: in3html -- convert in3-files to html
+SYNOPSIS:
+      in3html [--debug value] [--noinclude ] [file]
+      in3html [-d value] [-n ] [file]
+";
+}
+
+my $do_includes=1;
+
+my $continued=0;
+my $fileread=0;
+my @in3;
+for (@ARGV){
+	if ($continued==1){
+		if (/([0-9]+)/){ $DEBUG=$1; $continued=0;}
+		else { print STDERR "Invalid debug value $_\n"; $continued=0;}
+	}
+	elsif (/^--debug([0-9]+)/){$DEBUG=$1;}
+	elsif (/^-d([0-9]+)/){$DEBUG=$1;}
+	elsif (/^--debug/){$continued=1;}
+	elsif (/^-d/){$continued=1;}
+	elsif (/^--noinclude/){ $do_includes=0; }
+	elsif (/^-n/){ $do_includes=0; }
+	elsif (/^-$/){ 
+		my @in_file=<STDIN>;
+		close FILE;
+		push @in3,@in_file;
+		$fileread=1;
+	}
+	else {
+		if (open(FILE,"$_")){
+			my @in_file=<FILE>;
+			close FILE;
+			push @in3,@in_file;
+			$fileread=1;
+		}
+		else {
+			print STDERR "Cannot open $_\n";
+		}
+	}
+}
+if ($fileread==0){@in3=<STDIN>;}
 
 my $alineatype=-1;
 debug($DEB_ALINEA,"Initial alinea=-1");
@@ -180,9 +223,11 @@ for (@in3){
 		}
 	}
 	elsif (/^{INCLUDE}(.*)/){
-		if ( open (INCLUDE, $1)){
-			while (<INCLUDE>){pushout ($_);}
-			close INCLUDE;
+		if ($do_includes==1){
+			if ( open (INCLUDE, $1)){
+				while (<INCLUDE>){pushout ($_);}
+				close INCLUDE;
+			}
 		}
 		
 	}
