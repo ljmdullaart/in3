@@ -87,7 +87,10 @@ fi
 
 
 
-echo 'tag/in: tag/in3.html tag/in3.pdf tag/in3.img' >> Makefile
+echo -n 'tag/in: ' >> Makefile
+if [ -d  $WWWDIR ] ; then  echo -n 'tag/in3.html ' >> Makefile ; fi
+if [ -d  $PDFDIR ] ; then  echo -n 'tag/in3.pdf ' >> Makefile ; fi
+echo    'tag/in3.img' >> Makefile
 echo '	touch tag/in' >> Makefile
 echo 'tag/in'>>$CLEANFILE
 #
@@ -161,40 +164,42 @@ fi
 #     #     #     #     #  #        
 #     #     #     #     #  ####### 
 
-DONE_TOTAL=0
-DONE_INDEX=0
-
-INHTML=`ls *.in | sort -n | sed 's/.in$/.html/' |sed "s/^/$WWWDIR\//"| paste -sd' '`
-if [ ! -f index.in ] ; then INHTML="INHTML $WWWDIR/index.html" ; fi
-if [ ! -f total.in ] ; then INHTML="INHTML $WWWDIR/total.html" ; fi
-echo "tag/in3.html: $INHTML" >> Makefile
-echo "	touch tag/in3.html" >> Makefile
-echo "tag/in3.html">>$CLEANFILE
-
-add_www(){
-	echo "$WWWDIR/$1.html: $1.in3 header |$WWWDIR ">>Makefile
-	echo "	in3html $1.in3 > $WWWDIR/$1.html">>Makefile
-	echo "$WWWDIR/$1.html">>$CLEANFILE
-	echo "$WWWDIR/$1.html">>$UPLOADFILE
-}
-for FILE in $INBASE ; do
-	if [ $FILE = total ] ; then DONE_TOTAL=1 ; fi
-	if [ $FILE = index ] ; then DONE_INDEX=1 ; fi
-	add_www $FILE
-done
-echo "index.htm: $INFILES" >> Makefile
-echo "	mkinheader -h > index.htm" >> Makefile
-echo 'index.htm'>>$CLEANFILE
-
-if [ $DONE_INDEX = 0 ] ; then
-	add_www index
+if [ -d $WWWDIR ] ; then
+	DONE_TOTAL=0
+	DONE_INDEX=0
+	
+	INHTML=`ls *.in | sort -n | sed 's/.in$/.html/' |sed "s/^/$WWWDIR\//"| paste -sd' '`
+	if [ ! -f index.in ] ; then INHTML="$INHTML $WWWDIR/index.html" ; fi
+	if [ ! -f total.in ] ; then INHTML="$INHTML $WWWDIR/total.html" ; fi
+	echo "tag/in3.html: $INHTML" >> Makefile
+	echo "	touch tag/in3.html" >> Makefile
+	echo "tag/in3.html">>$CLEANFILE
+	
+	add_www(){
+		echo "$WWWDIR/$1.html: $1.in3 header |$WWWDIR ">>Makefile
+		echo "	in3html $1.in3 > $WWWDIR/$1.html">>Makefile
+		echo "$WWWDIR/$1.html">>$CLEANFILE
+		echo "$WWWDIR/$1.html">>$UPLOADFILE
+	}
+	for FILE in $INBASE ; do
+		if [ $FILE = total ] ; then DONE_TOTAL=1 ; fi
+		if [ $FILE = index ] ; then DONE_INDEX=1 ; fi
+		add_www $FILE
+	done
+	echo "index.htm: $INFILES" >> Makefile
+	echo "	mkinheader -h > index.htm" >> Makefile
+	echo 'index.htm'>>$CLEANFILE
+	
+	if [ $DONE_INDEX = 0 ] ; then
+		add_www index
+	fi
+	if [ $DONE_TOTAL = 0 ] ; then
+		add_www total
+	fi
+	
+	echo "$WWWDIR:" >> Makefile
+	echo "	mkdir $WWWDIR" >> Makefile
 fi
-if [ $DONE_TOTAL = 0 ] ; then
-	add_www total
-fi
-
-echo "www:" >> Makefile
-echo "	mkdir www" >> Makefile
 ######   ######   #######  
 #     #  #     #  #        
 #     #  #     #  #        
@@ -202,45 +207,45 @@ echo "	mkdir www" >> Makefile
 #        #     #  #        
 #        #     #  #        
 #        ######   #     
-
-INPDF=`ls *.in | sort -n | sed "s/.in$/.pdf/;s/^/$PDFDIR\//" | paste -sd' '`
-echo "tag/in3.pdf: $PDFDIR/total.pdf $INPDF" >> Makefile
-echo "	touch tag/in3.pdf" >> Makefile
-DONE_TOTAL=0
-DONE_INDEX=0
- 
-add_pdf(){
-	echo "$PDFDIR/$1.pdf: $PDFDIR/$1.ps">>Makefile
-	echo "	cat $PDFDIR/$1.ps | ps2pdf - - > $PDFDIR/$1.pdf">>Makefile
-	echo "$PDFDIR/$1.ps: $PDFDIR/$1.min">>Makefile
-	echo "	groff -min $PDFDIR/$1.min > $PDFDIR/$1.ps">>Makefile
-	echo "$PDFDIR/$1.min: $PDFDIR/$1.tbl">>Makefile
-	echo "	tbl $PDFDIR/$1.tbl > $PDFDIR/$1.min">>Makefile
-	echo "$PDFDIR/$1.tbl: $1.in3 tag/in3.img |$PDFDIR">>Makefile
-	echo "	in3tbl $1.in3 > $PDFDIR/$1.tbl">>Makefile
-	echo "$PDFDIR/$1.pdf">>$CLEANFILE
-	echo "$PDFDIR/$1.pdf">>$UPLOADFILE
-	echo "$PDFDIR/$1.ps">>$CLEANFILE
-	echo "$PDFDIR/$1.min">>$CLEANFILE
-	echo "$PDFDIR/$1.tbl">>$CLEANFILE
-}
- 
-for FILE in $INBASE ; do
-	if [ $FILE = total ] ; then DONE_TOTAL=1 ; fi
-	if [ $FILE = index ] ; then DONE_INDEX=1 ; fi
-	add_pdf $FILE
-done
-if [ $DONE_TOTAL = 0 ] ; then
-	add_pdf total
+if [ -d $PDFDIR ] ; then
+	INPDF=`ls *.in | sort -n | sed "s/.in$/.pdf/;s/^/$PDFDIR\//" | paste -sd' '`
+	echo "tag/in3.pdf: $PDFDIR/total.pdf $INPDF" >> Makefile
+	echo "	touch tag/in3.pdf" >> Makefile
+	DONE_TOTAL=0
+	DONE_INDEX=0
+	 
+	add_pdf(){
+		echo "$PDFDIR/$1.pdf: $PDFDIR/$1.ps">>Makefile
+		echo "	cat $PDFDIR/$1.ps | ps2pdf - - > $PDFDIR/$1.pdf">>Makefile
+		echo "$PDFDIR/$1.ps: $PDFDIR/$1.min">>Makefile
+		echo "	groff -min $PDFDIR/$1.min > $PDFDIR/$1.ps">>Makefile
+		echo "$PDFDIR/$1.min: $PDFDIR/$1.tbl">>Makefile
+		echo "	tbl $PDFDIR/$1.tbl > $PDFDIR/$1.min">>Makefile
+		echo "$PDFDIR/$1.tbl: $1.in3 tag/in3.img |$PDFDIR">>Makefile
+		echo "	in3tbl $1.in3 > $PDFDIR/$1.tbl">>Makefile
+		echo "$PDFDIR/$1.pdf">>$CLEANFILE
+		echo "$PDFDIR/$1.pdf">>$UPLOADFILE
+		echo "$PDFDIR/$1.ps">>$CLEANFILE
+		echo "$PDFDIR/$1.min">>$CLEANFILE
+		echo "$PDFDIR/$1.tbl">>$CLEANFILE
+	}
+	 
+	for FILE in $INBASE ; do
+		if [ $FILE = total ] ; then DONE_TOTAL=1 ; fi
+		if [ $FILE = index ] ; then DONE_INDEX=1 ; fi
+		add_pdf $FILE
+	done
+	if [ $DONE_TOTAL = 0 ] ; then
+		add_pdf total
+	fi
+	if [ $DONE_INDEX = 0 ] ; then
+		add_pdf index
+	fi
+		
+	echo "$PDFDIR:" >> Makefile
+	echo "	mkdir $PDFDIR" >> Makefile
+		
 fi
-if [ $DONE_INDEX = 0 ] ; then
-	add_pdf index
-fi
-	
-echo "pdf:" >> Makefile
-echo "	mkdir pdf" >> Makefile
-	
-
 
 
 ###  #     #     #      #####   #######   #####   
@@ -286,12 +291,16 @@ IMGFILES=`cat $INFILES | sed -n 's/^.img //p'  | sed 's/ .*//'| paste -sd ' '`
 MAPFILES=`cat $INFILES | sed -n 's/^.map image *//p' | sed 's/ .*//'| paste -sd ' '`
 
 echo "tag/in3.img: $IMGFILES $MAPFILES |tag" >> Makefile
-echo "	cp $IMGFILES $MAPFILES $WWWDIR">> Makefile
+if [ -d $WWWDIR ] ; then
+	echo "	cp $IMGFILES $MAPFILES $WWWDIR">> Makefile
+fi
 echo "	touch tag/in3.img" >> Makefile
 echo "tag/in3.img">>$CLEANFILE
-
-sed -n  "s/^.map *image */$WWWDIR\//p" *in >>$UPLOADFILE
-sed -n  "s/^\.img */$WWWDIR\//p" *in | sed 's/ .*//' >>$UPLOADFILE
+if [ -d $WWWDIR ] ; then
+	echo "echo $IMGFILES $MAPFILES">> $CLEANFILE
+	sed -n  "s/^.map *image */$WWWDIR\//p" *in >>$UPLOADFILE
+	sed -n  "s/^\.img */$WWWDIR\//p" *in | sed 's/ .*//' >>$UPLOADFILE
+fi
 
 
  #####   ######   #######           #      #####          #####    #####   #     #  ######    #####   #######  
