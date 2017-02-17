@@ -1,8 +1,13 @@
 #!/usr/bin/perl
 #INSTALL@ /usr/local/bin/mkinheader
+use Cwd qw();
+
 $VERBOSE=0;
 
 $type='header';
+my $WD = Cwd::cwd();
+$WD=~s/.*\///;
+
 
 for (@ARGV){
 	chomp;
@@ -28,7 +33,7 @@ else {
 	die 'Cannot grep .in-files';
 }
 
-$tot_title='Index';
+$tot_title='';
 $sub_title='';
 $author='';
 
@@ -45,6 +50,7 @@ if ($type eq 'header'){
 }
 elsif ($type eq 'index'){
 	print ".link total.pdf (pdf)\n";
+	print ".link $WD.epub (epub)\n";
 	if ($tot_title ne '' ){print ".title $tot_title\n";}
 	if ($sub_title ne '' ){print ".subtitle $sub_title\n";}
 	if ($author ne ''){print ".author $author\n";}
@@ -109,7 +115,7 @@ if ($VERBOSE>0){print "#chapter:$c file:$file level:$level title:$title\n";}
 		if ($c != $prev_c){ $s=0; $p=0; $prev_c=$c; }
 		if ($level==1){
 			if ($type eq 'header'){ print "	<tr class=toc><td colspan=3><a href=\"$file#a$c\"><span CLASS=toc> $c $title</span></a></td></tr>\n"; }
-			if ($type eq 'index'){print "\n.br\n.link $file#a$c $c $title\n.link $pdf (pdf)";}
+			if ($type eq 'index'){print "\n.br\n.link $file#a$c $c $title\n";}
 		}
 		elsif ($level==2){
 			$s++; $p=0;

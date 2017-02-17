@@ -90,6 +90,7 @@ fi
 echo -n 'tag/in: ' >> Makefile
 if [ -d  $WWWDIR ] ; then  echo -n 'tag/in3.html ' >> Makefile ; fi
 if [ -d  $PDFDIR ] ; then  echo -n 'tag/in3.pdf ' >> Makefile ; fi
+if [ -d  $EPUBDIR ] ; then  echo -n 'tag/in3.epub ' >> Makefile ; fi
 echo    'tag/in3.img' >> Makefile
 echo '	touch tag/in' >> Makefile
 echo 'tag/in'>>$CLEANFILE
@@ -196,9 +197,71 @@ if [ -d $WWWDIR ] ; then
 	if [ $DONE_TOTAL = 0 ] ; then
 		add_www total
 	fi
-	
 	echo "$WWWDIR:" >> Makefile
 	echo "	mkdir $WWWDIR" >> Makefile
+fi
+	
+
+#######  ######   #     #  ######   
+#        #     #  #     #  #     #  
+#        #     #  #     #  #     #  
+#####    ######   #     #  ######   
+#        #        #     #  #     #  
+#        #        #     #  #     #  
+#######  #         #####   ######   
+
+
+if [ -d $EPUBDIR ] ; then
+	DONE_TOTAL=0
+	DONE_INDEX=0
+	pub_opt="--remove-paragraph-spacing-indent-size 0";
+	
+	INHTML=`ls *.in | sort -n | sed 's/.in$/.html/' |sed "s/^/$EPUBDIR\//"| paste -sd' '`
+	if [ ! -f index.in ] ; then INHTML="$INHTML $EPUBDIR/index.html" ; fi
+	if [ ! -f total.in ] ; then INHTML="$INHTML $EPUBDIR/total.html" ; fi
+
+	TITLE=`grep '^.title '  *in | sed 's/.*:.title //' | sort -u | head -1`
+	if [ "$TITLE" = "" ] ; then TITLE=$wd ; fi
+	pub_opt="$pub_opt --title $TITLE";
+
+	AUTHOR=`grep '^.author '  *in | sed 's/.*:.author //' | sort -u | head -1`
+	if [ "$AUTHOR" != "" ] ; then 
+		pub_opt="$pub_opt --authors '$author'";
+	fi
+
+	if [ -f cover.jpg ] ; then
+		pub_opt="$pub_opt --cover cover.jpg"
+	fi
+	
+	echo "tag/in3.epub: $EPUBDIR/$WD.epub" >> Makefile
+	echo "	touch tag/in3.html" >> Makefile
+	echo "$EPUBDIR/$WD.epub: $INHTML" >> Makefile
+	echo "	cd $EPUBDIR ; ebook-convert index.html $WD.epub $pub_opt" >> Makefile
+	echo "tag/in3.epub">>$CLEANFILE
+	echo "$EPUBDIR/$WD.epub">>$UPLOADFILE
+	add_www(){
+		echo "$EPUBDIR/$1.html: $1.in3 header |$EPUBDIR ">>Makefile
+		echo "	in3html -n  $1.in3 > $EPUBDIR/$1.html">>Makefile
+		echo "$EPUBDIR/$1.html">>$CLEANFILE
+	}
+	for FILE in $INBASE ; do
+		if [ $FILE = total ] ; then DONE_TOTAL=1 ; fi
+		if [ $FILE = index ] ; then DONE_INDEX=1 ; fi
+		add_www $FILE
+	done
+	echo "index.htm: $INFILES" >> Makefile
+	echo "	mkinheader -h > index.htm" >> Makefile
+	echo 'index.htm'>>$CLEANFILE
+	
+	if [ $DONE_INDEX = 0 ] ; then
+		add_www index
+	fi
+	if [ $DONE_TOTAL = 0 ] ; then
+		add_www total
+	fi
+	
+	echo "$EPUBDIR:" >> Makefile
+	echo "	mkdir $EPUBDIR" >> Makefile
 fi
 ######   ######   #######  
 #     #  #     #  #        
@@ -274,6 +337,7 @@ mk_images(){
 	fi
 	echo "$BASEIMAGE.eps: $IMAGE" >> Makefile
 	echo "	convert $IMAGE $BASEIMAGE.eps" >> Makefile
+	echo "$BASEIMAGE.eps" >>$CLEANFILE
 	
 }
 
@@ -291,13 +355,15 @@ IMGFILES=`cat $INFILES | sed -n 's/^.img //p'  | sed 's/ .*//'| paste -sd ' '`
 MAPFILES=`cat $INFILES | sed -n 's/^.map image *//p' | sed 's/ .*//'| paste -sd ' '`
 
 echo "tag/in3.img: $IMGFILES $MAPFILES |tag" >> Makefile
+if [ -d $EPUBDIR ] ; then
+	echo "	cp $IMGFILES $MAPFILES $EPUBDIR">> Makefile
+fi
 if [ -d $WWWDIR ] ; then
 	echo "	cp $IMGFILES $MAPFILES $WWWDIR">> Makefile
 fi
 echo "	touch tag/in3.img" >> Makefile
 echo "tag/in3.img">>$CLEANFILE
 if [ -d $WWWDIR ] ; then
-	echo "echo $IMGFILES $MAPFILES">> $CLEANFILE
 	sed -n  "s/^.map *image */$WWWDIR\//p" *in >>$UPLOADFILE
 	sed -n  "s/^\.img */$WWWDIR\//p" *in | sed 's/ .*//' >>$UPLOADFILE
 fi
