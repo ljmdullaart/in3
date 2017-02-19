@@ -44,13 +44,20 @@ for (@in){
 }
 
 if ($type eq 'header'){
-	if ($tot_title ne 'Index' ){print "<h1>$tot_title</h1>\n";}
-	if ($sub_title ne '' ){print "<h2>$sub_title</h2>\n";}
-	if ($author ne ''){print "<h3>$author</h3>\n";}
+#	if ($tot_title ne 'Index' ){print "<h1>$tot_title</h1>\n";}
+#	if ($sub_title ne '' ){print "<h2>$sub_title</h2>\n";}
+#	if ($author ne ''){print "<h3>$author</h3>\n";}
 }
 elsif ($type eq 'index'){
-	print ".link total.pdf (pdf)\n";
-	print ".link $WD.epub (epub)\n";
+	if ( -d 'pdf' ) {
+		print ".link total.pdf (pdf)\n";
+	}
+	if ( -d 'epub' ) {
+		print ".link $WD.epub (epub)\n";
+	}
+	if ( -d 'www' ) {
+		print ".link total.html (1 page)\n";
+	}
 	if ($tot_title ne '' ){print ".title $tot_title\n";}
 	if ($sub_title ne '' ){print ".subtitle $sub_title\n";}
 	if ($author ne ''){print ".author $author\n";}
@@ -165,7 +172,6 @@ if ($type eq 'header'){
 	print "</table>\n";
 }
 else {
-	print "\n.br\n.link total.pdf PDF\n";
 	if ( -f "index.bottom"){
 		if (open(IT,"index.bottom")){
 			while (<IT>){print;}

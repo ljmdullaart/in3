@@ -78,8 +78,7 @@ sub pushout{
 # Macro for encapsulated postsrcipt files (typically images)
 #
 sub img_macro {
-print "
-.de dospark
+print ".de dospark
 .psbb \\\\\$1
 .nr ht0 \\\\n[ury]-\\\\n[lly]
 .nr wd0 \\\\n[urx]-\\\\n[llx]
@@ -105,7 +104,7 @@ print "
 sub stylesheet {
 	if (open (STYLE,"stylesheet.mm")){
 		debug ($DEB_FILE,"Stylesheet found");
-		while (<STYLE>){push @output,$_;}
+		while (<STYLE>){chomp;push @output,$_;}
 		close STYLE;
 	}
 	else {
@@ -131,12 +130,29 @@ sub pushlit{
 
 my @thistable;
 my %variables=();
+my $cover='';
 $variables{'interpret'}=1;
-
 my @in3=<>;
+
+
+for (@in3){
+	if (/^{COVER}(.*)/){ $cover=$1;}
+}
+if ($cover ne ''){
+	pushout(".PGNH");
+	pushout(".ds pg*header");
+}
+
 img_macro;
 stylesheet;
 
+if ($cover ne ''){
+	my $epsfile=$cover; $epsfile=~s/\.[^.]+$/.eps/;
+	system("convert $cover $epsfile");
+	pushout(".ce 1");
+	pushout(".dospark $epsfile 19c 27.5c");
+
+}
 $coversheet=0;
 for (@in3){
 	if (/^{TITLE}(.*)/){ $coversheet=1;}
@@ -145,8 +161,9 @@ if ($coversheet > 0){
 	for (@in3){
 		if (/^{TITLE}(.*)/){
 			$title=$1;
-			pushout(".bp");
-			pushout(" ");
+			pushout(".PGNH");
+			pushout(".bp 0");
+			pushout(".sv 4c");
 			pushout(".sp 2c");
 			pushout(".ls 3");
 			pushout(".ps +16");
@@ -185,6 +202,9 @@ if ($coversheet > 0){
 	}
 	
 }
+
+pushout(".ds pg*header ''- \\\\nP -''");
+pushout(".nr P 0");
 
 for (@in3){
 	chomp;
@@ -235,12 +255,14 @@ for (@in3){
 	}
 	elsif (/^{AUTHOR}/){
 	}
+	elsif (/^{COVER}/){
+	}
 	elsif (/^{INCLUDE}/){
 	}
 	elsif (/^{HEADER ([0-9])}(.*)/){
 		alineatabend;
 		if ($1==1){
-			pushout(".bp")
+			# pushout(".bp")
 		}
 		else {
 			pushout (".ne 10v");
@@ -429,13 +451,17 @@ for (@in3){
 		my $frst=1;
 		for (@thistable){
 			if (/^{TABLEROW}/){ $outline=''; $frst=1;}
+			elsif (/^{TABLEHEAD}/){ $outline=''; $frst=1;}
 			elsif (/^{TABLECEL}<VSPAN>/){ if ($frst==1){$frst=0;$outline .= "^";}else{$outline .= " ^";}}
 			elsif (/^{TABLECEL}<HSPAN>/){ if ($frst==1){$frst=0;$outline .= "s";}else{$outline .= " s";}}
 			elsif (/^{TABLECEL}/){ if ($frst==1){$frst=0;$outline .= "l";}else{$outline .= " l";}}
 			elsif (/^{TABLEROWEND}/){ pushout ($outline); }
 		}
 		$output[$#output] .= ".";
+		pushout(".TS H");
+		pushout (".TH");
 		my $frst=1;
+		my $thead=0;
 		for (@thistable){
 			if (/^{TABLEROW}/){ $oultine=''; $frst=1;}
 			elsif (/^{TABLECEL}/){
@@ -473,7 +499,7 @@ for (@in3){
 		pushout(".ft CR");
 		pushout(".ps -2");
 		pushout("$1");
-		pushout(".ps +0");
+		pushout(".ps");
 		pushout(".ft");
 	}
 	elsif (/^{TEXTNORMAL}(.*)/){

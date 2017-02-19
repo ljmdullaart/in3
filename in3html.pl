@@ -80,6 +80,7 @@ my $like=0;
 my $side=0;
 my %variables=();
 my $mapnr=0;
+my $cover='';
 
 my $notes;
 sub pushnote{
@@ -101,6 +102,7 @@ for (@in3){
 			$title=$1;
 		}
 	}
+	if (/^{COVER}(.*)/){ $cover=$1; }
 	if (/^{LIKE}/){$like=1;}
 	if (/^{SIDE/){$side=1;}
 	if (/^{SET}([^ ]*) (.*)/){
@@ -140,6 +142,9 @@ if ($like>0){
 	pushout ( "js.src = \"//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5\";");
 	pushout ( "fjs.parentNode.insertBefore(js, fjs);");
 	pushout ( "}(document, 'script', 'facebook-jssdk'));</script>");
+}
+if ($cover ne ''){
+	pushout ( "<img src=$cover><br>");
 }
 
 sub alineatabstart {
@@ -222,6 +227,8 @@ for (@in3){
 			pushout("</div></td></tr>")
 		}
 	}
+	elsif (/^{AUTHOR}(.*)/){ }
+	elsif (/^{COVER}(.*)/){ }
 	elsif (/^{INCLUDE}(.*)/){
 		if ($do_includes==1){
 			if ( open (INCLUDE, $1)){

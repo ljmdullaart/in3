@@ -229,8 +229,9 @@ if [ -d $EPUBDIR ] ; then
 		pub_opt="$pub_opt --authors '$author'";
 	fi
 
-	if [ -f cover.jpg ] ; then
-		pub_opt="$pub_opt --cover cover.jpg"
+	COVER=`sed -n 's/^\.cover //p' *.in | head -1`
+	if [ "$COVER" != "" ] ; then
+		pub_opt="$pub_opt --cover $COVER"
 	fi
 	
 	echo "tag/in3.epub: $EPUBDIR/$WD.epub" >> Makefile
@@ -249,9 +250,6 @@ if [ -d $EPUBDIR ] ; then
 		if [ $FILE = index ] ; then DONE_INDEX=1 ; fi
 		add_www $FILE
 	done
-	echo "index.htm: $INFILES" >> Makefile
-	echo "	mkinheader -h > index.htm" >> Makefile
-	echo 'index.htm'>>$CLEANFILE
 	
 	if [ $DONE_INDEX = 0 ] ; then
 		add_www index
@@ -322,7 +320,6 @@ ALLIMAGE=""
 
 mk_images(){
 	BASEIMAGE=${IMAGE%.*}
-	ALLIMAGE="$ALLIMAGE $IMAGE $BASEIMAGE.eps"
 	if [ -f $BASEIMAGE.xcf ] ; then
 		echo "$IMAGE: $BASEIMAGE.xcf" >> Makefile
 		echo "	convert $BASEIMAGE.xcf $IMAGE" >> Makefile
@@ -341,25 +338,43 @@ mk_images(){
 	
 }
 
-cat $INFILES | sed -n 's/^\.img *//p' | sed 's/ .*//'|sort -u|
-while read IMAGE; do
+CURIMG=`cat $INFILES | sed -n 's/^\.img *//p' | sed 's/ .*//'|sort -u`
+for IMAGE in $CURIMG ; do
 	mk_images
+	BASEIMAGE=${IMAGE%.*}
+	TMPA="$ALLIMAGE $IMAGE $BASEIMAGE.eps"
+	ALLIMAGE=$TMPA
 done
+echo "Images: $ALLIMAGE"
 
-cat $INFILES | sed -n 's/^\.map image *//p' | sed 's/ .*//'|sort -u|
-while read IMAGE; do
+CURIMG=`cat $INFILES | sed -n 's/^\.map image *//p' | sed 's/ .*//'|sort -u`
+for IMAGE in $CURIMG ; do
 	mk_images
+	BASEIMAGE=${IMAGE%.*}
+	TMPA="$ALLIMAGE $IMAGE $BASEIMAGE.eps"
+	ALLIMAGE=$TMPA
 done
+echo "Images: $ALLIMAGE"
+
+CURIMG=`cat $INFILES | sed -n 's/^\.cover *//p' | sed 's/ .*//'|sort -u`
+for IMAGE in $CURIMG ; do
+	mk_images
+	BASEIMAGE=${IMAGE%.*}
+	TMPA="$ALLIMAGE $IMAGE $BASEIMAGE.eps"
+	ALLIMAGE=$TMPA
+done
+echo "Images: $ALLIMAGE"
 
 IMGFILES=`cat $INFILES | sed -n 's/^.img //p'  | sed 's/ .*//'| paste -sd ' '`
+COVERS=`cat $INFILES | sed -n 's/^.cover //p'  | sed 's/ .*//'| paste -sd ' '`
 MAPFILES=`cat $INFILES | sed -n 's/^.map image *//p' | sed 's/ .*//'| paste -sd ' '`
 
-echo "tag/in3.img: $IMGFILES $MAPFILES |tag" >> Makefile
+echo "tag/in3.img: $ALLIMAGE|tag" >> Makefile
 if [ -d $EPUBDIR ] ; then
-	echo "	cp $IMGFILES $MAPFILES $EPUBDIR">> Makefile
+	echo "	cp $ALLIMAGE $EPUBDIR">> Makefile
 fi
 if [ -d $WWWDIR ] ; then
-	echo "	cp $IMGFILES $MAPFILES $WWWDIR">> Makefile
+	echo "	cp $ALLIMAGE $WWWDIR">> Makefile
 fi
 echo "	touch tag/in3.img" >> Makefile
 echo "tag/in3.img">>$CLEANFILE

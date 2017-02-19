@@ -119,7 +119,7 @@ else {
 			else {print STDERR "Can't find a numeric value for 'DEBUG' in $_; ignored the debug set.\n";}
 			$what='';
 		}
-		elsif ($what eq 'H1'){
+		elsif ($what eq 'chapter'){
 			if (/([0-9]+)/){ $variables{"H1"}=$1;}
 			else {print STDERR "Can't find a numeric value for chapter in $_; ignored the chapter set.\n";}
 			$what='';
@@ -292,12 +292,14 @@ sub close_table{
 	my @line;
 	my $x=0; my $y=0;
 	my $maxx=0; my $maxy=0;
+	my $head=0;
 	debug ($FUNCTIONS,"Close table ($intable)");
 	if ($intable>0){
 		inpush("{TABLESTART}");
 		for (@thistable){
 			chomp;
 			s/^	//;
+			if (/^\{.*\}$/){$head=1;}
 			@line=split('	',$_);
 			$x=0;
 			for (@line){
@@ -326,7 +328,12 @@ sub close_table{
 		}
 			
 		for ($y=0; $y<$maxy; $y++){
-			inpush( "{TABLEROW}");
+			if (($y==0) && ($head==1)){
+				inpush( "{TABLEHEAD}");
+			}
+			else {
+				inpush( "{TABLEROW}");
+			}
 			for ($x=0; $x<$maxx;$x++){
 				inpush("{TABLECEL}$output_table[$x][$y]");
 			}
@@ -522,6 +529,10 @@ for (@input){
 	elsif (/^\.back/) {
 		debug($TAGS,".back (end of leftnotes)");
 		$variables{'notes'}=$variables{'notes'}&2;
+	}
+	elsif (/^\.cover (.+)/){
+		inpush("{COVER}$1");
+		debug($TAGS,".cover: set cover to $1");
 	}
 	elsif (/^\.global/){
 	}
