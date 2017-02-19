@@ -1,0 +1,82 @@
+.header
+
+.h1 In language specification
+.h2 Special Characters
+
+Some chararacters have a special meaning.
+	%*Character%*	%*When%*	%*Meaning%*
+	{tab}	always	Tab is an indication that a format construct (leftnote, table or list) is used
+	..	beginning of line	A dot at the beginning of a line indicates a request
+	%	when interpret=2	Next characters are interpreted
+	-	beginning of line or after tab(s)	list item in a dash-list
+	#	beginning of line or after tab(s)	list item in a numbered-list
+	@	beginning of line or after tab(s)	list item in a alpha-list
+
+
+.h2 Implemented requests
+
+.h3 General formatting
+	request	argument	meaning
+	empty line or .	 	Ends an alinea, if an alinea is open
+	text{tab}	text	a text with a left note
+	back	none	Ends a section with left notes
+	br	none	force a line break
+	note	text	text is a footnote
+	side	side note text	Specifies a referal to sidenotes
+
+.h3 Lists
+	request	argument	meaning
+	-{tab}	text	dash list item
+	{tab}-{tab}	text	second level dash list
+	@{tab}	text	alphabetized list item
+	{tab}@{tab}	text	second level alphabetized list
+	#{tab}	text	numbered list item
+	{tab}#{tab}	text	second level numbered list
+
+.h3 Character format
+	request	argument	meaning
+	b	text	text must be written in bold
+	fix	text	fixed font text
+	i	text	italized text
+	pre	none	starts or stops a pre-formatted text
+	u	text	Underline text
+
+.h3 Headers
+	request	argument	meaning
+	h{0-5}	text	create a chapter/section/... title
+	header	none	include the file header if that seems appropriate
+	hu	test	Header, unnumbered
+
+.h3 Other
+	request	argument	meaning
+	author	text	specify the name(s) of the author(s)
+	cover	filename	use the image in filename as cover
+	global	variable value	set the variable to value globally
+	hr	none	horizontal line
+	img	image	include an image here
+	link	link text	provide a link
+	map	image  image_file	Map creates a clickable map in HTML or an image in PDF.
+	map	field link coordinates	Creates a click-field on the current map.
+	set	variable value	set the variable to value from now on
+
+Tables, maps and lists are defined as block requests. They should start on a new alinea
+and end with an alinea (i.e. a blank line).
+
+
+.h2 Variables
+
+The concept of variables is used to control the behaviour of the in-scripts. Variables may be
+set globally or from a point in the text. If a variable is set as global, the last value in the
+input file is used from the beginning. Global variables may be overridden by set requests.
+
+Variables have consequences.
+
+	%*Variable%*	 	%*Meaning%*
+	interpret	global	0=only accented characters<br>1=%% style interpretation<br>2=direct interpretation
+	notes	direct	0=no left or side notes<br>1=only leftnotes<br>2=only sidenotes<br>3=both
+	H1	direct	Number for the next chapter
+	H2	direct	Number for the next section
+	H3	direct	Number for the next paragraph
+	H4	direct	Number for the next sub-paragraph
+
+

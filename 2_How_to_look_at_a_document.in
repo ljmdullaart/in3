@@ -1,0 +1,51 @@
+.header
+
+.h1 How to look at a document
+
+.h2 Output document
+
+A document consists of a number of pages. A page has the following structure:
+
+.img in_page.png
+
+A page consists of a
+-	header, which should be static
+-	a set of alineas that provide the actual content
+-	a foot note section, which is specific for that page
+-	a footer, which should be static as well.
+
+Headers and footers should be static, because in some output formats (f.e. HTML),
+they are printed only once.
+
+An alinea consists of three parts:
+-	a left-note part
+-	the alinea body
+-	the side-note part.
+
+A header (chapter title etc.) is also seen as a specific alinea. For some alineas,
+the left or side note section may be empty, either because no content is produced,
+or by definition.
+
+.h2 How notes work
+Left and side notes follow a different pattern.
+
+.h3 Left notes
+Left notes apear as a column on the right of the text. The columnn for left notes starts
+at the first alinea that uses a left note and the column ends at:
+-	a .back request
+-	a header (at any level)
+
+A .back request does not break the alinea.
+
+A left note is a simple blurb of text, just A-Z, a-z, 0-9 and possibly a space.
+
+In in3, if a left note column is present, it must be specified, even if the left note
+part for that alinea is empty.
+
+
+.h3 Side notes
+A column on the right is reserved if anywhere in the text a side note is requested. 
+
+In in3, if a side note column is present, all alineas must specify the side note part.
+
+

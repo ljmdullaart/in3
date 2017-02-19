@@ -1,0 +1,54 @@
+.header
+.h1 Intro
+
+.h2 My personal itch
+
+Writing this kind of software is considered as "scratching your personal itch".
+My personal itches for this project were twofold.
+
+First, I needed something that produces consistent results for both PDF and 
+HTML without too much manual intervention. Libreoffice does this, but delivered
+just not exactly the type of webpages that I wanted. Dumping webpages to PDF
+consistenly gave half lines on the bottom and top. Groff's webpages are just
+not good enough for me.
+
+Secondly, I needed something that allows me to have notes in the right margin
+of the text.
+.side Like this
+This is something that you commonly see in school books. I did not
+find anything that could do that in an easy way. Publishing software require
+too many mouse cliicks to get the work done.
+
+.h2 Downloading
+At this moment, there is not a neatly packaged 
+in3. You can download the code from github
+.link https://github.com/ljmdullaart/in3
+or do 
+.fix git clone https://github.com/ljmdullaart/in3.git
+to get a clone of the sourcecode.
+
+
+.h2 History
+In was a run-off format for web-pages. It was meant to create web pages 
+of different formats. It worked quite well as long as the text was kept simple.
+
+At some point, formatting requirements elaborate, using side-notes, tables and left-notes.
+There was also the requirement of getting a PDF document, which was produced using tbl
+and groff. I called this in2, having the nice pun in2html, in2groff etc.
+
+By now, the code got quite complex. The difference between tables in html and tables in 
+tbl made it necessary to dupplicate a lot of code. Adding features became quite a 
+challenge.
+
+I also picked up a book called 'Clean Code' by Robert Martin. That described 
+exactly the problem I was having; dirty code. 
+
+So a major rewrite became necessary. And it also became necessary to create a
+sort of architecture document that describes the way in looks at formatting 
+a document. It also describes the in input language, the in3 intermediate language
+and what in does or doesn't do. In general, the real formatting is left to the
+output-processor (either the formatting of the web page or Groff).
+
+I do not follow all the priciples of 'clean code'. Thinking about how it
+shoudld be written has however made my code much more maintanable.
+

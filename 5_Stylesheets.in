@@ -1,0 +1,55 @@
+.header
+
+.h1 Stylesheets
+
+In3 supports stylesheets per output-type. 
+It is also possible to put some information in 
+.fix meta.in.
+
+.h2 Meta.in
+The goal of
+.fix meta.in
+is to provide meta-information about the text. It is not meant to generate output.
+In a 
+.fix meta.in
+you generaly provide information like:
+	title	The title of the complete document
+	author	The author
+	cover	The image that should be on the cover. Using an image that is 1200x1600 gives the best results.
+
+.h2 HTML style sheet
+
+If a
+.fix stylesheet.css
+exists in the current directory, it is called in the HTML code. You can 
+create styles for all the normal HTML elements.
+Example:
+
+.pre
+   table.normal {
+      border: 1px solid #ddd;
+   }
+.pre
+
+In addition, 
+.fix in3html
+creates div-containers for specific text-elements:
+
+	class/style	text element	example
+	alinea	standard alinea	·alinea { background-color: #DDDD00; }
+	fixed	font for fixed character-width	·fixed { font-family:courier, "courier new", monospace; }
+	cel	cel in a normal table	·cel { background-color: #DD00DD; }
+	left	left notes	·left { font-size: 80%; }
+	list	format for all lists	·list { background-color: #00DDDD; }
+	side	side notes (right hand side)	·side { font-size: 50%; background-color: #DD0000; }
+	table·note the layout of notes; mostly used to align notes	table·note td { vertical-allign: top; }
+	toc	Table of contents	·toc { color: #000000; background-color: #DDDDDD; width: 100%; } 
+
+.h2 Groff style sheet
+
+.pre
+.ds Licon "Table of Contents"
+.pre
+
+In general, in2tbl does not invoke specific styles. The style-sheet allows you to redefine some 
+of the standard texts.
