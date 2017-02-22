@@ -2,9 +2,22 @@
 #INSTALL@ /usr/local/bin/mkinheader
 use Cwd qw();
 
+sub hellup {
+print "
+mkinheader: make header/index file for in3
+--help           This help
+-h  --header     create an includebla header
+-i  --index      create an index-file
+-t               Don't include the total
+-v               increase verbosity
+";
+}
+
+
 $VERBOSE=0;
 
 $type='header';
+$do_total=1;
 my $WD = Cwd::cwd();
 $WD=~s/.*\///;
 
@@ -12,20 +25,41 @@ $WD=~s/.*\///;
 for (@ARGV){
 	chomp;
 	if (/^$/){ $type='header';}
+	elsif (/--help/){
+		hellup;
+	}
+	elsif (/--header/){
+		$type='header';
+	}
 	elsif (/-h/){
 		$type='header';
+	}
+	elsif (/--index/){
+		$type='index';
 	}
 	elsif (/-i/){
 		$type='index';
 	}
+	elsif (/-t/){
+		$do_total=0;
+	}
 	elsif (/-v/){$VERBOSE++;}
-	else { print "$_; only -h(eader) and -i(ndex.html) allowed.\n";}
+	else { print "$_; Unknown option $_.\n";}
 }
 	
 if ($VERBOSE > 0){ print "######## type=$type\n";}
 
+if ($do_total==1){
+	$all_in=`ls *.in| sort -n | paste -sd ' '`;
+}
+else{
+	$all_in=`ls *.in|grep -v total.in| sort -n| paste -sd ' '`;
+}
+chomp $all_in;
 
-if (open(IN,"egrep '^\.h[123] |\.toc|^.author|^.title|^.subtitle' `ls *.in| sort -n` |")){
+if ($VERBOSE > 0){ print "########all_in=$all_in=\n";}
+
+if (open(IN,"egrep '^\.h[123] |\.toc|^.author|^.title|^.subtitle' $all_in  |")){
 	@in=<IN>;
 	close IN;
 }
@@ -49,13 +83,13 @@ if ($type eq 'header'){
 #	if ($author ne ''){print "<h3>$author</h3>\n";}
 }
 elsif ($type eq 'index'){
-	if ( -d 'pdf' ) {
+	if (( -d 'pdf' ) && ($do_total==1)) {
 		print ".link total.pdf (pdf)\n";
 	}
-	if ( -d 'epub' ) {
+	if (( -d 'epub' ) && ($do_total==1)){
 		print ".link $WD.epub (epub)\n";
 	}
-	if ( -d 'www' ) {
+	if (( -d 'www' ) && ($do_total==1)){
 		print ".link total.html (1 page)\n";
 	}
 	if ($tot_title ne '' ){print ".title $tot_title\n";}
