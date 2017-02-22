@@ -220,9 +220,9 @@ if [ -d $EPUBDIR ] ; then
 	if [ ! -f index.in ] ; then INHTML="$INHTML $EPUBDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $EPUBDIR/total.html" ; fi
 
-	TITLE=`grep '^.title '  *in | sed 's/.*:.title //' | sort -u | head -1`
+	TITLE=`grep '^.title '  *in | sed 's/.*:.title //;s/"/''/g' | sort -u | head -1`
 	if [ "$TITLE" = "" ] ; then TITLE=$wd ; fi
-	pub_opt="$pub_opt --title $TITLE";
+	pub_opt="$pub_opt --title \"$TITLE\"";
 
 	AUTHOR=`grep '^.author '  *in | sed 's/.*:.author //' | sort -u | head -1`
 	if [ "$AUTHOR" != "" ] ; then 
@@ -235,8 +235,8 @@ if [ -d $EPUBDIR ] ; then
 	fi
 	
 	echo "tag/in3.epub: $EPUBDIR/$WD.epub" >> Makefile
-	echo "	touch tag/in3.html" >> Makefile
-	echo "$EPUBDIR/$WD.epub: $INHTML" >> Makefile
+	echo "	touch tag/in3.epub" >> Makefile
+	echo "$EPUBDIR/$WD.epub: $INHTML $EPUBDIR/index.html" >> Makefile
 	echo "	cd $EPUBDIR ; ebook-convert index.html $WD.epub $pub_opt" >> Makefile
 	echo "tag/in3.epub">>$CLEANFILE
 	echo "$EPUBDIR/$WD.epub">>$UPLOADFILE
@@ -247,13 +247,20 @@ if [ -d $EPUBDIR ] ; then
 	}
 	for FILE in $INBASE ; do
 		if [ $FILE = total ] ; then DONE_TOTAL=1 ; fi
-		if [ $FILE = index ] ; then DONE_INDEX=1 ; fi
-		add_www $FILE
+		if [ $FILE = index ] ; then
+			DONE_INDEX=1
+		else
+			add_www $FILE
+		fi
 	done
 	
-	if [ $DONE_INDEX = 0 ] ; then
-		add_www index
-	fi
+	echo "$EPUBDIR/index.html: $EPUBDIR/index.in3 |$EPUBDIR ">>Makefile
+	echo "	in3html <$EPUBDIR/index.in3 >$EPUBDIR/index.html">>Makefile
+	echo "$EPUBDIR/index.in3:$EPUBDIR/index.in |$EPUBDIR ">>Makefile
+	echo "	in3 < $EPUBDIR/index.in >$EPUBDIR/index.in3">>Makefile
+	echo "$EPUBDIR/index.in: index.in">>Makefile
+	echo "	mkinheader -t -i > $EPUBDIR/index.in">>Makefile
+	echo "$EPUBDIR/index.html">>$CLEANFILE
 	if [ $DONE_TOTAL = 0 ] ; then
 		add_www total
 	fi
