@@ -134,6 +134,9 @@ my $cover='';
 $variables{'interpret'}=1;
 my @in3=<>;
 
+################################################################################
+#	Cover processing
+################################################################################
 
 for (@in3){
 	if (/^{COVER}(.*)/){ $cover=$1;}
@@ -151,8 +154,13 @@ if ($cover ne ''){
 	system("convert $cover $epsfile");
 	pushout(".ce 1");
 	pushout(".dospark $epsfile 19c 27.5c");
+	pushout(".nr P 0");
 
 }
+################################################################################
+#	Cover sheet  processing
+################################################################################
+
 $coversheet=0;
 for (@in3){
 	if (/^{TITLE}(.*)/){ $coversheet=1;}
@@ -200,11 +208,11 @@ if ($coversheet > 0){
 
 		}
 	}
+	pushout(".nr P 0");
 	
 }
 
 pushout(".ds pg*header ''- \\\\nP -''");
-pushout(".nr P 0");
 
 for (@in3){
 	chomp;
