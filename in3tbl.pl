@@ -1,10 +1,13 @@
 #!/usr/bin/perl
 #INSTALL@ /usr/local/bin/in3tbl
+use strict;
+use warnings;
 ################################################################################
 #	Debugging where required
 ################################################################################
 my $DEBUG=0;
 my $DEB_FILE=1;		#files that are opened or closed
+my $DEB_TABLE=2;		#all table-processing stuff
 my $DEB_ALINEA=32;	#alinea processing
 my $DEB_CHAR=64;		#replace characters with GROFF escapes
 my $DEB_IMG=128;		#Image processing
@@ -119,7 +122,8 @@ sub stylesheet {
 }
 ################################################################################
 
-$litteraltext=0;
+my $litteraltext=0;
+my @litblock;
 sub pushlit{
       (my $text)=@_;
       $litteraltext=1;
@@ -161,7 +165,10 @@ if ($cover ne ''){
 #	Cover sheet  processing
 ################################################################################
 
-$coversheet=0;
+my $coversheet=0;
+my $title;
+my $subtitle;
+my $author;
 for (@in3){
 	if (/^{TITLE}(.*)/){ $coversheet=1;}
 }
@@ -184,7 +191,7 @@ if ($coversheet > 0){
 
 		}
 		if (/^{SUBTITLE}(.*)/){
-			$title=$1;
+			$subtitle=$1;
 			pushout(".ps +8");
 			pushout(".ls 2");
 			pushout(".ce 1");
@@ -196,7 +203,7 @@ if ($coversheet > 0){
 
 		}
 		if (/^{AUTHOR}(.*)/){
-			$title=$1;
+			$author=$1;
 			pushout(".sp 1c");
 			pushout(".ps +10");
 			pushout(".ls 2");
@@ -422,13 +429,14 @@ for (@in3){
 		pushout(".br");
 	}
 	elsif (/^{NOTE}(.*)/){
-		$qout=$#output;
+		my $qout=$#output;
 		$output[$qout]=$output[$qout].".\\*F";
 		pushout(".FS");
 		pushout("$1");
 		pushout(".FE");
 	}
 	elsif (/^{SET}([^ ]+) (.*)/){
+		my $val;
 		$variables{$1}=$2;
 		if ($1 eq 'H1'){ $val=$2-1; pushout(".nr H1 $val");}
 		elsif ($1 eq 'H2'){ $val=$2-1; pushout(".nr H2 $val");}
@@ -455,6 +463,7 @@ for (@in3){
 		$alineatype=-1;
 		pushout(".TS");
 		my $outline="allbox,center;";
+		debug($DEB_TABLE,"Start a table");
 		pushout ($outline);
 		my $frst=1;
 		for (@thistable){
@@ -468,10 +477,11 @@ for (@in3){
 		$output[$#output] .= ".";
 		pushout(".TS H");
 		pushout (".TH");
-		my $frst=1;
+		$frst=1;
 		my $thead=0;
 		for (@thistable){
-			if (/^{TABLEROW}/){ $oultine=''; $frst=1;}
+			my $text;
+			if (/^{TABLEROW}/){ $outline=''; $frst=1;}
 			elsif (/^{TABLECEL}/){
 				s/{TABLECEL}//;
 				s/<VSPAN>//;
@@ -486,9 +496,11 @@ for (@in3){
 
 					
 				if ($frst==1){$frst=0;$outline = "$text";} else {$outline .= "	$text";}
+				debug($DEB_TABLE,"CELL: outline=$outline");
 		
 			}
 			elsif(/{TABLEROWEND}/){
+				$outline='' unless defined $outline;
 				if ($outline=~/^	*$/){}
 				else {pushout ($outline);}
 			}
@@ -534,7 +546,7 @@ for (@in3){
 }
 
 alineatabend;
-$alinetype=-1;
+$alineatype=-1;
 
 pushout(".TC");
 
@@ -558,7 +570,7 @@ else { print STDERR "Cannot open in3charmap\n"; }
 if ($variables{'interpret'}==1){
 	print STDERR "INTERPRET =$variables{'interpret'}\n";
 	for my $i (0..$#output){
-		$changed=1;
+		my $changed=1;
 		while ($changed==1){
 			$changed=0;
 			if ($output[$i]=~/(.*)\%\*([^ ]*)\%\*(.*)/){
@@ -575,7 +587,7 @@ if ($variables{'interpret'}==1){
 if ($variables{'interpret'}==2){
 	print STDERR "INTERPRET =$variables{'interpret'}\n";
 	for my $i (0..$#output){
-		$changed=1;
+		my $changed=1;
 		while ($changed==1){
 			$changed=0;
 			if ($output[$i]=~/(.*)\*([^ ]*)\*(.*)/){
@@ -600,8 +612,8 @@ for (@output){
 	}
 	else { s/^ *//;}
 	if (/==>/){
-		$qis=s/=/=/g;
-		$repl='\~'x$qis;
+		my $qis=s/=/=/g;
+		my $repl='\~'x$qis;
 		s/===*>/$repl/;
 	}
 	if (/^'/){
@@ -610,7 +622,13 @@ for (@output){
 }
 for (@charmap){
 	chomp;
-	(my $char,my $groff,my $html)=split '	';
+	my $char;
+	my $groff;
+	my $html;
+	($char,$groff,$html)=split '	';
+	$char='UNDEFINED_CHAR' unless defined $char;
+	$groff=$char unless defined $groff;
+	$html=$char unless defined $html;
 	debug($DEB_CHAR,"Replace $char and $html with $groff");
 	for my $i (0..$#output){
 		if ($output[$i]=~/$char/){

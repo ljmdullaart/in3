@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 #INSTALL@ /usr/local/bin/mkinheader
+use strict;
+use warnings;
+
 use Cwd qw();
 
 sub hellup {
@@ -14,13 +17,14 @@ mkinheader: make header/index file for in3
 }
 
 
-$VERBOSE=0;
+my $VERBOSE=0;
 
-$type='header';
-$do_total=1;
-my $WD = Cwd::cwd();
+my $type='header';		# Type of output to produce
+my $do_total=1;			# Include the "total" file in the header/index
+my $WD = Cwd::cwd();		# Basename of the current working directory
 $WD=~s/.*\///;
-
+my $all_in;				# A space-separated list of al .in files
+my @in;				# all relevant lines from the in-files
 
 for (@ARGV){
 	chomp;
@@ -48,12 +52,11 @@ for (@ARGV){
 }
 	
 if ($VERBOSE > 0){ print "######## type=$type\n";}
-
 if ($do_total==1){
 	$all_in=`ls *.in| sort -n | paste -sd ' '`;
 }
 else{
-	$all_in=`ls *.in|grep -v total.in| sort -n| paste -sd ' '`;
+	$all_in=`ls *.in|egrep -v 'total.in' | sort -n| paste -sd ' '`;
 }
 chomp $all_in;
 
@@ -67,13 +70,13 @@ else {
 	die 'Cannot grep .in-files';
 }
 
-$tot_title='';
-$sub_title='';
-$author='';
+my $tot_title='';
+my $sub_title='';
+my $author='';
 
 for (@in){
 	if (/in:.title (.*)/){ $tot_title=$1; }
-	if (/in:.subtitle (.*)/){ $sub_title="$subtitle<br>$1"; }
+	if (/in:.subtitle (.*)/){ $sub_title="$sub_title<br>$1"; }
 	if (/in:.author (.*)/){ $author=$1;}
 }
 
@@ -105,9 +108,9 @@ elsif ($type eq 'index'){
 
 if ($type eq 'header'){print "<table CLASS=\"toc\">\n";}
 if ($type eq 'header'){print "	<tr class=toc><td colspan=3><a href=\"index.html\"><span CLASS=toc>Index</span></a></td></tr>\n"; }
-$prev_c=0;
-$s=0;
-$p=0;
+my $prev_c=0;
+my $s=0;
+my $p=0;
 for (@in){
 	chomp;
 	if ($type eq 'header'){
@@ -143,11 +146,11 @@ for (@in){
 		s/û/&uuml;/g;
 		s/±/&plusmn;/g;
 	}
-
+	my $c;
 	if (/^index/){ $prev_c=0;}
 	if (/^total/){ $prev_c=0;}
 	elsif (/^([0-9]*)_(.*).in:.h([123]) (.*)/){
-		my $c=$1;
+		$c=$1;
 		my $file="$1_$2.html";
 		my $pdf="$1_$2.pdf";
 		my $level=$3;
@@ -155,7 +158,10 @@ for (@in){
 if ($VERBOSE>0){print "#chapter:$c file:$file level:$level title:$title\n";}
 		if ($c != $prev_c){ $s=0; $p=0; $prev_c=$c; }
 		if ($level==1){
-			if ($type eq 'header'){ print "	<tr class=toc><td colspan=3><a href=\"$file#a$c\"><span CLASS=toc> $c $title</span></a></td></tr>\n"; }
+			if ($type eq 'header'){
+ 				print "	<tr class=toc><td colspan=3><a href=\"$file#a$c\">"
+				print "<span CLASS=toc> $c $title</span></a></td></tr>\n";
+			}
 			if ($type eq 'index'){print "\n.br\n.link $file#a$c $c $title\n";}
 		}
 		elsif ($level==2){
@@ -189,7 +195,7 @@ if ($VERBOSE>0){print "#chapter:$c file:$file level:$level title:$title\n";}
 		}
 	}
 	elsif (/.in:\.toc([123])/){
-		$level=$1;
+		my $level=$1;
 		s/.*\.toc.//;
 		if  ($type eq 'index') {
 		 	print "\n.hu $level $_\n";

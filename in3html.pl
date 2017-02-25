@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 #INSTALL@ /usr/local/bin/in3html
+use strict;
+use warnings;
 
 my $DEBUG=0;
 my $DEB_IN=4;		#All input lines 
@@ -72,8 +74,8 @@ debug($DEB_ALINEA,"Initial alinea=-1");
 	#	3	left and side note.
 
 
-@headnum=(0,0,0,0,0,0,0,0,0,0,0,0);
-$notenum=1;
+my @headnum=(0,0,0,0,0,0,0,0,0,0,0,0);
+my $notenum=1;
 my $tablestate=0;
 my $title='';
 my $like=0;
@@ -81,6 +83,7 @@ my $side=0;
 my %variables=();
 my $mapnr=0;
 my $cover='';
+my @note;
 
 my $notes;
 sub pushnote{
@@ -106,6 +109,7 @@ for (@in3){
 	if (/^{LIKE}/){$like=1;}
 	if (/^{SIDE/){$side=1;}
 	if (/^{SET}([^ ]*) (.*)/){
+		my $val;
 		$variables{$1}=$2;
 		debug($DEB_VARS,"variables{$1}=$2 ($variables{$1})");
 		if ($1 eq 'H1'){ $val=$2-1; $headnum[1]=$val;}
@@ -174,7 +178,8 @@ sub alineatabend {
 	$alineatype=-1;
 }
 
-$litteraltext=0;
+my $litteraltext=0;
+my @litblock;
 sub pushlit{
 	(my $text)=@_;
 	$litteraltext=1;
@@ -239,13 +244,13 @@ for (@in3){
 		
 	}
 	elsif (/^{HEADER ([0-9])}(.*)/){
-		$num=$1;$text=$2;
+		my $num=$1;my $text=$2;
 		alineatabend;
 		debug($DEB_HEAD,"HEADER $num : $text");
 		$headnum[$num]++;
 		$headnum[$num+1]=0;
-		$titnr='';
-		for ($i=1;$i<=$num;$i++){
+		my $titnr='';
+		for (my $i=1;$i<=$num;$i++){
 			$titnr="$titnr$headnum[$i].";
 		}
 		$num++;
@@ -253,7 +258,7 @@ for (@in3){
 		if ($alineatype >0){$alineatype &=2;}
 	}
 	elsif (/^{HEADUNNUM ([0-9])}(.*)/){
-		$num=$1;$text=$2;
+		my $num=$1;my $text=$2;
 		alineatabend;
 		$num++;
 		pushout("<h$num>$text</h$num>");
@@ -262,6 +267,7 @@ for (@in3){
 	elsif (/^{IMAGE}(.*)/){
 		alineatabend;
 		pushout ("<br>");
+		my $image;my $text;
 		if (/^{IMAGE}([^ ]*) (.*)/){
 			$image=$1;$text=$2;
 			pushout("<img src=\"$image\" alt=\"image for $text>\">");
@@ -275,7 +281,7 @@ for (@in3){
 		pushout ("<br>");
 	}
 	elsif (/^{LEFTNOTE}(.*)/){
-		$text=$1;
+		my $text=$1;
 		pushout("<div class=left>$text</div>");
 		pushout("</td><td style=\"vertical-align:top;\">");
 	}
@@ -329,7 +335,7 @@ for (@in3){
 		pushout("<ol type=1>");
 	}
 	elsif (/^{LITTERAL}(.*)/){
-		$text=$1;
+		my $text=$1;
 		$text=~s/ /&nbsp;/g;
 		$text=~s/</&lt;/g;
 		$text=~s/>/&gt;/g;
@@ -355,7 +361,7 @@ for (@in3){
 		pushout("</div>");
 	}
 	elsif (/^{NOTE}(.*)/){
-		$text=$1;
+		my $text=$1;
 		pushout("$notenum");
 		pushnote("$notenum: $text");
 		$notenum++;
@@ -363,7 +369,7 @@ for (@in3){
 	elsif (/^{SET}([^ ]+) (.*)/){
 	}
 	elsif (/^{SIDENOTE}(.*)/){
-		$text=$1;
+		my $text=$1;
 		pushout("</td><td style=\"vertical-align:top;width:25%\">");
 		pushout("<div class=side>$text</div>");
 	}
@@ -374,8 +380,8 @@ for (@in3){
 		pushout ("<table class=\"normal\">");
 	}
 	elsif (/^{TABLECEL}(.*)/){
-		$text=$1;
-		$colspan=''; $rowspan='';
+		my $text=$1;
+		my $colspan=''; my $rowspan='';
 		if ($text=~/<.s=[0-9]+>/){
 			if ($text=~/<rs=([0-9]+)>/){
 				$rowspan=" rowspan=\"$1\"";
@@ -424,7 +430,7 @@ for (@in3){
 }
 
 alineatabend;
-$alinetype=-1;
+$alineatype=-1;
 
 for (keys %variables){
 	debug($DEB_VARS,"variables{$_}=$variables{$_}");
@@ -458,7 +464,7 @@ for (@charmap){
 
 if ($variables{'interpret'}==1){
 	for my $i (0..$#output){
-		$changed=1;
+		my $changed=1;
 		while ($changed==1){
 			$changed=0;
 			if ($output[$i]=~/(.*)\%\*([^ ]*)\%\*(.*)/){
@@ -475,7 +481,7 @@ if ($variables{'interpret'}==1){
 if ($variables{'interpret'}==2){
 	print STDERR "INTERPRET =$variables{'interpret'}\n";
 	for my $i (0..$#output){
-		$changed=1;
+		my $changed=1;
 		while ($changed==1){
 			$changed=0;
 			if ($output[$i]=~/(.*)\*([^ ]*)\*(.*)/){
@@ -495,8 +501,8 @@ for (@output){
 	if (/^ \./){}
 	else { s/^ *//;}
 	if (/==>/){
-		$qis=s/=/=/g;
-		$repl='&nbsp;'x$qis;
+		my $qis=s/=/=/g;
+		my $repl='&nbsp;'x$qis;
 		s/===*>/$repl/;
 	}
 }

@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 #INSTALL@ /usr/local/bin/in3
+use strict;
+use warnings;
 
 ########################################################
 
@@ -13,6 +15,10 @@
 my %variables=();
 $variables{"interpret"}=1;
 
+my @input;			# array containing all input lines
+my $leftnote;
+my $level;
+my $bodytext;
 ########################################################
 
 #     #  #######  #        ######   
@@ -74,6 +80,7 @@ sub debug{
 	}
 }
 ########################################################
+########################################################
 
    #     ######    #####    #####   
   # #    #     #  #     #  #     #  
@@ -87,7 +94,7 @@ if ($#ARGV<0){
 	@input=<>;
 }
 else {
-	$what='';
+	my $what='';
 	for (@ARGV){
 		if ($what eq ''){
 			if (1==0){}
@@ -100,7 +107,8 @@ else {
 			elsif (/^-+h/){ hellup; }
 			elsif (/^-/){ print STDERR "$_ is not known as a flag; ignored.\n";}
 			else {
-				$file=$_;
+				my $file=$_;
+				my $ch;	# Chapter number from filename
 				if ($file=~/^([0-9]+)_/){$ch=$1;} else {$ch=-1;}
 				if (open(IN,$file)){
 					if ($ch>0){
@@ -552,7 +560,7 @@ for (@input){
 		inpush("{INCLUDE}header");
 	}
 	elsif (/^\.hu ([0-9]) (.*)/){
-		$level=$1;
+		my $level=$1;
 		$bodytext=$2;
 		close_alinea;
 		inpush("{HEADUNNUM $level}$bodytext");
@@ -592,7 +600,7 @@ for (@input){
 	elsif (/^\.img /) {
 		debug($TAGS,"Image tag: $_");
 		s/^\.img *//;
-		inpush "{IMAGE}$_";
+		inpush("{IMAGE}$_");
 	}
 	elsif (/^\.link /){
 		if (/^\.link ([^ ]*) (.*)/){
@@ -616,7 +624,7 @@ for (@input){
 		else { print "ERROR-- UNKNOWN MAP $1 $2\n";}
 	}
 	elsif (/^\.note (.*)/){
-		$text=$1;
+		my $text=$1;
 		debug ($TAGS,"Note: $text");
 		inpush("{NOTE}$text");
 	}
