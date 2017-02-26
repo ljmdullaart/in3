@@ -85,6 +85,8 @@ my $mapnr=0;
 my $cover='';
 my @note;
 
+$variables{'interpret'}=1;
+
 my $notes;
 sub pushnote{
 	(my $txt)=@_;
@@ -454,6 +456,9 @@ else { print STDERR "Cannot open in3charmap$variables{'interpret'}"; }
 for (@charmap){
 	chomp;
 	(my $char,my $groff,my $html)=split '	';
+	$char='NOCHAR' unless defined $char;
+	$groff=$char unless defined $groff;
+	$html=$char unless defined $html;
 	debug($DEB_CHAR,"Replace $char with $html");
 	for my $i (0..$#output){
 		$output[$i]=~s/$char/$html/g;
