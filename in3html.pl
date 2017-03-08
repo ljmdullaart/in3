@@ -24,13 +24,44 @@ sub hellup {
 	print STDERR "
 NAME: in3html -- convert in3-files to html
 SYNOPSIS:
-      in3html [--debug value] [--noinclude ] [file]
-      in3html [-d value] [-n ] [file]
+      in3html [flags] [file]
+DESCRIPTION:
+In3html converts in3-files to html-format. If no files are
+present on the commandline, STDIN is used. Multiple files
+on the commandline are concatenated before they are handled.
+A single - represents the filename of STDIN.
+
+FLAGS:
+-d <value>
+--debug <value> :Set debugging level; or of the following:
+                 4   All input lines
+                 8   All push-outs
+                 16  Put headers in the debug-stream
+                 32  alinea pricessing
+                 64  replace characters with GROFF escapes
+                 128 Image processing
+                 256 interpret and other vars
+                 512 debug table processing
+
+-h
+--help          :Produce this explanation.
+
+-n
+--noinclude     :Do not include files; usefull to suppress
+                 the inclusion of headers.
+-p
+--partonly      :Create an HTML-part without headers.
+
+BUGS:
+The code is perfect; if you find any bugs it must be because 
+you have an alternative perception of reality.
+
 ";
+
 }
 
 my $do_includes=1;
-
+my $part_only=0;
 my $continued=0;
 my $fileread=0;
 my @in3;
@@ -43,8 +74,12 @@ for (@ARGV){
 	elsif (/^-d([0-9]+)/){$DEBUG=$1;}
 	elsif (/^--debug/){$continued=1;}
 	elsif (/^-d/){$continued=1;}
+	elsif (/^-h/){hellup;exit(0);}
+	elsif (/^-help/){hellup;exit(0);}
 	elsif (/^--noinclude/){ $do_includes=0; }
 	elsif (/^-n/){ $do_includes=0; }
+	elsif (/^-p/){ $part_only=1; }
+	elsif (/^--partonly/){ $part_only=1; }
 	elsif (/^-$/){ 
 		my @in_file=<STDIN>;
 		close FILE;
@@ -126,28 +161,30 @@ for (@in3){
 	}
 }
 
-pushout ( "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
-pushout ( "<html>");
-pushout ( "<head>");
-pushout ( "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">");
-if (-f "stylesheet.css"){
-	pushout ( "<LINK HREF=\"stylesheet.css\" REL=\"stylesheet\" TYPE=\"text/css\">");
-}
-pushout ( "");
-if ($title ne ''){
-	 pushout ( "<title>$title</title>");
-}
-pushout ( "</head>");
-pushout ( "<body>");
-if ($like>0){
-	pushout ( "<div id=\"fb-root\"></div>");
-	pushout ( "<script>(function(d, s, id) {");
-	pushout ( "var js, fjs = d.getElementsByTagName(s)[0];");
-	pushout ( "if (d.getElementById(id)) return;");
-	pushout ( "js = d.createElement(s); js.id = id;");
-	pushout ( "js.src = \"//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5\";");
-	pushout ( "fjs.parentNode.insertBefore(js, fjs);");
-	pushout ( "}(document, 'script', 'facebook-jssdk'));</script>");
+if ($part_only==0){
+	pushout ( "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+	pushout ( "<html>");
+	pushout ( "<head>");
+	pushout ( "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">");
+	if (-f "stylesheet.css"){
+		pushout ( "<LINK HREF=\"stylesheet.css\" REL=\"stylesheet\" TYPE=\"text/css\">");
+	}
+	pushout ( "");
+	if ($title ne ''){
+	 	pushout ( "<title>$title</title>");
+	}
+	pushout ( "</head>");
+	pushout ( "<body>");
+	if ($like>0){
+		pushout ( "<div id=\"fb-root\"></div>");
+		pushout ( "<script>(function(d, s, id) {");
+		pushout ( "var js, fjs = d.getElementsByTagName(s)[0];");
+		pushout ( "if (d.getElementById(id)) return;");
+		pushout ( "js = d.createElement(s); js.id = id;");
+		pushout ( "js.src = \"//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5\";");
+		pushout ( "fjs.parentNode.insertBefore(js, fjs);");
+		pushout ( "}(document, 'script', 'facebook-jssdk'));</script>");
+	}
 }
 if ($cover ne ''){
 	pushout ( "<img src=$cover><br>");
@@ -256,7 +293,7 @@ for (@in3){
 			$titnr="$titnr$headnum[$i].";
 		}
 		$num++;
-		pushout ("<h$num>$titnr $text</h$num>");
+		pushout ("<h$num id=\"a$titnr\">$titnr $text</h$num>");
 		if ($alineatype >0){$alineatype &=2;}
 	}
 	elsif (/^{HEADUNNUM ([0-9])}(.*)/){
@@ -397,7 +434,7 @@ for (@in3){
 		}
 		elsif ($text=~/<.SPAN>/){}
 		else {
-			pushout ("<td><dic class=\"cel\">$text</div></td>");
+			pushout ("<td><div class=\"cel\">$text</div></td>");
 		}
 	}
 	elsif (/^{TABLEROW}/){
