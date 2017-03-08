@@ -6,7 +6,7 @@
 WWWDIR=www
 PDFDIR=pdf
 EPUBDIR=epub
-
+HTMLDIR=html
 
 banner in3 >> Makefile
 PWD=`pwd`
@@ -88,7 +88,8 @@ fi
 
 
 echo -n 'tag/in: ' >> Makefile
-if [ -d  $WWWDIR ] ; then  echo -n 'tag/in3.html ' >> Makefile ; fi
+if [ -d  $WWWDIR ] ; then  echo -n 'tag/in3.www ' >> Makefile ; fi
+if [ -d  $WWWHTML ] ; then  echo -n 'tag/in3.html ' >> Makefile ; fi
 if [ -d  $PDFDIR ] ; then  echo -n 'tag/in3.pdf ' >> Makefile ; fi
 if [ -d  $EPUBDIR ] ; then  echo -n 'tag/in3.epub ' >> Makefile ; fi
 echo    'tag/in3.img' >> Makefile
@@ -165,6 +166,47 @@ fi
 #     #     #     #     #  #        
 #     #     #     #     #  ####### 
 
+if [ -d $HTML ] ; then
+	DONE_TOTAL=0
+	DONE_INDEX=0
+	
+	INHTML=`ls *.in | sort -n | sed 's/.in$/.html/' |sed "s/^/$HTMLDIR\//"| paste -sd' '`
+	if [ ! -f index.in ] ; then INHTML="$INHTML $HTMLDIR/index.html" ; fi
+	if [ ! -f total.in ] ; then INHTML="$INHTML $HTMLDIR/total.html" ; fi
+	echo "tag/in3.html: $INHTML" >> Makefile
+	echo "	touch tag/in3.html" >> Makefile
+	echo "tag/in3.html">>$CLEANFILE
+	
+	add_html(){
+		echo "$HTMLDIR/$1.html: $1.in3 header |$HTMLDIR ">>Makefile
+		echo "	in3html -n --partonly  $1.in3 > $HTMLDIR/$1.html">>Makefile
+		echo "$HTMLDIR/$1.html">>$CLEANFILE
+		echo "$HTMLDIR/$1.html">>$UPLOADFILE
+	}
+	for FILE in $INBASE ; do
+		if [ $FILE = total ] ; then DONE_TOTAL=1 ; fi
+		if [ $FILE = index ] ; then DONE_INDEX=1 ; fi
+		add_html $FILE
+	done
+	
+	if [ $DONE_INDEX = 0 ] ; then
+		add_html index
+	fi
+	if [ $DONE_TOTAL = 0 ] ; then
+		add_html total
+	fi
+	echo "$HTMLDIR:" >> Makefile
+	echo "	mkdir $HTMLDIR" >> Makefile
+fi
+
+#     #        #     #        #     #  
+#  #  #        #  #  #        #  #  #  
+#  #  #        #  #  #        #  #  #  
+#  #  #        #  #  #        #  #  #  
+#  #  #        #  #  #        #  #  #  
+#  #  #        #  #  #        #  #  #  
+ ## ##          ## ##          ## ##   
+
 if [ -d $WWWDIR ] ; then
 	DONE_TOTAL=0
 	DONE_INDEX=0
@@ -172,9 +214,9 @@ if [ -d $WWWDIR ] ; then
 	INHTML=`ls *.in | sort -n | sed 's/.in$/.html/' |sed "s/^/$WWWDIR\//"| paste -sd' '`
 	if [ ! -f index.in ] ; then INHTML="$INHTML $WWWDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $WWWDIR/total.html" ; fi
-	echo "tag/in3.html: $INHTML" >> Makefile
-	echo "	touch tag/in3.html" >> Makefile
-	echo "tag/in3.html">>$CLEANFILE
+	echo "tag/in3.www: $INHTML" >> Makefile
+	echo "	touch tag/in3.www" >> Makefile
+	echo "tag/in3.www">>$CLEANFILE
 	
 	add_www(){
 		echo "$WWWDIR/$1.html: $1.in3 header |$WWWDIR ">>Makefile
