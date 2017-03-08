@@ -8,9 +8,9 @@ Some chararacters have a special meaning.
 	{tab}	always	Tab is an indication that a format construct (leftnote, table or list) is used
 	..	beginning of line	A dot at the beginning of a line indicates a request
 	%	when interpret=2	Next characters are interpreted
-	-	beginning of line or after tab(s)	list item in a dash-list
-	#	beginning of line or after tab(s)	list item in a numbered-list
-	@	beginning of line or after tab(s)	list item in a alpha-list
+	 -	beginning of line or after tab(s)	list item in a dash-list
+	 #	beginning of line or after tab(s)	list item in a numbered-list
+	 @	beginning of line or after tab(s)	list item in a alpha-list
 
 
 .h2 Implemented requests

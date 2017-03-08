@@ -1,4 +1,5 @@
 .header
+.set markdown 1
 .h1 Intro
 
 .h2 My personal itch
