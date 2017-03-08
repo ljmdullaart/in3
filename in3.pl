@@ -14,6 +14,7 @@ use warnings;
    #     #     #  #     #   ##### 
 my %variables=();
 $variables{"interpret"}=1;
+$variables{"markdown"}=0;
 
 my @input;			# array containing all input lines
 my $leftnote;
@@ -104,6 +105,7 @@ else {
 			elsif (/^-c$/){$what='chapter';}
 			elsif (/^-i([0-9]+)/){ $variables{"interpret"}=$1;}
 			elsif (/^-i$/){$what='interpret';}
+			elsif (/^-m/){$variables{"markdown"}=1;}
 			elsif (/^-+h/){ hellup; }
 			elsif (/^-/){ print STDERR "$_ is not known as a flag; ignored.\n";}
 			else {
@@ -491,6 +493,52 @@ for (@input){
 		inpush("{LEFTNOTE}$leftnote");
 		inpush("{TEXTNORMAL}$bodytext");
 		$inalinea=1;
+	}
+	elsif (/^====*$/) {
+		if ($variables{"markdown"}>0){
+			my $prevtxt=$in3[$#in3];
+			if ($prevtxt=~/^{TEXTNORMAL}/){
+				$in3[$#in3]="{TEXTNORMAL} ";
+				$prevtxt=~s/^{TEXTNORMAL}//;
+				close_alinea;
+				inpush("{HEADER 1}$prevtxt");
+				start_alinea;
+			}
+			else{
+				close_alinea;
+				inpush ("{LINE}");
+				inpush ("{LINE}");
+				start_alinea;
+			}
+		}
+		else{
+			close_alinea;
+			inpush ("{LINE}");
+			inpush ("{LINE}");
+			start_alinea;
+		}
+	}
+	elsif (/^----*$/) {
+		if ($variables{"markdown"}>0){
+			my $prevtxt=$in3[$#in3];
+			if ($prevtxt=~/^{TEXTNORMAL}/){
+				$in3[$#in3]="{TEXTNORMAL} ";
+				$prevtxt=~s/^{TEXTNORMAL}//;
+				close_alinea;
+				inpush("{HEADER 2}$prevtxt");
+				start_alinea;
+			}
+			else{
+				close_alinea;
+				inpush ("{LINE}");
+				start_alinea;
+			}
+		}
+		else{
+			close_alinea;
+			inpush ("{LINE}");
+			start_alinea;
+		}
 	}
 	elsif (/^-[ 	](.*)/) {
 		$bodytext=$1;
