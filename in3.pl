@@ -199,19 +199,20 @@ sub close_list {
 		debug($LISTS,"Close list: inlist=1");
 		my $listlevel=0;
 		my $target=0;
-		my @types;
+		my @types=(' ',' ',' ',' ');
 		for (@thislist){
 			debug ($LISTS,"list line: $_");
 			# Determine target list-level and the type
-			if (/^-[ 	]/){ $target=1; $types[1]='-';}
-			elsif (/^	-[ 	]/){ $target=2; $types[2]='-';}
-			elsif (/^		-[ 	]/){ $target=3; $types[3]='-';}
-			elsif (/^\#[ 	]/){ $target=1; $types[1]='#';}
-			elsif (/^	\#[ 	]/){ $target=2; $types[2]='#';}
-			elsif (/^		\#[ 	]/){ $target=3; $types[3]='#';}
-			elsif (/^\@[ 	]/){ $target=1; $types[1]='@';}
-			elsif (/^	\@[ 	]/){ $target=2; $types[2]='@';}
-			elsif (/^		\@[ 	]/){ $target=3; $types[3]='@';}
+			if (0==1){}
+			elsif (/^-[ 	]/)		{ $target=1; $types[1]='-';}
+			elsif (/^	-[ 	]/)		{ $target=2; $types[2]='-';}
+			elsif (/^		-[ 	]/)	{ $target=3; $types[3]='-';}
+			elsif (/^\#[ 	]/)		{ $target=1; $types[1]='#';}
+			elsif (/^	\#[ 	]/)		{ $target=2; $types[2]='#';}
+			elsif (/^		\#[ 	]/)	{ $target=3; $types[3]='#';}
+			elsif (/^\@[ 	]/)		{ $target=1; $types[1]='@';}
+			elsif (/^	\@[ 	]/)		{ $target=2; $types[2]='@';}
+			elsif (/^		\@[ 	]/)	{ $target=3; $types[3]='@';}
 			# Start lists until the required level
 			while($listlevel<$target){
 				debug($LISTS,"increment listlevel $listlevel < target $target");
@@ -307,12 +308,14 @@ sub close_table{
 		for (@thistable){
 			chomp;
 			s/^	//;
+			debug ($TABLE,"table-line=$_");
 			if (/^\{.*\}$/){$head=1;}
 			@line=split('	',$_);
 			$x=0;
 			for (@line){
 				my $txt=$_;
-				if (/<cs=([0-9]*)>/){
+				debug ($TABLE,"table-cell x=$x y=$y --- $txt ");
+				if (/<cs=([0-9]+)>/){
 					my $span=$1;
 					for (my $i=0;$i<$span;$i++){
 						$output_table[$x+$i][$y]='<HSPAN>';
@@ -320,14 +323,16 @@ sub close_table{
 					$output_table[$x][$y]=$txt;
 					
 				}
-				if (/<rs=([0-9]*)>/){
+				if (/<rs=([0-9]+)>/){
 					my $span=$1;
 					for (my $i=0;$i<$span;$i++){
 						$output_table[$x][$y+$i]='<VSPAN>';
 					}
 					$output_table[$x][$y]=$txt;
 				}
+				if (! defined ($output_table[$x][$y])){$output_table[$x][$y]=' ';}
 				if ($output_table[$x][$y] eq '<VSPAN>'){$x++;}
+				if (! defined ($output_table[$x][$y])){$output_table[$x][$y]=' ';}
 				if ($output_table[$x][$y] eq '<HSPAN>'){$x++;}
 				$output_table[$x][$y]=$txt;
 				$x++; if($x>$maxx){$maxx=$x;}
