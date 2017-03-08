@@ -48,10 +48,10 @@ should be fairly readable. The following tags are used:
 	LISTALPHAEND	 level	End alpha list
 	LISTALPHASTART	level	Start a alpha-list
 	LISTALPHAITEM	text	alpha list item
-	LISTDASHEND	 level	End dash list
+	LISTDASHEND	level	End dash list
 	LISTDASHSTART	level	Start a dash-list
 	LISTDASHITEM	text	Dash list item
-	LISTNUMEND	 level	End numeric list
+	LISTNUMEND	level	End numeric list
 	LISTNUMSTART	level	Start a numeric-list
 	LISTNUMITEM	text	numeric list item
 	LITTERAL	text	text to be outputted as pre-formatted text
