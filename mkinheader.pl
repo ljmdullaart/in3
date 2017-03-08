@@ -159,20 +159,20 @@ if ($VERBOSE>0){print "#chapter:$c file:$file level:$level title:$title\n";}
 		if ($c != $prev_c){ $s=0; $p=0; $prev_c=$c; }
 		if ($level==1){
 			if ($type eq 'header'){
- 				print "	<tr class=toc><td colspan=3><a href=\"$file#a$c\">"
+ 				print "	<tr class=toc><td colspan=3><a href=\"$file#a$c\">";
 				print "<span CLASS=toc> $c $title</span></a></td></tr>\n";
 			}
-			if ($type eq 'index'){print "\n.br\n.link $file#a$c $c $title\n";}
+			if ($type eq 'index'){print "\n.br\n.link $file#a$c. $c $title\n";}
 		}
 		elsif ($level==2){
 			$s++; $p=0;
 #			if ($type eq 'header'){ print "	<tr class=toc><td>&nbsp;</td><td colspan=2><a href=\"$file#a$c.$s\"><span CLASS=toc>$c.$s $title</span></a></td></tr>\n"; }
-			if ($type eq 'index'){print "\n.br\n.link $file#a$c.$s $c.$s $title\n";}
+			if ($type eq 'index'){print "\n.br\n.link $file#a$c.$s. $c.$s $title\n";}
 		}
 		elsif ($level==3){
 			$p++;
 #			if ($type eq 'header'){ print "	<tr class=toc><td>&nbsp;</td><td>&nbsp;</td><td><a href=\"$file#a$c.$s.$p\"><span CLASS=toc>$c.$s.$p $title</span></a></td></tr>\n"; }
-			if ($type eq 'index'){print "\n.br\n.link $file#a$c.$s.$p $c.$s.$p $title\n";}
+			if ($type eq 'index'){print "\n.br\n.link $file#a$c.$s.$p. $c.$s.$p $title\n";}
 		}
 	}
 	elsif (/(.*).in:\.h([123]) (.*)/){
