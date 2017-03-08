@@ -64,6 +64,7 @@ my $do_includes=1;
 my $part_only=0;
 my $continued=0;
 my $fileread=0;
+my $inalinea=0;
 my @in3;
 for (@ARGV){
 	if ($continued==1){
@@ -162,7 +163,7 @@ for (@in3){
 }
 
 if ($part_only==0){
-	pushout ( "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+	pushout ( "<!DOCTYPE HTML>");
 	pushout ( "<html>");
 	pushout ( "<head>");
 	pushout ( "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">");
@@ -204,17 +205,18 @@ sub alineatabstart {
 	elsif ($alineatype==3){
 		pushout ( "<table class=note><tr><td style=\"width:15%\">");
 	}
+	$inalinea=1;
 }
 sub alineatabend {
 	debug($DEB_ALINEA,"ALINEA END; alineatype=$alineatype;");
 	if ($alineatype==0){
-		pushout ( "</div></p>");
+		if ($inalinea>0){pushout ( "</div>");}
 	}
 	elsif ($alineatype>0){
 		#pushout ( "</div></td></tr></table>");
 		pushout ( "</table>");
 	}
-	$alineatype=-1;
+	$inalinea=0;
 }
 
 my $litteraltext=0;
@@ -265,11 +267,12 @@ for (@in3){
 	elsif (/^{ALINEAEND}/){
 		if ($alineatype<0){}
 		elsif ($alineatype==0){
-			pushout("</div></p>");
+			if ($inalinea>0){pushout("</div>");}
 		}
 		elsif ($alineatype>0){
 			pushout("</div></td></tr>")
 		}
+		$inalinea=0;
 	}
 	elsif (/^{AUTHOR}(.*)/){ }
 	elsif (/^{COVER}(.*)/){ }
