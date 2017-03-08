@@ -9,7 +9,7 @@ sub hellup {
 print "
 mkinheader: make header/index file for in3
 --help           This help
--h  --header     create an includebla header
+-h  --header     create an includable header
 -i  --index      create an index-file
 -t               Don't include the total
 -v               increase verbosity
@@ -108,48 +108,42 @@ elsif ($type eq 'index'){
 
 if ($type eq 'header'){print "<table CLASS=\"toc\">\n";}
 if ($type eq 'header'){print "	<tr class=toc><td colspan=3><a href=\"index.html\"><span CLASS=toc>Index</span></a></td></tr>\n"; }
+
+my $charmapfile;
+if ( -f "/usr/local/share/in3charmap1" ){
+	$charmapfile="/usr/local/share/in3charmap1";
+}
+else {
+	$charmapfile="in3charmap1";
+}
+
+my @charmap;
+if ( open (CHARMAP,$charmapfile)){
+	@charmap=<CHARMAP>;
+	close CHARMAP;
+}
+else { print STDERR "Cannot open in3charmap1"; }
+
 my $prev_c=0;
 my $s=0;
 my $p=0;
 for (@in){
 	chomp;
+	my $inline=$_;
 	if ($type eq 'header'){
-		s/  /&nbsp;&nbsp/g;
-		s/û/&ucirc;/g;
-		s/<p.*>/<p>/g;
-		s/\&nbsp\;/ /g;
-		s/[«]/"/g;
-		s/[»]/"/g;
-		s/""/"/g;
-		s/’/'/g;
-		s/Ã/&Acirc;/g;
-		s/À/&Agrave;/g;
-		s/â/&acirc;/g;
-		s/à/&agrave;/g;
-		s/Ç/&Ccedil;/g;
-		s/ç/&ccedil;/g;
-		s/É/&Eacute;/g;
-		s/È/&Egrave;/g;
-		s/Ê/&Ecirc;/g;
-		s/é/&eacute;/g;
-		s/è/&egrave;/g;
-		s/ê/&ecirc;/g;
-		s/ë/&euml;/g;
-		s/î/&icirc;/g;
-		s/ï/&iuml;/g;
-		s/œ/&oelig;/g;
-		s/Ô/&Ocirc;/g;
-		s/ô/&ocirc;/g;
-		s/Û/&Ucirc;/g;
-		s/Ù/&Ugrave;/g;
-		s/ù/&ugrave;/g;
-		s/û/&uuml;/g;
-		s/±/&plusmn;/g;
+		for (@charmap){
+			chomp;
+			(my $char,my $groff,my $html)=split '	';
+			$char='NOCHAR' unless defined $char;
+			$groff=$char unless defined $groff;
+			$html=$char unless defined $html;
+			$inline=~s/$char/$html/g;
+		}
 	}
 	my $c;
-	if (/^index/){ $prev_c=0;}
-	if (/^total/){ $prev_c=0;}
-	elsif (/^([0-9]*)_(.*).in:.h([123]) (.*)/){
+	if ($inline=~/^index/){ $prev_c=0;}
+	if ($inline=~/^total/){ $prev_c=0;}
+	elsif ($inline=~/^([0-9]*)_(.*).in:.h([123]) (.*)/){
 		$c=$1;
 		my $file="$1_$2.html";
 		my $pdf="$1_$2.pdf";
@@ -175,7 +169,7 @@ if ($VERBOSE>0){print "#chapter:$c file:$file level:$level title:$title\n";}
 			if ($type eq 'index'){print "\n.br\n.link $file#a$c.$s.$p. $c.$s.$p $title\n";}
 		}
 	}
-	elsif (/(.*).in:\.h([123]) (.*)/){
+	elsif ($inline=~/(.*).in:\.h([123]) (.*)/){
 		my $file="$1.html";
 		my $level=$2;
 		my $title=$3;
@@ -194,14 +188,14 @@ if ($VERBOSE>0){print "#chapter:$c file:$file level:$level title:$title\n";}
 			if ($type eq 'index'){print "\n.br\n.link $file#a$c.$s.$p $c.$s.$p $title\n";}
 		}
 	}
-	elsif (/.in:\.toc([123])/){
+	elsif ($inline=~/.in:\.toc([123])/){
 		my $level=$1;
 		s/.*\.toc.//;
 		if  ($type eq 'index') {
 		 	print "\n.hu $level $_\n";
 		}
 	}
-	elsif (/.in:\.toc /){
+	elsif ($inline=~/.in:\.toc /){
 		s/.*\.toc *//;
 		if ($type eq 'index'){
 			print "\n$_\n";
