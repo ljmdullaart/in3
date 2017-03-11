@@ -498,7 +498,7 @@ for (@input){
 		if ($variables{"markdown"}>0){
 			my $prevtxt=$in3[$#in3];
 			if ($prevtxt=~/^{TEXTNORMAL}/){
-				$in3[$#in3]="{TEXTNORMAL} ";
+				$in3[$#in3]="{NOP}";
 				$prevtxt=~s/^{TEXTNORMAL}//;
 				close_alinea;
 				inpush("{HEADER 1}$prevtxt");
@@ -522,7 +522,7 @@ for (@input){
 		if ($variables{"markdown"}>0){
 			my $prevtxt=$in3[$#in3];
 			if ($prevtxt=~/^{TEXTNORMAL}/){
-				$in3[$#in3]="{TEXTNORMAL} ";
+				$in3[$#in3]="{NOP}";
 				$prevtxt=~s/^{TEXTNORMAL}//;
 				close_alinea;
 				inpush("{HEADER 2}$prevtxt");
@@ -540,6 +540,18 @@ for (@input){
 			start_alinea;
 		}
 	}
+	elsif ((/^\+[ 	](.*)/) &&($variables{"markdown"}>0)){
+		$bodytext=$1;
+		$inlist=1;
+		s/^\*/-/;
+		push @thislist,$_;
+	}
+	elsif ((/^\*[ 	](.*)/) &&($variables{"markdown"}>0)){
+		$bodytext=$1;
+		$inlist=1;
+		s/^\*/-/;
+		push @thislist,$_;
+	}
 	elsif (/^-[ 	](.*)/) {
 		$bodytext=$1;
 		$inlist=1;
@@ -547,6 +559,12 @@ for (@input){
 	}
 	elsif (/^	-[ 	](.*)/) {
 		$bodytext=$1;
+		$inlist=1;
+		push @thislist,$_;
+	}
+	elsif ((/^[a-z]\.[ 	](.*)/)&&($variables{"markdown"}>0)) {
+		$bodytext=$1;
+		s/^[a-z]\./@/;
 		$inlist=1;
 		push @thislist,$_;
 	}
@@ -562,8 +580,28 @@ for (@input){
 	}
 	elsif (/^\#[ 	](.*)/) {
 		$bodytext=$1;
-		$inlist=1;
+		if ($variables{"markdown"}>0){
+			if ($inlist==0){
+				close_alinea;
+				$bodytext=~s/#*$//;
+				inpush("{HEADER 1}$bodytext");
+				debug($TAGS,"Header line: $_");
+				$variables{'notes'}=$variables{'notes'}&2;
+			}
+			else {
+				push @thislist,$_;
+			}
+		}
+		else {
+			$inlist=1;
+			push @thislist,$_;
+		}
+	}
+	elsif ((/^[0-9][0-9]*\.[ 	](.*)/) &&($variables{"markdown"}>0)){
+		$bodytext=$1;
+		s/^[0-9][0-9]*\./#/;
 		push @thislist,$_;
+		$inlist=1;
 	}
 	elsif (/^	\#[ 	](.*)/) {
 		$bodytext=$1;
