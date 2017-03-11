@@ -26,6 +26,7 @@ should be fairly readable. The following tags are used:
 	MAPPICT	filename	Use the image for the map
 	MAPFIELD	link coordinates	Create a click-field on the map
 	MAPEND	 	End the currend map
+	NOP	 	No Operation; line is discarded
 	SET	variable value	Set variable to value
 	SUBTITLE	text	Create a subtitle for the document
 	TITLE	text	The title of this document

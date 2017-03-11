@@ -408,6 +408,8 @@ for (@in3){
 		pushnote("$notenum: $text");
 		$notenum++;
 	}
+	elsif (/^{NOP}/){
+	}
 	elsif (/^{SET}([^ ]+) (.*)/){
 	}
 	elsif (/^{SIDENOTE}(.*)/){

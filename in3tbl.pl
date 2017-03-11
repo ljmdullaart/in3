@@ -435,6 +435,8 @@ for (@in3){
 		pushout("$1");
 		pushout(".FE");
 	}
+	elsif (/^{NOP}/){
+	}
 	elsif (/^{SET}([^ ]+) (.*)/){
 		my $val;
 		$variables{$1}=$2;
