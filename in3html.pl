@@ -65,6 +65,7 @@ my $part_only=0;
 my $continued=0;
 my $fileread=0;
 my $inalinea=0;
+my $inli=0;
 my @in3;
 for (@ARGV){
 	if ($continued==1){
@@ -262,6 +263,7 @@ for (@in3){
 			elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\">");}
 			elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\">");}
 			elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\">");}
+			$inalinea=1;
 		}
 	}
 	elsif (/^{ALINEAEND}/){
@@ -344,34 +346,40 @@ for (@in3){
 		}
 	}
 	elsif (/^{LISTALPHAEND}/){
+		if($inli>0){pushout("</div></li>");$inli=0;}
 		pushout("</ol>");
 	}
 	elsif (/^{LISTALPHAITEM}(.*)/){
+		if($inli>0){pushout("</div></li>");$inli=0;}
 		pushout("<li>");
-		pushout("<div class=\"list\">$1</div>");
-		pushout("</li>");
+		$inli=1;
+		pushout("<div class=\"list\">$1");
 	}
 	elsif (/^{LISTALPHASTART}/){
 		pushout("<ol type=a>");
 	}
 	elsif (/^{LISTDASHEND}/){
+		if($inli>0){pushout("</div></li>");$inli=0;}
 		pushout("</ul>");
 	}
 	elsif (/^{LISTDASHITEM}(.*)/){
+		if($inli>0){pushout("</div></li>");$inli=0;}
 		pushout("<li>");
-		pushout("<div class=\"list\">$1</div>");
-		pushout("</li>");
+		pushout("<div class=\"list\">$1");
+		$inli=1;
 	}
 	elsif (/^{LISTDASHSTART}/){
 		pushout("<ul>");
 	}
 	elsif (/^{LISTNUMEND}/){
+		if($inli>0){pushout("</div></li>");$inli=0;}
 		pushout("</ol>");
 	}
 	elsif (/^{LISTNUMITEM}(.*)/){
+		if($inli>0){pushout("</div></li>");$inli=0;}
 		pushout("<li>");
-		pushout("<div class=\"list\">$1</div>");
-		pushout("</li>");
+		$inli=1;
+		pushout("<div class=\"list\">$1");
 	}
 	elsif (/^{LISTNUMSTART}/){
 		pushout("<ol type=1>");
