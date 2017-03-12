@@ -623,7 +623,12 @@ for (@input){
 		$bodytext=$1;
 		debug($TAGS,"Bold text:$_");
 		start_alinea;
-		inpush("{TEXTBOLD}$bodytext");
+		if ($inlist>0) {
+			push @thislist,$_;
+		}
+		else {
+			inpush("{TEXTBOLD}$bodytext");
+		}
 	}
 	elsif (/^\.back/) {
 		debug($TAGS,".back (end of leftnotes)");
@@ -722,8 +727,13 @@ for (@input){
 	elsif (/^\.u (.*)/){
 		my $textbody=$1;
 		start_alinea;
-		debug ($TAGS,"Underline request");
-		inpush ("{TEXTUNDERLINE}$textbody");
+		if ($inlist>0) {
+			push @thislist,$_;
+		}
+		else {
+			inpush ("{TEXTUNDERLINE}$textbody");
+		}
+
 	}
 	elsif (/^\.set ([^ ]+) (.*)/){
 		$variables{$1}=$2;
