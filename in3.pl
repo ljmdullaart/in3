@@ -69,6 +69,7 @@ my $TAGS=4;	     #	tags and escapes
 my $SIDENOTE=8;  #	sidenotes
 my $LISTS=16;    #	lists
 my $TABLE=32;    #	tables
+my $MARKDOWN=64; #	Markdown-style formats
 my $COPYIN=128;  #	Copy all input lines
 my $IN3PUSH=256; #	all pushes to in3
 my $DETAILS=512; #	real detailed stuff
@@ -176,7 +177,55 @@ my @in3;
 sub inpush{
 	(my $line)=@_;
 	debug ($IN3PUSH,"PUSH $line");
-	push @in3,$line;
+	if ($line=~/\{([A-Z]*)\}(.*)/){
+		my $tag=$1;
+		my $txt=$2;
+		if (( $variables{"interpret"}>0) || ( $variables{"markdown"}>0)){
+			debug ($MARKDOWN,"tag=$1 text=$2");
+			if (($tag eq 'TEXTNORMAL')||($tag =~/LIST.*ITEM/)) {
+				if ($txt=~/[_\*][^_\* ]+[_\*]/){
+					while ($txt=~/([^_\*]*)([_\*]+)([^_\* ]+)([_\*]+)(.*)/){
+						my $pre=$1;
+						my $empopen=$2;
+						my $emptxt=$3;
+						my $empclose=$4;
+						my $post=$5;
+						push @in3,"{$tag}$pre";
+						$tag='TEXTNORMAL';
+						if ($empopen ne $empclose){
+							push @in3,"{$tag}$empopen$emptxt";
+							$txt="$empclose$post";
+						}
+						else {
+							if ($empopen =~/__*/){
+								push @in3,"{TEXTUNDERLINE}$emptxt";
+							}
+							else {
+								push @in3,"{TEXTBOLD}$emptxt";
+							}
+							$txt=$post;
+						}
+							
+					}
+					if ($txt ne ''){
+						push @in3,"{$tag}$txt";
+					}
+				}
+				else {
+					push @in3,$line;
+				}
+			}
+			else {
+				push @in3,$line;
+			}
+		}
+		else {
+			push @in3,$line;
+		}
+	}
+	else {
+		push @in3,$line;
+	}
 }
 sub inappend {
 	(my $line)=@_;
@@ -498,6 +547,7 @@ for (@input){
 		if ($variables{"markdown"}>0){
 			my $prevtxt=$in3[$#in3];
 			if ($prevtxt=~/^{TEXTNORMAL}/){
+				debug($MARKDOWN,"MD header 1 $prevtxt");
 				$in3[$#in3]="{NOP}";
 				$prevtxt=~s/^{TEXTNORMAL}//;
 				close_alinea;
@@ -505,6 +555,7 @@ for (@input){
 				start_alinea;
 			}
 			else{
+				debug($MARKDOWN,"MD: previous line is not a h1");
 				close_alinea;
 				inpush ("{LINE}");
 				inpush ("{LINE}");
@@ -522,6 +573,7 @@ for (@input){
 		if ($variables{"markdown"}>0){
 			my $prevtxt=$in3[$#in3];
 			if ($prevtxt=~/^{TEXTNORMAL}/){
+				debug($MARKDOWN,"MD header 2 $prevtxt");
 				$in3[$#in3]="{NOP}";
 				$prevtxt=~s/^{TEXTNORMAL}//;
 				close_alinea;
@@ -529,6 +581,7 @@ for (@input){
 				start_alinea;
 			}
 			else{
+				debug($MARKDOWN,"MD: previous line is not a h2");
 				close_alinea;
 				inpush ("{LINE}");
 				start_alinea;
@@ -542,12 +595,14 @@ for (@input){
 	}
 	elsif ((/^\+[ 	](.*)/) &&($variables{"markdown"}>0)){
 		$bodytext=$1;
+		debug($MARKDOWN,"MD: List item with +");
 		$inlist=1;
 		s/^\*/-/;
 		push @thislist,$_;
 	}
 	elsif ((/^\*[ 	](.*)/) &&($variables{"markdown"}>0)){
 		$bodytext=$1;
+		debug($MARKDOWN,"MD: List item with *");
 		$inlist=1;
 		s/^\*/-/;
 		push @thislist,$_;
@@ -564,6 +619,7 @@ for (@input){
 	}
 	elsif ((/^[a-z]\.[ 	](.*)/)&&($variables{"markdown"}>0)) {
 		$bodytext=$1;
+		debug($MARKDOWN,"MD: alpha list item with a");
 		s/^[a-z]\./@/;
 		$inlist=1;
 		push @thislist,$_;
@@ -586,6 +642,7 @@ for (@input){
 				$bodytext=~s/#*$//;
 				inpush("{HEADER 1}$bodytext");
 				debug($TAGS,"Header line: $_");
+				debug($MARKDOWN,"MD: Header 1 line with #");
 				$variables{'notes'}=$variables{'notes'}&2;
 			}
 			else {
@@ -599,6 +656,7 @@ for (@input){
 	}
 	elsif ((/^[0-9][0-9]*\.[ 	](.*)/) &&($variables{"markdown"}>0)){
 		$bodytext=$1;
+		debug($MARKDOWN,"MD: num list with 1.");
 		s/^[0-9][0-9]*\./#/;
 		push @thislist,$_;
 		$inlist=1;
