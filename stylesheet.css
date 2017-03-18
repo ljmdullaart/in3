@@ -13,37 +13,10 @@ PRE {
 	background-color: #DDDDDD;
 	width: 100%;
 }
-table.note td {
-	vertical-allign: top;
+.tabel.normal {
+	color: #111111;
+	background-color: #BBBBBB;
 }
-
-table.normal {
- border: 1px solid #ddd;
-}
-
-table.normal tr {
- border: 1px solid #ddd;
-}
-table.normal td {
- border: 1px solid #ddd;
-}
-
-.side {
-	font-size: 50%;
-	 background-color: #EEEEEE;
-}
-.alinea {
-	background-color: #EEEEEE;
-}
-.left {
-	font-size: 80%;
-}
-.fixed {
-	font-family:courier, "courier new", monospace;
-}
-.cel {
-	background-color: #EEEEEE;
-}
-.list {
-	background-color: #EEEEEE;
+p.quote {
+      color:blue;
 }
