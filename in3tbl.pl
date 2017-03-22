@@ -133,6 +133,7 @@ sub pushlit{
 ################################################################################
 
 my @thistable;
+my $intable=0;
 my %variables=();
 my $cover='';
 $variables{'interpret'}=1;
@@ -455,6 +456,7 @@ for (@in3){
 	elsif (/^{SUBTITLE}/){
 	}
 	elsif (/^{TABLEEND}/){
+		$intable=0;
 		if ($alineatype<0){}
 		elsif ($alineatype==0){
 			pushout(".P");
@@ -501,6 +503,21 @@ for (@in3){
 				debug($DEB_TABLE,"CELL: outline=$outline");
 		
 			}
+			elsif (/{TEXTNORMAL}(.*)/){ 	#Seen as an extension of the last cell
+				my $text=$1;
+				$outline=~s/T}$/$text\nT}/;
+				debug($DEB_TABLE,"NORMAL: outline=$outline");
+			}
+			elsif (/{TEXTBOLD}(.*)/){
+				my $text=$1;
+				$outline=~s/T}$/.B "$text"\nT}/;
+				debug($DEB_TABLE,"BOLD: outline=$outline");
+			}
+			elsif (/{TEXTUNDERLINE}(.*)/){
+				my $text=$1;
+				$outline=~s/T}$/.underline "$text"\nT}/;
+				debug($DEB_TABLE,"UNDL: outline=$outline");
+			}
 			elsif(/{TABLEROWEND}/){
 				$outline='' unless defined $outline;
 				if ($outline=~/^	*$/){}
@@ -512,10 +529,16 @@ for (@in3){
 
 	}
 	elsif (/^{TABLE/){
+		$intable=1;
 		push @thistable,$_;
 	}
 	elsif (/^{TEXTBOLD}(.*)/){
-		pushout(".B \"$1\"");
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			pushout(".B \"$1\"");
+		}
 	}
 	elsif (/^{TEXTFIX}(.*)/){
 		pushout(".ft CR");
@@ -525,20 +548,35 @@ for (@in3){
 		pushout(".ft");
 	}
 	elsif (/^{TEXTNORMAL}(.*)/){
-		if (/^{TEXTNORMAL}(\..*)/){
-			pushout(" $1");
+		if ($intable>0){
+			push @thistable,$_;
 		}
 		else {
-			pushout("$1");
+			if (/^{TEXTNORMAL}(\..*)/){
+				pushout(" $1");
+			}
+			else {
+				pushout("$1");
+			}
 		}
 	}
 	elsif (/^{TEXTITALIC}(.*)/){
-		s/^{TEXTITALIC}//;
-		s/"/\\[rq]/g;
-		pushout(".I \" $_ \"");
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			s/^{TEXTITALIC}//;
+			s/"/\\[rq]/g;
+			pushout(".I \" $_ \"");
+		}
 	}
 	elsif (/^{TEXTUNDERLINE}(.*)/){
-		pushout(".underline \" $1 \"");
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			pushout(".underline \"$1\"");
+		}
 	}
 	elsif (/^{TITLE}(.*)/){
 	}

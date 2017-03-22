@@ -4,7 +4,7 @@
 .h2 Special Characters
 
 Some chararacters have a special meaning.
-	%*Character%*	%*When%*	%*Meaning%*
+	*Character*	*When*	*Meaning*
 	{tab}	always	Tab is an indication that a format construct (leftnote, table or list) is used
 	..	beginning of line	A dot at the beginning of a line indicates a request
 	%	when interpret=2	Next characters are interpreted
@@ -62,6 +62,18 @@ Some chararacters have a special meaning.
 Tables, maps and lists are defined as block requests. They should start on a new alinea
 and end with an alinea (i.e. a blank line).
 
+.h2 Markdown
+Enthousiastic markdown users would like to use mark-down syntax. The following requests 
+are implemented.
+
+	*markdown* *format* *request*	*allowed* *when*
+	use of _ or * emphasis	markdown=1 or inlineemp=1
+	use of [] links	markdown=1 or inlineemp=1
+	use of > instead of .pre markdown=1
+	==== for chapters	markdown=1
+	---- for sections	markdown=1
+	hashes for titles	markdown=1
+	lists with 1. oe a.	markdown=1
 
 .h2 Variables
 
@@ -71,12 +83,21 @@ input file is used from the beginning. Global variables may be overridden by set
 
 Variables have consequences.
 
-	%*Variable%*	 	%*Meaning%*
+	*Variable*	*active* 	*Meaning*
 	interpret	global	0=only accented characters<br>1=%% style interpretation<br>2=direct interpretation
 	notes	direct	0=no left or side notes<br>1=only leftnotes<br>2=only sidenotes<br>3=both
 	H1	direct	Number for the next chapter
 	H2	direct	Number for the next section
 	H3	direct	Number for the next paragraph
 	H4	direct	Number for the next sub-paragraph
+	markdown	direct	if 1, accept markdown format requests, 0=don't
+	inlineemp	direct	1=accept underscore underlining, star bolding and markdown links; 0=don't
 
+Variables may have initial values
+
+	variable	initial value
+	interpret	1
+	H1	if the filename starts with a number and an underscore, the value of that number (e.g. 3_title: H1=3)
+	markdown	0, but if -m is given: 1
+	inlineemp	1
 

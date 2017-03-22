@@ -15,6 +15,7 @@ use warnings;
 my %variables=();
 $variables{"interpret"}=1;
 $variables{"markdown"}=0;
+$variables{"inlineemp"}=1;	# Allow inline emphasis _underline_ and *bold*
 
 my @input;			# array containing all input lines
 my $leftnote;
@@ -180,28 +181,42 @@ sub inpush{
 	if ($line=~/\{([A-Z]*)\}(.*)/){
 		my $tag=$1;
 		my $txt=$2;
-		if (( $variables{"interpret"}>0) || ( $variables{"markdown"}>0)){
+		if (( $variables{"inlineemp"}>0) || ( $variables{"markdown"}>0)){
 			debug ($MARKDOWN,"tag=$1 text=$2");
-			if (($tag eq 'TEXTNORMAL')||($tag =~/LIST.*ITEM/)) {
-				if ($txt=~/[_\*][^_\* ]+[_\*]/){
-					while ($txt=~/([^_\*]*)([_\*]+)([^_\* ]+)([_\*]+)(.*)/){
+			if (($tag eq 'TEXTNORMAL')||($tag =~/LIST.*ITEM/) ||($tag eq 'TABLECEL')) {
+				if ($txt=~/[_\[\*][^_\* ]+[_\]\*]/){
+					while ($txt=~/([^_\[\*]*)([_\[\*]+)([^_\]\* ]+)([_\]\*]+)(.*)/){
 						my $pre=$1;
 						my $empopen=$2;
 						my $emptxt=$3;
 						my $empclose=$4;
 						my $post=$5;
+						debug ($MARKDOWN,"-----\npre=$pre\nempopen=$empopen\nemptxt=$emptxt\nempclose=$empclose\npost=$post");
 						push @in3,"{$tag}$pre";
 						$tag='TEXTNORMAL';
-						if ($empopen ne $empclose){
+						if (($empopen ne $empclose) && (($empopen ne '[')&&($empclose ne ']'))) {
 							push @in3,"{$tag}$empopen$emptxt";
 							$txt="$empclose$post";
 						}
 						else {
-							if ($empopen =~/__*/){
+							if ($empopen eq '['){
+								if ($post=~/^\(([^\)]*)\)/){
+									debug ($MARKDOWN,"LINK found $1 -> $emptxt");
+									push @in3,"{LINK}$emptxt $1";
+									$post=~s/^\([^\)]*\)//;
+								}
+								else {
+									debug ($MARKDOWN,"LINK found $emptxt (no description)");
+									push @in3,"{LINK}$emptxt";
+								}
+							}
+							elsif ($empopen =~/__*/){
+								debug ($MARKDOWN,"UNDERLINE");
 								push @in3,"{TEXTUNDERLINE}$emptxt";
 							}
 							else {
 								push @in3,"{TEXTBOLD}$emptxt";
+								debug ($MARKDOWN,"BOLD");
 							}
 							$txt=$post;
 						}
@@ -515,12 +530,21 @@ for (@input){
 	debug (128,"========================================================");
 	debug (128, "== $_");
 	debug (128,"========================================================");
+	
 	if (/^\.pre/){
 		debug ($TAGS,"Pre-tag (was: $inpre)");
 		if ($inpre==0){$inpre=1;}
 		else {$inpre=0};
 	}
 	elsif ($inpre>0){
+		inpush("{LITTERAL}$_");
+	}
+	elsif ((/^    /)&&($variables{"markdown"}>0)){
+		s/^    //;
+		inpush("{LITTERAL}$_");
+	}
+	elsif ((/^>/)&&($variables{"markdown"}>0)){
+		s/^>//;
 		inpush("{LITTERAL}$_");
 	}
 	elsif (/^\.$/){

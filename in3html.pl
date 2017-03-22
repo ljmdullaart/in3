@@ -37,8 +37,8 @@ FLAGS:
                  4   All input lines
                  8   All push-outs
                  16  Put headers in the debug-stream
-                 32  alinea pricessing
-                 64  replace characters with GROFF escapes
+                 32  alinea processing
+                 64  replace characters with escapes
                  128 Image processing
                  256 interpret and other vars
                  512 debug table processing
@@ -65,6 +65,7 @@ my $part_only=0;
 my $continued=0;
 my $fileread=0;
 my $inalinea=0;
+my $tcelopen=0;
 my $inli=0;
 my @in3;
 for (@ARGV){
@@ -434,6 +435,10 @@ for (@in3){
 	elsif (/^{TABLECEL}(.*)/){
 		my $text=$1;
 		my $colspan=''; my $rowspan='';
+		if ($tcelopen>0){
+			pushout ("</div></td>");
+			$tcelopen=0;
+		}
 		if ($text=~/<.s=[0-9]+>/){
 			if ($text=~/<rs=([0-9]+)>/){
 				$rowspan=" rowspan=\"$1\"";
@@ -443,17 +448,23 @@ for (@in3){
 				$colspan=" colspan=\"$1\"";
 				$text=~s/<cs=[0-9]*>//;
 			}
-			pushout ("<td$colspan$rowspan><div class=\"cel\">$text</div></td>");
+			pushout ("<td$colspan$rowspan><div class=\"cel\">$text");
+			$tcelopen=1;
 		}
 		elsif ($text=~/<.SPAN>/){}
 		else {
-			pushout ("<td><div class=\"cel\">$text</div></td>");
+			pushout ("<td><div class=\"cel\">$text");
+			$tcelopen=1;
 		}
 	}
 	elsif (/^{TABLEROW}/){
 		pushout("<tr>");
 	}
 	elsif (/^{TABLEROWEND/){
+		if ($tcelopen>0){
+			pushout ("</div></td>");
+			$tcelopen=0;
+		}
 		pushout("</tr>");
 	}
 	elsif (/^{TABLEEND}/){
