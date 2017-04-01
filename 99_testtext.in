@@ -2,17 +2,27 @@
 
 .set markdown 1
 
-# Title of the text #
+# In3 handling markdown format #
+
+Previous was a title with a hash.
+
+Title with equals below
+======================
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
 sed _do_ eiusmod *tempor* incididunt ut labore et
 dolore magna aliqua. Ut enim ad minim veniam, quis
 
+
+Title with dashes below
+--------------
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu.
+
 1.	nostrud _exercitation_ ullamco laboris nisi ut aliquip ex
 2.	ea *commodo* consequat.
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur [http://ljm.name](sint) occaecat cupidatat
+Fugiat nulla pariatur. Excepteur [http://ljm.name](sint) occaecat cupidatat
 non proident, sunt in culpa qui officia deserunt mollit
 anim id est laborum.
  
@@ -32,7 +42,25 @@ Praesent laoreet ornare purus, sit amet bibendum metus venenatis
 vel.
 >Cras congue felis a arcu feugiat malesuada venenatis sit
 >amet magna. Mauris interdum pellentesque urna vel pulvinar.
+
 Curabitur id sodales risus. Sed a congue est.
+
+Aenean rhoncus metus diam, vel aliquam risus suscipit in. Sed
+arcu risus, vehicula eu felis sed, placerat placerat ipsum. Nam
+ipsum sapien, suscipit vulputate vestibulum sed, pharetra nec
+ante.
+```
+Duis eget arcu vel metus interdum eleifend non vel leo.
+Fusce ultrices imperdiet ante, id ornare enim venenatis et. Nam
+eu luctus nibh. Suspendisse id gravida turpis, at blandit sapien.
+```
+Ut consequat ex tellus, ac efficitur mauris efficitur vel. Phasellus
+vel lectus imperdiet, eleifend risus vitae, aliquam orci. Nam
+vulputate porta nisi quis pretium. Pellentesque vel lectus ornare,
+interdum eros in, aliquam eros. Integer metus leo, commodo et
+lobortis in, tincidunt sed sapien. Pellentesque a quam dapibus,
+eleifend diam a, ultricies augue.
+
 
 .set markdown 0
 
@@ -95,19 +123,6 @@ iaculis massa ante, ac vestibulum risus semper at. Aliquam in
 volutpat tellus, sit amet aliquet risus. Sed vel ante condimentum,
 porta orci tempus, ultricies ligula. Sed laoreet eros sapien,
 vitae dictum nulla tincidunt quis.
-
-Aenean rhoncus metus diam, vel aliquam risus suscipit in. Sed
-arcu risus, vehicula eu felis sed, placerat placerat ipsum. Nam
-ipsum sapien, suscipit vulputate vestibulum sed, pharetra nec
-ante. Duis eget arcu vel metus interdum eleifend non vel leo.
-Fusce ultrices imperdiet ante, id ornare enim venenatis et. Nam
-eu luctus nibh. Suspendisse id gravida turpis, at blandit sapien.
-Ut consequat ex tellus, ac efficitur mauris efficitur vel. Phasellus
-vel lectus imperdiet, eleifend risus vitae, aliquam orci. Nam
-vulputate porta nisi quis pretium. Pellentesque vel lectus ornare,
-interdum eros in, aliquam eros. Integer metus leo, commodo et
-lobortis in, tincidunt sed sapien. Pellentesque a quam dapibus,
-eleifend diam a, ultricies augue.
 
 Sed hendrerit nisi risus, nec faucibus elit fermentum nec. Duis
 in justo non risus tincidunt vestibulum. Sed gravida sodales augue,

@@ -536,6 +536,11 @@ for (@input){
 		if ($inpre==0){$inpre=1;}
 		else {$inpre=0};
 	}
+	elsif (/^\`\`\`/){
+		debug ($TAGS,"Pre-tag (was: $inpre)");
+		if ($inpre==0){$inpre=1;}
+		else {$inpre=0};
+	}
 	elsif ($inpre>0){
 		inpush("{LITTERAL}$_");
 	}
