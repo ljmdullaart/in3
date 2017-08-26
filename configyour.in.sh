@@ -89,7 +89,7 @@ fi
 
 echo -n 'tag/in: ' >> Makefile
 if [ -d  $WWWDIR ] ; then  echo -n 'tag/in3.www ' >> Makefile ; fi
-if [ -d  $WWWHTML ] ; then  echo -n 'tag/in3.html ' >> Makefile ; fi
+if [ -d  $HTMLDIR ] ; then  echo -n 'tag/in3.html ' >> Makefile ; fi
 if [ -d  $PDFDIR ] ; then  echo -n 'tag/in3.pdf ' >> Makefile ; fi
 if [ -d  $EPUBDIR ] ; then  echo -n 'tag/in3.epub ' >> Makefile ; fi
 echo    'tag/in3.img' >> Makefile
@@ -117,7 +117,13 @@ mkinheader -i > index.in
 #     #  #        #######  #     #  #        #   #    
 #     #  #        #     #  #     #  #        #    #   
 #     #  #######  #     #  ######   #######  #     # 
-echo "index.in: $INFILES_noindex" >> Makefile
+if [ -f index.top ] ; then
+	index_top_bottom=index.top
+fi
+if [ -f index.bottom ] ; then
+	index_top_bottom="$index_top_bottom index.bottom"
+fi
+echo "index.in: $INFILES_noindex $index_top_bottom" >> Makefile
 echo "	mkinheader -i > index.in" >> Makefile
 echo 'index.in'>>$CLEANFILE
 echo "total.in: $INFILES_noindex" >> Makefile
@@ -166,7 +172,7 @@ fi
 #     #     #     #     #  #        
 #     #     #     #     #  ####### 
 
-if [ -d $HTML ] ; then
+if [ -d $HTMLDIR ] ; then
 	DONE_TOTAL=0
 	DONE_INDEX=0
 	
@@ -181,7 +187,6 @@ if [ -d $HTML ] ; then
 		echo "$HTMLDIR/$1.html: $1.in3 header |$HTMLDIR ">>Makefile
 		echo "	in3html -n --partonly  $1.in3 > $HTMLDIR/$1.html">>Makefile
 		echo "$HTMLDIR/$1.html">>$CLEANFILE
-		echo "$HTMLDIR/$1.html">>$UPLOADFILE
 	}
 	for FILE in $INBASE ; do
 		if [ $FILE = total ] ; then DONE_TOTAL=1 ; fi
@@ -423,7 +428,9 @@ if [ -d $EPUBDIR ] ; then
 	echo "	cp $ALLIMAGE $EPUBDIR">> Makefile
 fi
 if [ -d $WWWDIR ] ; then
-	echo "	cp $ALLIMAGE $WWWDIR">> Makefile
+	if [ "$ALLIMAGE" != "" ] ; then
+		echo "	cp $ALLIMAGE $WWWDIR">> Makefile
+	fi
 fi
 echo "	touch tag/in3.img" >> Makefile
 echo "tag/in3.img">>$CLEANFILE
