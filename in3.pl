@@ -2,6 +2,7 @@
 #INSTALL@ /usr/local/bin/in3
 use strict;
 use warnings;
+use Time::localtime;
 
 ########################################################
 
@@ -16,6 +17,8 @@ my %variables=();
 $variables{"interpret"}=1;
 $variables{"markdown"}=0;
 $variables{"inlineemp"}=1;	# Allow inline emphasis _underline_ and *bold*
+my $tm=localtime;
+my $datestring=sprintf("The current date is %04d-%02d-%02d\n", $tm->year+1900, ($tm->mon)+1, $tm->mday);
 
 my @input;			# array containing all input lines
 my $leftnote;
@@ -414,6 +417,7 @@ sub close_table{
 				inpush( "{TABLEROW}");
 			}
 			for ($x=0; $x<$maxx;$x++){
+				if (! defined $output_table[$x][$y]){$output_table[$x][$y]=' ';}
 				inpush("{TABLECEL}$output_table[$x][$y]");
 			}
 			inpush( "{TABLEROWEND}");
@@ -725,6 +729,10 @@ for (@input){
 		inpush("{COVER}$1");
 		debug($TAGS,".cover: set cover to $1");
 	}
+	elsif (/^\.date/) {
+		debug($TAGS,".date");
+		inpush ("{TEXTNORMAL}$datestring");
+	}
 	elsif (/^\.global/){
 	}
 	elsif (/^\.fix (.*)/){
@@ -810,6 +818,14 @@ for (@input){
 		my $text=$1;
 		debug ($TAGS,"Note: $text");
 		inpush("{NOTE}$text");
+	}
+	elsif (/^\.page/){
+		s/^.page //;
+		inpush ("{PAGE}$_");
+	}
+	elsif (/^\.p/){
+		debug ($TAGS,"Hard paragraph separator");
+		inpush("{HARDPARAGRAPH}");
 	}
 	elsif (/^\.u (.*)/){
 		my $textbody=$1;
