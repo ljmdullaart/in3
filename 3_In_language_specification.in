@@ -58,6 +58,7 @@ Some chararacters have a special meaning.
 	map	image  image_file	Map creates a clickable map in HTML or an image in PDF.
 	map	field link coordinates	Creates a click-field on the current map.
 	set	variable value	set the variable to value from now on
+	date	none	print the date on which the in to in3 processor ran.
 
 Tables, maps and lists are defined as block requests. They should start on a new alinea
 and end with an alinea (i.e. a blank line).
