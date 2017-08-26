@@ -13,9 +13,12 @@ is to provide meta-information about the text. It is not meant to generate outpu
 In a 
 .fix meta.in
 you generaly provide information like:
+
 	title	The title of the complete document
+	subtitle	The subtitle of the complete document
 	author	The author
 	cover	The image that should be on the cover. Using an image that is 1200x1600 gives the best results.
+
 
 .h2 HTML style sheet
 
@@ -46,6 +49,8 @@ creates div-containers for specific text-elements:
 	toc	Table of contents	·toc { color: #000000; background-color: #DDDDDD; width: 100%; } 
 
 .h2 Groff style sheet
+
+Example:
 
 .pre
 .ds Licon "Table of Contents"
