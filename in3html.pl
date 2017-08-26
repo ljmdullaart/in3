@@ -288,6 +288,9 @@ for (@in3){
 		}
 		
 	}
+	elsif (/^{HARDPARAGRAPH}/){
+		pushout ("<p<&nbsp;</p>");
+	}
 	elsif (/^{HEADER ([0-9])}(.*)/){
 		my $num=$1;my $text=$2;
 		alineatabend;
@@ -402,10 +405,10 @@ for (@in3){
 		pushout("<map name=map$mapnr>");
 	}
 	elsif (/^{MAPFIELD}([^ ]*) (.*)/){
-		pushout("<area shape=rectangle coords=\"$2\" href=\"$1\">");
+		pushout("<area shape=rect coords=\"$2\" href=\"$1\">");
 	}
 	elsif (/^{MAPLINK}([^ ]*) (.*)/){
-		pushout("<area shape=rectangle coords=\"$2\" href=\"$1\">");
+		pushout("<area shape=rect coords=\"$2\" href=\"$1\">");
 	}
 	elsif (/^{MAPEND}/){
 		pushout("</map>");
@@ -416,6 +419,8 @@ for (@in3){
 		pushout("$notenum");
 		pushnote("$notenum: $text");
 		$notenum++;
+	}
+	elsif (/^{PAGE}/){
 	}
 	elsif (/^{NOP}/){
 	}
