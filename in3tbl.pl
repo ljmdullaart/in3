@@ -196,7 +196,7 @@ if ($coversheet > 0){
 			pushout(".ps +8");
 			pushout(".ls 2");
 			pushout(".ce 1");
-			pushout("$title");
+			pushout("$subtitle");
 			pushout(".ps");
 			pushout(".P");
 			pushout(".ls 1");
@@ -209,7 +209,7 @@ if ($coversheet > 0){
 			pushout(".ps +10");
 			pushout(".ls 2");
 			pushout(".ce 1");
-			pushout("$title");
+			pushout("$author");
 			pushout(".ps");
 			pushout(".P");
 			pushout(".ls 1");
@@ -230,12 +230,12 @@ for (@in3){
                   pushout(".P");
                   pushout(".B1");
                   pushout(".ft CR");
-                  pushout(".ps +0");
+                  pushout(".ps -2");
                   for my $i (0..$#litblock){
                   	pushout(".br");
 				pushout("{LITTERAL}$litblock[$i]");
 			}
-                  pushout(".ps +2");
+                  pushout(".ps");
                   pushout(".ft");
                   pushout(".B2");
                   undef @litblock;
@@ -284,6 +284,9 @@ for (@in3){
 			pushout (".ne 10v");
 		}
 		pushout(".H $1 \"$2\"");
+	}
+	elsif (/^{HARDPARAGRAPH}/){
+		pushout (".sp");
 	}
 	elsif (/^{HEADUNNUM ([0-9])}(.*)/){
 		my $level=$1;
@@ -438,6 +441,9 @@ for (@in3){
 	}
 	elsif (/^{NOP}/){
 	}
+	elsif (/^{PAGE}/){
+		pushout(".bp");
+	}
 	elsif (/^{SET}([^ ]+) (.*)/){
 		my $val;
 		$variables{$1}=$2;
@@ -530,6 +536,7 @@ for (@in3){
 	}
 	elsif (/^{TABLE/){
 		$intable=1;
+		pushout (".ne 10v");
 		push @thistable,$_;
 	}
 	elsif (/^{TEXTBOLD}(.*)/){
