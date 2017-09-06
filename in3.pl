@@ -104,6 +104,7 @@ else {
 	for (@ARGV){
 		if ($what eq ''){
 			if (1==0){}
+			elsif (/^--$/){ while (<STDIN>){push @input,$_;}}
 			elsif (/^-d([0-9]+)/){ $variables{"DEBUG"}=$1; }
 			elsif (/^-d$/){$what='debug';}
 			elsif (/^-c([0-9]+)/){ $variables{"H1"}=$1;}
@@ -873,6 +874,9 @@ for (@input){
 	}
 	elsif (/^\.title (.*)/) {
 		inpush("{TITLE}$1");
+	}
+	elsif (/^\.subtitle (.*)/) {
+		inpush("{SUBTITLE}$1");
 	}
 	elsif (/^\.toc([0-9]*) (.*)/){
 		# Depricated 'toc' request
