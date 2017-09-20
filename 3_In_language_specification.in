@@ -4,6 +4,7 @@
 .h2 Special Characters
 
 Some chararacters have a special meaning.
+
 	*Character*	*When*	*Meaning*
 	{tab}	always	Tab is an indication that a format construct (leftnote, table or list) is used
 	..	beginning of line	A dot at the beginning of a line indicates a request
@@ -16,6 +17,7 @@ Some chararacters have a special meaning.
 .h2 Implemented requests
 
 .h3 General formatting
+
 	request	argument	meaning
 	empty line or .	 	Ends an alinea, if an alinea is open
 	text{tab}	text	a text with a left note
@@ -25,6 +27,7 @@ Some chararacters have a special meaning.
 	side	side note text	Specifies a referal to sidenotes
 
 .h3 Lists
+
 	request	argument	meaning
 	-{tab}	text	dash list item
 	{tab}-{tab}	text	second level dash list
@@ -34,6 +37,7 @@ Some chararacters have a special meaning.
 	{tab}#{tab}	text	second level numbered list
 
 .h3 Character format
+
 	request	argument	meaning
 	b	text	text must be written in bold
 	fix	text	fixed font text
@@ -42,12 +46,14 @@ Some chararacters have a special meaning.
 	u	text	Underline text
 
 .h3 Headers
+
 	request	argument	meaning
 	h{0-5}	text	create a chapter/section/... title
 	header	none	include the file header if that seems appropriate
 	hu	test	Header, unnumbered
 
 .h3 Other
+
 	request	argument	meaning
 	author	text	specify the name(s) of the author(s)
 	cover	filename	use the image in filename as cover
@@ -81,6 +87,7 @@ are implemented.
 The concept of variables is used to control the behaviour of the in-scripts. Variables may be
 set globally or from a point in the text. If a variable is set as global, the last value in the
 input file is used from the beginning. Global variables may be overridden by set requests.
+
 
 Variables have consequences.
 
