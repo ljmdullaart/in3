@@ -80,6 +80,7 @@ sub pushout{
 ################################################################################
 # Macro for encapsulated postsrcipt files (typically images)
 #
+################################################################################
 sub img_macro {
 print ".de dospark
 .psbb \\\\\$1
@@ -104,6 +105,7 @@ print ".de dospark
 # If a style sheet for roff exists, copy is to the output. Otherwise
 # use some default styling.
 #
+################################################################################
 sub stylesheet {
 	if (open (STYLE,"stylesheet.mm")){
 		debug ($DEB_FILE,"Stylesheet found");
@@ -217,11 +219,16 @@ if ($coversheet > 0){
 		}
 	}
 	pushout(".nr P 0");
+	pushout(".bp");
 	
 }
 
+################################################################################
 pushout(".ds pg*header ''- \\\\nP -''");
 
+################################################################################
+# Main loop
+################################################################################
 for (@in3){
 	chomp;
       if($litteraltext==1){
@@ -471,6 +478,7 @@ for (@in3){
 			pushout(".TE");
 		}
 		$alineatype=-1;
+		pushout(".ne 20v");
 		pushout(".TS");
 		my $outline="allbox,center;";
 		debug($DEB_TABLE,"Start a table");
@@ -478,34 +486,72 @@ for (@in3){
 		my $frst=1;
 		for (@thistable){
 			if (/^{TABLEROW}/){ $outline=''; $frst=1;}
-			elsif (/^{TABLEHEAD}/){ $outline=''; $frst=1;}
-			elsif (/^{TABLECEL}<VSPAN>/){ if ($frst==1){$frst=0;$outline .= "^";}else{$outline .= " ^";}}
-			elsif (/^{TABLECEL}<HSPAN>/){ if ($frst==1){$frst=0;$outline .= "s";}else{$outline .= " s";}}
-			elsif (/^{TABLECEL}/){ if ($frst==1){$frst=0;$outline .= "l";}else{$outline .= " l";}}
-			elsif (/^{TABLEROWEND}/){ pushout ($outline); }
+			elsif (/^{TABLEHEAD}/){
+				$outline='';
+				$frst=1;
+			}
+			elsif (/^{TABLECEL}<VSPAN>/){
+				if ($frst==1){
+					$frst=0;
+					$outline .= "^";
+				}
+				else{
+					$outline .= " ^";
+				}
+			}
+			elsif (/^{TABLECEL}<HSPAN>/){
+				if ($frst==1){
+					# This should not happen in a correctly formatted table.
+					$frst=0;
+					$outline .= "s";
+				}
+				else{
+					$outline .= " s";
+				}
+			}
+			elsif (/^{TABLECEL}/){
+				if ($frst==1){
+					$frst=0;
+					$outline .= "l";
+				}
+				else{
+					$outline .= " l";
+				}
+			}
+			elsif (/^{TABLEROWEND}/){
+				pushout ($outline);
+			}
 		}
 		$output[$#output] .= ".";
 		pushout(".TS H");
 		pushout (".TH");
 		$frst=1;
 		my $thead=0;
+		my $learcell=0;
 		for (@thistable){
 			my $text;
 			if (/^{TABLEROW}/){ $outline=''; $frst=1;}
 			elsif (/^{TABLECEL}/){
 				s/{TABLECEL}//;
-				s/<VSPAN>//;
-				s/<HSPAN>//;
 				s/<cs=.*>//;
 				s/<rs=.*>//;
-				$text=$_;
-				if (/<br>/){
-					$text=~s/<br>/\n.br\n/g;
-				}
-				$text="T{\n$text\nT}";
+				if(/<VSPAN>/){$text="";}
+				elsif(/<HSPAN>/){$text="";}
+				else {
+					$text=$_;
+					if (/<br>/){
+						$text=~s/<br>/\n.br\n/g;
+					}
+					$text="T{\n$text\nT}";
 
-					
-				if ($frst==1){$frst=0;$outline = "$text";} else {$outline .= "	$text";}
+				}
+				if ($frst==1){
+					$frst=0;
+					$outline = "$text";
+				} 
+				elsif ($text ne '') {
+					$outline .= "	$text";
+				}
 				debug($DEB_TABLE,"CELL: outline=$outline");
 		
 			}
@@ -535,8 +581,8 @@ for (@in3){
 
 	}
 	elsif (/^{TABLE/){
+		#if ($intable<1){pushout (".ne 10v");}
 		$intable=1;
-		pushout (".ne 10v");
 		push @thistable,$_;
 	}
 	elsif (/^{TEXTBOLD}(.*)/){
@@ -597,6 +643,16 @@ $alineatype=-1;
 
 pushout(".TC");
 
+################################################################################
+# Post processing
+################################################################################
+
+################################################################################
+#  Char-map processing
+################################################################################
+# Depending on the interpret-flag, replace specific characters by their GROFF
+# specific escaped ones.
+# In the end, replace all HTML-characters by their GROFF equivalent.
 
 my $charmapfile;
 if ( -f "/usr/local/share/in3charmap$variables{'interpret'}" ){
@@ -648,25 +704,7 @@ if ($variables{'interpret'}==2){
 		}
 	}
 }
-	
 
-
-for (@output){
-	if (/^ \./){}
-	elsif (/^{LITTERAL}/){
-		s/^{LITTERAL}//;
-		s/^\./\\&./;
-	}
-	else { s/^ *//;}
-	if (/==>/){
-		my $qis=s/=/=/g;
-		my $repl='\~'x$qis;
-		s/===*>/$repl/;
-	}
-	if (/^'/){
-		s/^'/ '/;
-	}
-}
 for (@charmap){
 	chomp;
 	my $char;
@@ -687,6 +725,24 @@ for (@charmap){
 		}
 		debug($DEB_CHAR,"New: $output[$i]");
 		
+	}
+}
+
+
+for (@output){
+	if (/^ \./){}
+	elsif (/^{LITTERAL}/){
+		s/^{LITTERAL}//;
+		s/^\./\\&./;
+	}
+	else { s/^ *//;}
+	if (/==>/){
+		my $qis=s/=/=/g;
+		my $repl='\~'x$qis;
+		s/===*>/$repl/;
+	}
+	if (/^'/){
+		s/^'/ '/;
 	}
 }
 for (@output){

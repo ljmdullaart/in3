@@ -24,6 +24,7 @@ my @input;			# array containing all input lines
 my $leftnote;
 my $level;
 my $bodytext;
+my @reflist;		# all references with .ref
 ########################################################
 
 #     #  #######  #        ######   
@@ -385,7 +386,13 @@ sub close_table{
 			for (@line){
 				my $txt=$_;
 				debug ($TABLE,"table-cell x=$x y=$y --- $txt ");
+				if (! defined ($output_table[$x][$y])){$output_table[$x][$y]='';}
 				if (/<cs=([0-9]+)>/){
+					while ($output_table[$x][$y] =~ /<[HV]SPAN>/){
+						$x++;
+						if (! defined ($output_table[$x][$y])){$output_table[$x][$y]='';}
+					}
+					debug ($TABLE,"table-cell past SPAN x=$x y=$y --- $txt ");
 					my $span=$1;
 					for (my $i=0;$i<$span;$i++){
 						$output_table[$x+$i][$y]='<HSPAN>';
@@ -394,16 +401,22 @@ sub close_table{
 					
 				}
 				if (/<rs=([0-9]+)>/){
+					while ($output_table[$x][$y] =~ /<[HV]SPAN>/){
+						$x++;
+						if (! defined ($output_table[$x][$y])){$output_table[$x][$y]='';}
+					}
+					debug ($TABLE,"table-cell past SPAN x=$x y=$y --- $txt ");
 					my $span=$1;
 					for (my $i=0;$i<$span;$i++){
 						$output_table[$x][$y+$i]='<VSPAN>';
 					}
 					$output_table[$x][$y]=$txt;
 				}
-				if (! defined ($output_table[$x][$y])){$output_table[$x][$y]=' ';}
-				if ($output_table[$x][$y] eq '<VSPAN>'){$x++;}
-				if (! defined ($output_table[$x][$y])){$output_table[$x][$y]=' ';}
-				if ($output_table[$x][$y] eq '<HSPAN>'){$x++;}
+				if (! defined ($output_table[$x][$y])){$output_table[$x][$y]='';}
+				while ($output_table[$x][$y] =~ /<[HV]SPAN>/){
+					$x++;
+					if (! defined ($output_table[$x][$y])){$output_table[$x][$y]='';}
+				}
 				$output_table[$x][$y]=$txt;
 				$x++; if($x>$maxx){$maxx=$x;}
 			}
@@ -827,6 +840,11 @@ for (@input){
 	elsif (/^\.p/){
 		debug ($TAGS,"Hard paragraph separator");
 		inpush("{HARDPARAGRAPH}");
+	}
+	elsif (/^\.quote/){
+		s/\.quote *//;
+		debug ($TAGS,"Quote: $_");
+		inpush("{QUOTE}$_");
 	}
 	elsif (/^\.u (.*)/){
 		my $textbody=$1;
