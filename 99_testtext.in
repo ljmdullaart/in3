@@ -57,6 +57,13 @@ eu luctus nibh. Suspendisse id gravida turpis, at blandit sapien.
 Ut consequat ex tellus, ac efficitur mauris efficitur vel. Phasellus
 vel lectus imperdiet, eleifend risus vitae, aliquam orci. Nam
 vulputate porta nisi quis pretium. Pellentesque vel lectus ornare,
+
+@ alphalist
+@ beta list
+
+a. gammalist
+b. deltalist
+
 interdum eros in, aliquam eros. Integer metus leo, commodo et
 lobortis in, tincidunt sed sapien. Pellentesque a quam dapibus,
 eleifend diam a, ultricies augue.
@@ -73,7 +80,9 @@ voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia
 
 @ alphalist
 @ beta list
+
 a. gammalist
+b. deltalist
 
 consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro
 
@@ -107,9 +116,12 @@ Nulla venenatis orci vitae interdum tincidunt. Mauris id felis
 a metus euismod sodales. Nam pulvinar neque vel magna efficitur,
 ac cursus leo iaculis. Fusce elementum, neque id bibendum pellentesque,
 eros tellus venenatis velit, quis mattis diam neque eleifend ex.
-Pellentesque vel mauris nec mauris viverra molestie. Mauris ultricies
-ultricies odio, luctus maximus leo pellentesque ut. Fusce pulvinar
-libero eu dui porttitor, sed varius nulla mattis.
+Pellentesque vel mauris nec mauris viverra molestie. 
+	<cs=2>Mauris	<cs=3>ultricies
+	ultricies	odio,	luctus	maximus	leo
+	<rs=2>pellentesque	ut.	Fusce	pulvinar	libero
+	eu	dui	porttitor,	sed
+	varius	 nulla	<cs=3>mattis.
 
 
 Nunc in aliquam orci. Morbi in purus porta, congue nisi molestie,
