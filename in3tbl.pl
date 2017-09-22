@@ -578,6 +578,7 @@ for (@in3){
 		}
 		undef @thistable;
 		pushout(".TE");
+		pushout(".sp");
 
 	}
 	elsif (/^{TABLE/){
