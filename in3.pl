@@ -205,14 +205,27 @@ sub inpush{
 						}
 						else {
 							if ($empopen eq '['){
-								if ($post=~/^\(([^\)]*)\)/){
-									debug ($MARKDOWN,"LINK found $1 -> $emptxt");
-									push @in3,"{LINK}$emptxt $1";
-									$post=~s/^\([^\)]*\)//;
+								if ($emptxt=~/^[hf]t+p/){	# We only allow http and ftp links; may be elaborated further later.
+									if ($post=~/^\(([^\)]*)\)/){
+										debug ($MARKDOWN,"LINK found $1 -> $emptxt");
+										push @in3,"{LINK}$emptxt $1";
+										$post=~s/^\([^\)]*\)//;
+									}
+									else {
+										debug ($MARKDOWN,"LINK found $emptxt (no description)");
+										push @in3,"{LINK}$emptxt";
+									}
 								}
 								else {
-									debug ($MARKDOWN,"LINK found $emptxt (no description)");
-									push @in3,"{LINK}$emptxt";
+									if ($post=~/^\(([^\)]*)\)/){
+										debug ($MARKDOWN,"NOT A REAL LINK; pushing [$emptxt $1]");
+										push @in3,"{TEXTNORMAL}[$emptxt $1]";
+										$post=~s/^\([^\)]*\)//;
+									}
+									else {
+										debug ($MARKDOWN,"NOT A REAL LINK; pushing [$emptxt]");
+										push @in3,"{LINK}[$emptxt]";
+									}
 								}
 							}
 							elsif ($empopen =~/__*/){
