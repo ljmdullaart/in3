@@ -27,16 +27,17 @@ If a
 exists in the current directory, it is called in the HTML code. You can 
 create styles for all the normal HTML elements.
 Example:
-
+.p
 .pre
-   table.normal {
-      border: 1px solid #ddd;
-   }
+table.normal {
+   border: 1px solid #ddd;
+}
 .pre
-
+.p
 In addition, 
 .fix in3html
 creates div-containers for specific text-elements:
+.p
 
 	class/style	text element	example
 	alinea	standard alinea	·alinea { background-color: #DDDD00; }
@@ -51,10 +52,10 @@ creates div-containers for specific text-elements:
 .h2 Groff style sheet
 
 Example:
-
+.p
 .pre
 .ds Licon "Table of Contents"
 .pre
-
+.p
 In general, in2tbl does not invoke specific styles. The style-sheet allows you to redefine some 
 of the standard texts.
