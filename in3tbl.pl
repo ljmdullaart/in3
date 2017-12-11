@@ -425,7 +425,7 @@ for (@in3){
 		$xn=($x*150+2000)/($x*5+1000); $y=$y*$xn/$x;
 		pushout(".br");
 		my $found=0;
-		my $yroom=$y+15;
+		my $yroom=$y+25;
 		for (my $i=0; $i<10;$i++){
 			my $qout=$#output;
 			if ($output[$qout-$i]=~/^\.ne/){
@@ -434,7 +434,7 @@ for (@in3){
 			}
 		}
 		alineatabend;
-		if ($found == 0){pushout(".ne $y"."v");}
+		if ($found == 0){pushout(".ne $yroom"."v");}
 		pushout(".ce 1");
 		pushout(".dospark $epsfile $xn"."v $y"."v");
 		pushout(".br");

@@ -317,7 +317,8 @@ sub close_list {
 			if (/^\.i / )                    { s/^\.i *//;       inpush ("{TEXTITALIC}$_"); }
 			elsif (/^\.b / )                 { s/^\.b *//;       inpush ("{TEXTBOLD}$_"); }
 			elsif (/^\.u / )                 { s/^\.u *//;       inpush ("{TEXTUNDERLINE}$_"); }
-			elsif (!(/^[-#@ 	]/))           {                   inpush("{TEXTNORMAL}$_"); }
+			elsif (/^\.fix / )               { s/^\.fix *//;     inpush ("{TEXTFIX}$_"); }
+			elsif (!(/^[-#@ 	]/))         {                   inpush ("{TEXTNORMAL}$_"); }
 			elsif ($types[$listlevel] eq '-'){s/^[-#@ 	]*//;inpush("{LISTDASHITEM}$_");}
 			elsif ($types[$listlevel] eq '#'){s/^[-#@ 	]*//;inpush("{LISTNUMITEM}$_");}
 			elsif ($types[$listlevel] eq '@'){s/^[-#@ 	]*//;inpush("{LISTALPHAITEM}$_");}
@@ -764,9 +765,14 @@ for (@input){
 	}
 	elsif (/^\.fix (.*)/){
 		my $textbody=$1;
-		start_alinea;
 		debug ($TAGS,"Fixed request");
-		inpush ("{TEXTFIX}$textbody");
+		start_alinea;
+		if ($inlist>0) {
+			push @thislist,$_;
+		}
+		else {
+			inpush ("{TEXTFIX}$textbody");
+		}
 	}
 	elsif (/^\.hr/){
 		debug($TAGS,"Horizontal line");
