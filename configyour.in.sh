@@ -379,10 +379,14 @@ mk_images(){
 		echo "	convert $BASEIMAGE.xcf $IMAGE" >> Makefile
 		echo "$IMAGE">>$CLEANFILE
 		echo "$IMAGE">>$UPLOADFILE
-	fi
-	if [ -f $BASEIMAGE.dia ] ; then
+	elif [ -f $BASEIMAGE.dia ] ; then
 		echo "$IMAGE: $BASEIMAGE.dia" >> Makefile
 		echo "	dia --export=$IMAGE $BASEIMAGE.dia" >> Makefile
+		echo "$IMAGE">>$CLEANFILE
+		echo "$IMAGE">>$UPLOADFILE
+	elif [ -f $BASEIMAGE.gnuplot ] ; then
+		echo "$IMAGE: $BASEIMAGE.gnuplot" >> Makefile
+		echo "	gnuplot $BASEIMAGE.gnuplot" >> Makefile
 		echo "$IMAGE">>$CLEANFILE
 		echo "$IMAGE">>$UPLOADFILE
 	fi
