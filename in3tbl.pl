@@ -125,10 +125,12 @@ sub stylesheet {
 ################################################################################
 
 my $litteraltext=0;
+my $litlines=2;
 my @litblock;
 sub pushlit{
       (my $text)=@_;
       $litteraltext=1;
+	  $litlines++;
       push @litblock,$text;
 }
 
@@ -231,24 +233,49 @@ pushout(".ds pg*header ''- \\\\nP -''");
 ################################################################################
 for (@in3){
 	chomp;
-      if($litteraltext==1){
-            if (/^{LITTERAL}/){}
-            else {
-                  pushout(".P");
-                  pushout(".B1");
-                  pushout(".ft CR");
-                  pushout(".ps -2");
-                  for my $i (0..$#litblock){
-                  	pushout(".br");
-				pushout("{LITTERAL}$litblock[$i]");
+	if($litteraltext==1){
+		if (/^{LITTERAL}/){}
+		else {
+			pushout(".P");
+			if ($litlines>50){
+				$litlines=$litlines-50;
+				pushout(".ne 50v");
 			}
-                  pushout(".ps");
-                  pushout(".ft");
-                  pushout(".B2");
-                  undef @litblock;
-                  $litteraltext=0;
-            }
-      }
+			else {
+				pushout(".ne ".$litlines."v");
+			}
+			pushout(".B1");
+			pushout(".ft CR");
+			pushout(".ps -2");
+			for my $i (0..$#litblock){
+				pushout(".br");
+				pushout("{LITTERAL}$litblock[$i]");
+				if (($i % 50)==49){
+					pushout(".ps");
+					pushout(".ft");
+					pushout(".B2");
+					pushout(".P");
+					if ($litlines>50){
+						$litlines=$litlines-50;
+						pushout(".ne 50v");
+					}
+					else {
+						pushout(".ne ".$litlines."v");
+					}
+					pushout(".B1");
+					pushout(".ft CR");
+					pushout(".ps -2");
+				}
+					
+			}
+			pushout(".ps");
+			pushout(".ft");
+			pushout(".B2");
+			undef @litblock;
+			$litteraltext=0;
+			$litlines=2;
+		}
+	}
 
 	if (1==0){}
 	elsif (/^{ALINEA}([0-9])/){
@@ -404,9 +431,9 @@ for (@in3){
 	elsif (/^{LISTNUMSTART}/){
 		pushout(".AL 1");
 	}
-      elsif (/^{LITTERAL}(.*)/){
-            pushlit($1);
-      }
+    elsif (/^{LITTERAL}(.*)/){
+        pushlit($1);
+    }
 	elsif (/^{MAPFIELD}(.*)/){
       }
 	elsif (/^{MAPEND}(.*)/){
