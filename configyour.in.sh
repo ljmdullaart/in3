@@ -127,7 +127,7 @@ echo "index.in: $INFILES_noindex $index_top_bottom" >> Makefile
 echo "	mkinheader -i > index.in" >> Makefile
 echo 'index.in'>>$CLEANFILE
 echo "total.in: $INFILES_noindex" >> Makefile
-echo "	cat $INFILES_noindex > total.in" >> Makefile
+echo "	grep -vh '^\.header'  $INFILES_noindex > total.in" >> Makefile
 echo 'total.in'>>$CLEANFILE
 echo "header: $INFILES" >> Makefile
 echo "	mkinheader -h > header" >> Makefile
