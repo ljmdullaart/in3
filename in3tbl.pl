@@ -33,6 +33,7 @@ my $LEFTNOTE=2;
 my $BODYTEXT=11;
 my $SIDENOTE=4;
 my $actualbody=$LEFTNOTE+$BODYTEXT+$SIDENOTE;
+my $appendix=0;
 
 debug($DEB_ALINEA,"Initial alinea=-1");
 
@@ -303,6 +304,14 @@ for (@in3){
 			pushout("T}")
 		}
 	}
+	elsif (/^{APPENDIX}(.*)/){
+		my $aptxt=$1;
+		if ($aptxt==0){ $aptxt="Appendix"; }
+		$appendix++;
+		pushout(".HM A 1 1 1 1 1 1 1 1 1 1 1");
+		pushout(".nr H1 0");
+
+	}
 	elsif (/^{AUTHOR}/){
 	}
 	elsif (/^{COVER}/){
@@ -313,11 +322,18 @@ for (@in3){
 		alineatabend;
 		if ($1==1){
 			# pushout(".bp")
+			if ($appendix==0){
+				pushout(".H $1 \"$2\"");
+			}
+			else {
+				# 	pushout (".APP '$2'");
+				pushout(".H $1 \"$2\"");
+			}
 		}
 		else {
 			pushout (".ne 10v");
+			pushout(".H $1 \"$2\"");
 		}
-		pushout(".H $1 \"$2\"");
 	}
 	elsif (/^{HARDPARAGRAPH}/){
 		pushout (".sp");

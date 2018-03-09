@@ -34,6 +34,7 @@ should be fairly readable. The following tags are used:
 .h3 Headers
 	HEADER level	text	Header at level with text.
 	HEADUNNUM level	text	An unnumbered header at level.
+	APPENDIX	 	start level 1 from A
 
 .h3 Alineas etc.
 	tag	Argument	meaning

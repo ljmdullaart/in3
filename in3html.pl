@@ -113,6 +113,7 @@ debug($DEB_ALINEA,"Initial alinea=-1");
 
 
 my @headnum=(0,0,0,0,0,0,0,0,0,0,0,0);
+my $appendix=0;
 my $notenum=1;
 my $tablestate=0;
 my $title='';
@@ -278,6 +279,9 @@ for (@in3){
 		$inalinea=0;
 	}
 	elsif (/^{AUTHOR}(.*)/){ }
+	elsif (/^{APPENDIX}(.*)/){
+		$appendix=$headnum[1];
+	}
 	elsif (/^{COVER}(.*)/){ }
 	elsif (/^{INCLUDE}(.*)/){
 		if ($do_includes==1){
@@ -298,7 +302,13 @@ for (@in3){
 		$headnum[$num]++;
 		$headnum[$num+1]=0;
 		my $titnr='';
-		for (my $i=1;$i<=$num;$i++){
+		if ($appendix >0){
+			$titnr=substr('ABCDEFGHIJKLMNOPQRSTUVWXYZ',$headnum[1]-$appendix-1,1);
+		}
+		else {
+			$titnr="$headnum[1].";
+		}
+		for (my $i=2;$i<=$num;$i++){
 			$titnr="$titnr$headnum[$i].";
 		}
 		$num++;

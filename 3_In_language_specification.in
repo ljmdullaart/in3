@@ -50,7 +50,8 @@ Some chararacters have a special meaning.
 	request	argument	meaning
 	h{0-5}	text	create a chapter/section/... title
 	header	none	include the file header if that seems appropriate
-	hu	test	Header, unnumbered
+	hu	text	Header, unnumbered
+	appendix	none	change level 1 header to alpha-style and start from A
 
 .h3 Other
 

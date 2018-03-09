@@ -17,6 +17,7 @@ my %variables=();
 $variables{"interpret"}=1;
 $variables{"markdown"}=0;
 $variables{"inlineemp"}=1;	# Allow inline emphasis _underline_ and *bold*
+$variables{"appendix"}=0;	# We're in an appendix
 my $tm=localtime;
 my $datestring=sprintf("The current date is %04d-%02d-%02d\n", $tm->year+1900, ($tm->mon)+1, $tm->mday);
 
@@ -731,6 +732,11 @@ for (@input){
 		if ($intable==0){close_alinea;}
 		$intable=1;
 		push @thistable,$_;
+	}
+	elsif (/^\.appendix *(.*)/) {
+
+		inpush("{APPENDIX}$1");
+		$variables{"appendix"}=1;
 	}
 	elsif (/^\.author (.*)/) {
 		inpush("{AUTHOR}$1");
