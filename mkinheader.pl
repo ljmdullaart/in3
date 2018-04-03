@@ -127,6 +127,7 @@ else { print STDERR "Cannot open in3charmap1"; }
 my $prev_c=0;
 my $s=0;
 my $p=0;
+my $appendix=0;
 for (@in){
 	chomp;
 	my $inline=$_;
