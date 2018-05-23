@@ -306,7 +306,7 @@ for (@in3){
 	}
 	elsif (/^{APPENDIX}(.*)/){
 		my $aptxt=$1;
-		if ($aptxt==0){ $aptxt="Appendix"; }
+		if ($aptxt eq ''){ $aptxt="Appendix"; }
 		$appendix++;
 		pushout(".HM A 1 1 1 1 1 1 1 1 1 1 1");
 		pushout(".nr H1 0");
@@ -321,6 +321,8 @@ for (@in3){
 	elsif (/^{HEADER ([0-9])}(.*)/){
 		alineatabend;
 		if ($1==1){
+			my $dist=20-2*$1;
+			pushout (".ne $dist"."v");
 			# pushout(".bp")
 			if ($appendix==0){
 				pushout(".H $1 \"$2\"");
@@ -331,7 +333,8 @@ for (@in3){
 			}
 		}
 		else {
-			pushout (".ne 10v");
+			my $dist=20-2*$1;
+			pushout (".ne $dist"."v");
 			pushout(".H $1 \"$2\"");
 		}
 	}
