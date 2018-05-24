@@ -15,7 +15,7 @@ my $DEB_IMG=128;		#Image processing
 sub debug {
 	(my $level,my $msg)=@_;
 	if ($DEBUG & $level){
-		print STDERR "DEBUG $level: $msg\n";
+		print STDERR "in3tbl DEBUG $level: $msg\n";
 	}
 }
 
@@ -135,6 +135,7 @@ sub pushlit{
       push @litblock,$text;
 }
 
+my $inquote=0;
 ################################################################################
 
 my @thistable;
@@ -234,6 +235,10 @@ pushout(".ds pg*header ''- \\\\nP -''");
 ################################################################################
 for (@in3){
 	chomp;
+	if ($inquote==1){
+		if (/^{QUOTE}/){}
+		else {$inquote=0;pushout(".br");}
+	}
 	if($litteraltext==1){
 		if (/^{LITTERAL}/){}
 		else {
@@ -497,6 +502,14 @@ for (@in3){
 	elsif (/^{PAGE}/){
 		pushout(".bp");
 	}
+	elsif (/^{QUOTE}/){
+		s/^{QUOTE}//;
+		if ($inquote==0){
+			$inquote=1;
+			pushout(".br");
+		}
+		pushout(".I \" $_ \"");
+	}
 	elsif (/^{SET}([^ ]+) (.*)/){
 		my $val;
 		$variables{$1}=$2;
@@ -681,7 +694,7 @@ for (@in3){
 	elsif (/^{TITLE}(.*)/){
 	}
 	elsif (/^{.*}/){
-		print STDERR "Unknown $_\n";
+		print STDERR "in3tbl Unknown $_\n";
 	}
 }
 
@@ -714,11 +727,11 @@ if ( open (CHARMAP,$charmapfile)){
       @charmap=<CHARMAP>;
       close CHARMAP;
 }
-else { print STDERR "Cannot open in3charmap\n"; }
+else { print STDERR "in3tbl Cannot open in3charmap\n"; }
 
 
 if ($variables{'interpret'}==1){
-	print STDERR "INTERPRET =$variables{'interpret'}\n";
+	print STDERR "in3tbl INTERPRET =$variables{'interpret'}\n";
 	for my $i (0..$#output){
 		my $changed=1;
 		while ($changed==1){
@@ -735,7 +748,7 @@ if ($variables{'interpret'}==1){
 	}
 }
 if ($variables{'interpret'}==2){
-	print STDERR "INTERPRET =$variables{'interpret'}\n";
+	print STDERR "in3tbl INTERPRET =$variables{'interpret'}\n";
 	for my $i (0..$#output){
 		my $changed=1;
 		while ($changed==1){

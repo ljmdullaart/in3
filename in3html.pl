@@ -65,6 +65,7 @@ my $part_only=0;
 my $continued=0;
 my $fileread=0;
 my $inalinea=0;
+my $inquote=0;
 my $tcelopen=0;
 my $inli=0;
 my @in3;
@@ -240,6 +241,13 @@ for (@in3){
 for (@in3){
 	chomp;
 	debug($DEB_IN,"INPUT; $_;");
+	if ($inquote==1){
+		if (/^{QUOTE}/){}
+		else {
+			pushout("</div>");
+			$inquote=0;
+		}
+	}
 	if($litteraltext==1){
 		if (/^{LITTERAL}/){}
 		else {
@@ -431,6 +439,15 @@ for (@in3){
 		$notenum++;
 	}
 	elsif (/^{PAGE}/){
+	}
+	elsif (/^{QUOTE}/){
+		if ($inquote==0){
+			pushout("<div class=quote>");
+			$inquote=1;
+		}
+		s/^{QUOTE}//;
+		pushout("$_");
+
 	}
 	elsif (/^{NOP}/){
 	}
