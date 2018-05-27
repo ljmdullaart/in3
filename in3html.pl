@@ -192,7 +192,7 @@ if ($part_only==0){
 	}
 }
 if ($cover ne ''){
-	pushout ( "<img src=$cover><br>");
+	pushout ( "<img src=$cover alt=\"Cover\"><br>");
 }
 
 sub alineatabstart {
@@ -270,9 +270,9 @@ for (@in3){
 		else {
 			if ($alineatype==0){pushout("<p><div class=\"alinea\">")}
 			# below, sizes of the columns must be given
-			elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\">");}
-			elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\">");}
-			elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\">");}
+			elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
 			$inalinea=1;
 		}
 	}
@@ -281,8 +281,17 @@ for (@in3){
 		elsif ($alineatype==0){
 			if ($inalinea>0){pushout("</div>");}
 		}
-		elsif ($alineatype>0){
-			pushout("</div></td></tr>")
+		elsif ($alineatype==1){
+			pushout("</div>      </td>      </tr>")
+			#pushout(" </td>      </tr>")
+		}
+		elsif ($alineatype==2){
+			#pushout("</div>      </td>      </tr>")
+			pushout(" </td>      </tr>")
+		}
+		elsif ($alineatype==3){
+			#pushout("</div>      </td>      </tr>")
+			pushout(" </td>      </tr>")
 		}
 		$inalinea=0;
 	}
@@ -301,7 +310,7 @@ for (@in3){
 		
 	}
 	elsif (/^{HARDPARAGRAPH}/){
-		pushout ("<p<&nbsp;</p>");
+		pushout ("<p>&nbsp;</p>");
 	}
 	elsif (/^{HEADER ([0-9])}(.*)/){
 		my $num=$1;my $text=$2;
@@ -321,7 +330,10 @@ for (@in3){
 		}
 		$num++;
 		pushout ("<h$num id=\"a$titnr\">$titnr $text</h$num>");
-		if ($alineatype >0){$alineatype &=2;}
+		if ($alineatype >0){
+			$alineatype &=2;
+			pushout ("<table class=note>");
+		}
 	}
 	elsif (/^{HEADUNNUM ([0-9])}(.*)/){
 		my $num=$1;my $text=$2;
@@ -345,6 +357,10 @@ for (@in3){
 			pushout("<img src=\"$image\" alt=\"$image>\">");
 		}
 		pushout ("<br>");
+		if ($alineatype >0){
+			$alineatype &=2;
+			pushout ("<table class=note>");
+		}
 	}
 	elsif (/^{LEFTNOTE}(.*)/){
 		my $text=$1;
@@ -419,7 +435,7 @@ for (@in3){
 	elsif (/^{MAPPICT}(.*)/){
 		pushout('<div align="center">');
 		$mapnr++;
-		pushout("<img src=\"$1\" usemap=#map$mapnr border=\"0\">");
+		pushout("<img src=\"$1\" usemap=#map$mapnr border=\"0\" alt=\"map\">");
 		pushout("<map name=map$mapnr>");
 	}
 	elsif (/^{MAPFIELD}([^ ]*) (.*)/){
@@ -455,7 +471,7 @@ for (@in3){
 	}
 	elsif (/^{SIDENOTE}(.*)/){
 		my $text=$1;
-		pushout("</td><td style=\"vertical-align:top;width:25%\">");
+		pushout("</div></td><td style=\"vertical-align:top;width:25%\">");
 		pushout("<div class=side>$text</div>");
 	}
 	elsif (/^{SUBTITLE}(.*)/){
@@ -500,7 +516,7 @@ for (@in3){
 		pushout("</tr>");
 	}
 	elsif (/^{TABLEEND}/){
-		pushout ("</table>");
+			pushout ("</table>");
 	}
 	elsif (/^{TEXTBOLD}(.*)/){
 		pushout("<b>$1</b>");
