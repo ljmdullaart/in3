@@ -13,6 +13,7 @@ Some chararacters have a special meaning.
 	 #	beginning of line or after tab(s)	list item in a numbered-list
 	 @	beginning of line or after tab(s)	list item in a alpha-list
 
+The translation table for the % translations is the in3charmap.
 
 .h2 Implemented requests
 
