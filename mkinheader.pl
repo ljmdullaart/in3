@@ -76,7 +76,7 @@ my $author='';
 
 for (@in){
 	if (/in:.title (.*)/){ $tot_title=$1; }
-	if (/in:.subtitle (.*)/){ $sub_title="$sub_title<br>$1"; }
+	if (/in:.subtitle (.*)/){ $sub_title="$1"; }
 	if (/in:.author (.*)/){ $author=$1;}
 }
 
@@ -154,19 +154,19 @@ if ($VERBOSE>0){print "#chapter:$c file:$file level:$level title:$title\n";}
 		if ($c != $prev_c){ $s=0; $p=0; $prev_c=$c; }
 		if ($level==1){
 			if ($type eq 'header'){
- 				print "	<tr class=toc><td colspan=3><a href=\"$file#a$c\">";
-				print "<span CLASS=toc> $c $title</span></a></td></tr>\n";
+ 				print "	<tr class=tocrow><td colspan=3><a href=\"$file#a$c\">";
+				print "<span CLASS=tocitem> $c $title</span></a></td></tr>\n";
 			}
 			if ($type eq 'index'){print "\n.br\n.link $file#a$c. $c $title\n";}
 		}
 		elsif ($level==2){
 			$s++; $p=0;
-#			if ($type eq 'header'){ print "	<tr class=toc><td>&nbsp;</td><td colspan=2><a href=\"$file#a$c.$s\"><span CLASS=toc>$c.$s $title</span></a></td></tr>\n"; }
+#			if ($type eq 'header'){ print "	<tr class=tocrow><td>&nbsp;</td><td colspan=2><a href=\"$file#a$c.$s\"><span CLASS=tocitem>$c.$s $title</span></a></td></tr>\n"; }
 			if ($type eq 'index'){print "\n.br\n.link $file#a$c.$s. $c.$s $title\n";}
 		}
 		elsif ($level==3){
 			$p++;
-#			if ($type eq 'header'){ print "	<tr class=toc><td>&nbsp;</td><td>&nbsp;</td><td><a href=\"$file#a$c.$s.$p\"><span CLASS=toc>$c.$s.$p $title</span></a></td></tr>\n"; }
+#			if ($type eq 'header'){ print "	<tr class=tocrow><td>&nbsp;</td><td>&nbsp;</td><td><a href=\"$file#a$c.$s.$p\"><span CLASS=tocitem>$c.$s.$p $title</span></a></td></tr>\n"; }
 			if ($type eq 'index'){print "\n.br\n.link $file#a$c.$s.$p. $c.$s.$p $title\n";}
 		}
 	}
@@ -177,7 +177,7 @@ if ($VERBOSE>0){print "#chapter:$c file:$file level:$level title:$title\n";}
 		if ($level==1){
 			$c++;
 			if ($c != $prev_c){ $s=0; $p=0; $prev_c=$c; }
-			if ($type eq 'header'){ print "	<tr class=toc><td colspan=3><a href=\"$file#a$c\"><span CLASS=toc> $c $title</span></a></td></tr>\n"; }
+			if ($type eq 'header'){ print "	<tr class=tocrow><td colspan=3><a href=\"$file#a$c\"><span CLASS=tocitem> $c $title</span></a></td></tr>\n"; }
 			if ($type eq 'index'){print "\n.br\n.link $file#a$c $c $title\n";}
 		}
 		elsif ($level==2){
