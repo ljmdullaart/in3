@@ -179,10 +179,13 @@ if [ -d $HTMLDIR ] ; then
 	INHTML=`ls *.in | sort -n | sed 's/.in$/.html/' |sed "s/^/$HTMLDIR\//"| paste -sd' '`
 	if [ ! -f index.in ] ; then INHTML="$INHTML $HTMLDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $HTMLDIR/total.html" ; fi
-	echo "tag/in3.html: $INHTML" >> Makefile
+	echo "tag/in3.html: $INHTML $HTMLDIR/header.htm" >> Makefile
+
 	echo "	touch tag/in3.html" >> Makefile
 	echo "tag/in3.html">>$CLEANFILE
 	
+	echo "$HTMLDIR/header.htm: index.in" >> Makefile
+	echo "	mkinheader > $HTMLDIR/header.htm" >> Makefile
 	add_html(){
 		echo "$HTMLDIR/$1.html: $1.in3 header |$HTMLDIR ">>Makefile
 		echo "	in3html -n --partonly  $1.in3 > $HTMLDIR/$1.html">>Makefile
