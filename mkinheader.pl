@@ -107,7 +107,6 @@ elsif ($type eq 'index'){
 }
 
 if ($type eq 'header'){print "<table CLASS=\"toc\">\n";}
-if ($type eq 'header'){print "	<tr class=toc><td colspan=3><a href=\"index.html\"><span CLASS=toc>Index</span></a></td></tr>\n"; }
 
 my $charmapfile;
 if ( -f "/usr/local/share/in3charmap1" ){
@@ -123,6 +122,37 @@ if ( open (CHARMAP,$charmapfile)){
 	close CHARMAP;
 }
 else { print STDERR "Cannot open in3charmap1"; }
+sub charmapper {
+	(my $input)=@_;
+	for (@charmap){
+		chomp;
+		(my $char,my $groff,my $html)=split '	';
+		$char='NOCHAR' unless defined $char;
+		$groff=$char unless defined $groff;
+		$html=$char unless defined $html;
+		$input=~s/$char/$html/g;
+	}
+	return $input;
+}
+if ($type eq 'header'){
+	if (open (HL,"grep '^\.headerlink ' *.in | sort -u |")){
+		while (<HL>){
+			chomp;
+			s/.*headerlink *//;
+			my $linkdest=$_;
+			my $linktxt=$_;
+			$linkdest=~s/ .*//;
+			$linktxt=~s/^[^ ]* //; 
+			$linktxt=charmapper($linktxt);
+ 			print "	<tr class=tocrow><td colspan=3><a href=\"$linkdest\">";
+			print "<span CLASS=tocitem>$linktxt</span></a></td></tr>\n";
+		}
+	}
+}
+
+if ($type eq 'header'){print "</table>\n<p>\n";}
+if ($type eq 'header'){print "<table CLASS=\"toc\">\n";}
+if ($type eq 'header'){print "	<tr class=toc><td colspan=3><a href=\"index.html\"><span CLASS=toc>Index</span></a></td></tr>\n"; }
 
 my $prev_c=0;
 my $s=0;
@@ -132,14 +162,7 @@ for (@in){
 	chomp;
 	my $inline=$_;
 	if ($type eq 'header'){
-		for (@charmap){
-			chomp;
-			(my $char,my $groff,my $html)=split '	';
-			$char='NOCHAR' unless defined $char;
-			$groff=$char unless defined $groff;
-			$html=$char unless defined $html;
-			$inline=~s/$char/$html/g;
-		}
+		$inline=charmapper($inline);
 	}
 	my $c;
 	if ($inline=~/^index/){ $prev_c=0;}

@@ -769,6 +769,8 @@ for (@input){
 	}
 	elsif (/^\.global/){
 	}
+	elsif (/^\.headerlink/){
+	}
 	elsif (/^\.fix (.*)/){
 		my $textbody=$1;
 		debug ($TAGS,"Fixed request");

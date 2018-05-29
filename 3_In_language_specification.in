@@ -63,6 +63,7 @@ The translation table for the % translations is the in3charmap.
 	hr	none	horizontal line
 	img	image	include an image here
 	link	link text	provide a link
+	headerlink	link text	a link that is used only in the header
 	map	image  image_file	Map creates a clickable map in HTML or an image in PDF.
 	map	field link coordinates	Creates a click-field on the current map.
 	set	variable value	set the variable to value from now on
