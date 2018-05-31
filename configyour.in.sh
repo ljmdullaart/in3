@@ -225,6 +225,13 @@ if [ -d $WWWDIR ] ; then
 	echo "tag/in3.www: $INHTML" >> Makefile
 	echo "	touch tag/in3.www" >> Makefile
 	echo "tag/in3.www">>$CLEANFILE
+
+	if [ -f stylesheet.css ] ; then
+		echo "$WWWDIR/stylesheet.css: stylesheet.css |$WWWDIR ">>Makefile
+		echo "	cp stylesheet.css $WWWDIR ">>Makefile
+		echo "$WWWDIR/stylesheet.css">>$CLEANFILE
+		echo "$WWWDIR/stylesheet.css">>$UPLOADFILE
+	fi
 	
 	add_www(){
 		echo "$WWWDIR/$1.html: $1.in3 header |$WWWDIR ">>Makefile
