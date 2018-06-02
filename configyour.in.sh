@@ -440,10 +440,13 @@ MAPFILES=`cat $INFILES | sed -n 's/^.map image *//p' | sed 's/ .*//'| paste -sd 
 echo "tag/in3.img: $ALLIMAGE|tag" >> Makefile
 if [ -d $EPUBDIR ] ; then
 	echo "	cp $ALLIMAGE $EPUBDIR">> Makefile
+	echo "	rm $EPUBDIR/*.eps">> Makefile
+
 fi
 if [ -d $WWWDIR ] ; then
 	if [ "$ALLIMAGE" != "" ] ; then
 		echo "	cp $ALLIMAGE $WWWDIR">> Makefile
+		echo "	rm $WWWDIR/*.eps">> Makefile
 	fi
 fi
 echo "	touch tag/in3.img" >> Makefile
