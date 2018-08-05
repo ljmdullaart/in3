@@ -120,14 +120,14 @@ else {
 				my $file=$_;
 				my $ch;	# Chapter number from filename
 				if ($file=~/^([0-9]+)_/){$ch=$1;} else {$ch=-1;}
-				if (open(IN,$file)){
+				if (open(my $IN,'<',$file)){
 					if ($ch>0){
 						push @input,".set H1 $ch";
 					}
-					while (<IN>){
+					while (<$IN>){
 						push @input,$_;
 					}
-					close IN;
+					close $IN;
 				}
 				else {print STDERR "Cannot open $_; ignored.\n";}
 			}

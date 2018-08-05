@@ -62,9 +62,9 @@ chomp $all_in;
 
 if ($VERBOSE > 0){ print "########all_in=$all_in=\n";}
 
-if (open(IN,"egrep '^\.h[123] |\.toc|^.author|^.title|^.subtitle' $all_in  |")){
-	@in=<IN>;
-	close IN;
+if (open(my $IN,'-|',"egrep '^\.h[123] |\.toc|^.author|^.title|^.subtitle' $all_in")){
+	@in=<$IN>;
+	close $IN;
 }
 else {
 	die 'Cannot grep .in-files';
@@ -99,9 +99,9 @@ elsif ($type eq 'index'){
 	if ($sub_title ne '' ){print ".subtitle $sub_title\n";}
 	if ($author ne ''){print ".author $author\n";}
 	if ( -f "index.top"){
-		if (open(IT,"index.top")){
-			while (<IT>){print;}
-			close IT;
+		if (open(my $IT,'<',"index.top")){
+			while (<$IT>){print;}
+			close $IT;
 		}
 	}
 }
@@ -117,9 +117,9 @@ else {
 }
 
 my @charmap;
-if ( open (CHARMAP,$charmapfile)){
-	@charmap=<CHARMAP>;
-	close CHARMAP;
+if ( open (my $CHARMAP,'<',$charmapfile)){
+	@charmap=<$CHARMAP>;
+	close $CHARMAP;
 }
 else { print STDERR "Cannot open in3charmap1"; }
 sub charmapper {
@@ -135,8 +135,8 @@ sub charmapper {
 	return $input;
 }
 if ($type eq 'header'){
-	if (open (HL,"grep '^\.headerlink ' *.in | sort -u |")){
-		while (<HL>){
+	if (open (my $HL,'-|',"grep '^\.headerlink ' *.in | sort -u")){
+		while (<$HL>){
 			chomp;
 			s/.*headerlink *//;
 			my $linkdest=$_;
@@ -231,9 +231,9 @@ if ($type eq 'header'){
 }
 else {
 	if ( -f "index.bottom"){
-		if (open(IT,"index.bottom")){
-			while (<IT>){print;}
-			close IT;
+		if (open(my $IT,'<',"index.bottom")){
+			while (<$IT>){print;}
+			close $IT;
 		}
 	}
 	

@@ -91,9 +91,9 @@ for (@ARGV){
 		$fileread=1;
 	}
 	else {
-		if (open(FILE,"$_")){
-			my @in_file=<FILE>;
-			close FILE;
+		if (open(my $FILE,'<',"$_")){
+			my @in_file=<$FILE>;
+			close $FILE;
 			push @in3,@in_file;
 			$fileread=1;
 		}
@@ -302,9 +302,9 @@ for (@in3){
 	elsif (/^{COVER}(.*)/){ }
 	elsif (/^{INCLUDE}(.*)/){
 		if ($do_includes==1){
-			if ( open (INCLUDE, $1)){
-				while (<INCLUDE>){pushout ($_);}
-				close INCLUDE;
+			if ( open (my $INCLUDE,'<', $1)){
+				while (<$INCLUDE>){pushout ($_);}
+				close $INCLUDE;
 			}
 		}
 		
@@ -556,9 +556,9 @@ else {
 }
 
 my @charmap;
-if ( open (CHARMAP,$charmapfile)){
-	@charmap=<CHARMAP>;
-	close CHARMAP;
+if ( open (my $CHARMAP,'<',$charmapfile)){
+	@charmap=<$CHARMAP>;
+	close $CHARMAP;
 }
 else { print STDERR "Cannot open in3charmap$variables{'interpret'}"; }
 

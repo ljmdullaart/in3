@@ -18,8 +18,9 @@ for (@ARGV){
 	elsif (/^-*s.*/) { $side=1; }
 	elsif (/^-/) { print "Unknown argument $arg \n";}
 	else {
-		if (open(FILE,"<$arg")){
-			@input=<FILE>;
+		if (open(my $FILE,"<","$arg")){
+			@input=<$FILE>;
+			close $FILE;
 		}
 	}
 }

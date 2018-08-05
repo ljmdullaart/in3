@@ -108,10 +108,10 @@ print ".de dospark
 #
 ################################################################################
 sub stylesheet {
-	if (open (STYLE,"stylesheet.mm")){
+	if (open (my $STYLE,'<',"stylesheet.mm")){
 		debug ($DEB_FILE,"Stylesheet found");
-		while (<STYLE>){chomp;push @output,$_;}
-		close STYLE;
+		while (<$STYLE>){chomp;push @output,$_;}
+		close $STYLE;
 	}
 	else {
 		debug ($DEB_FILE,"No stylesheet found");
@@ -723,9 +723,9 @@ else {
 }
 
 my @charmap;
-if ( open (CHARMAP,$charmapfile)){
-      @charmap=<CHARMAP>;
-      close CHARMAP;
+if ( open (my $CHARMAP,'<',$charmapfile)){
+      @charmap=<$CHARMAP>;
+      close $CHARMAP;
 }
 else { print STDERR "in3tbl Cannot open in3charmap\n"; }
 
