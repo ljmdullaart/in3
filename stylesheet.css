@@ -27,3 +27,7 @@ table.normal {
 p.quote {
       color:blue;
 }
+.fixed {
+	font-family:"Courier New";
+}
+
