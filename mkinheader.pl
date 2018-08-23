@@ -53,10 +53,10 @@ for (@ARGV){
 	
 if ($VERBOSE > 0){ print "######## type=$type\n";}
 if ($do_total==1){
-	$all_in=`ls *.in| sort -n | paste -sd ' '`;
+	$all_in=`ls *.in| sort -n |egrep -v '^_top.in|^_bottom.in'| paste -sd ' '`;
 }
 else{
-	$all_in=`ls *.in|egrep -v 'total.in' | sort -n| paste -sd ' '`;
+	$all_in=`ls *.in|egrep -v 'total.in' | egrep -v '^_top.in|^_bottom.in'| sort -n| paste -sd ' '`;
 }
 chomp $all_in;
 
