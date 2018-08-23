@@ -56,3 +56,16 @@ output-processor (either the formatting of the web page or Groff).
 I do not follow all the priciples of 'clean code'. Thinking about how it
 shoudld be written has however made my code much more maintanable.
 
+.h2 Requirements
+
+To run in3, you must have on your system:
+
+- groff
+- tbl
+- ghostscript
+- ps2pdf
+- gnuplot
+- dia
+- imagemagic
+
+
