@@ -257,6 +257,8 @@ for (@in3){
 				pushout(".br");
 				pushout("{LITTERAL}$litblock[$i]");
 				if (($i % 50)==49){
+					pushout("");
+					pushout("");
 					pushout(".ps");
 					pushout(".ft");
 					pushout(".B2");
@@ -274,6 +276,7 @@ for (@in3){
 				}
 					
 			}
+			pushout("  ");
 			pushout(".ps");
 			pushout(".ft");
 			pushout(".B2");
@@ -535,10 +538,11 @@ for (@in3){
 		}
 		elsif ($alineatype>0){
 			pushout(".TE");
+			pushout(".P");
 		}
 		$alineatype=-1;
 		pushout(".ne 20v");
-		pushout(".TS");
+		pushout(".TS H");
 		my $outline="allbox,center;";
 		debug($DEB_TABLE,"Start a table");
 		pushout ($outline);
@@ -582,7 +586,7 @@ for (@in3){
 			}
 		}
 		$output[$#output] .= ".";
-		pushout(".TS H");
+		#pushout(".TS H");
 		pushout (".TH");
 		$frst=1;
 		my $thead=0;
@@ -806,5 +810,10 @@ for (@output){
 	}
 }
 for (@output){
-	print "$_\n";
+	if ($_ =~ '-EMPTY LINE-'){
+		print "$_\n";
+	}
+	else {
+		print "$_\n";
+	}
 }
