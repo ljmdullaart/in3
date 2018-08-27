@@ -86,7 +86,7 @@ for (@ARGV){
 	elsif (/^--partonly/){ $part_only=1; }
 	elsif (/^-$/){ 
 		my @in_file=<STDIN>;
-		close FILE;
+		#close FILE;
 		push @in3,@in_file;
 		$fileread=1;
 	}
