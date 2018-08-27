@@ -7,6 +7,7 @@ WWWDIR=www
 PDFDIR=pdf
 EPUBDIR=epub
 HTMLDIR=html
+TXTDIR=text
 
 banner in3 >> Makefile
 PWD=`pwd`
@@ -91,6 +92,7 @@ echo -n 'tag/in: ' >> Makefile
 if [ -d  $WWWDIR ] ; then  echo -n 'tag/in3.www ' >> Makefile ; fi
 if [ -d  $HTMLDIR ] ; then  echo -n 'tag/in3.html ' >> Makefile ; fi
 if [ -d  $PDFDIR ] ; then  echo -n 'tag/in3.pdf ' >> Makefile ; fi
+if [ -d  $TXTDIR ] ; then  echo -n 'tag/in3.txt ' >> Makefile ; fi
 if [ -d  $EPUBDIR ] ; then  echo -n 'tag/in3.epub ' >> Makefile ; fi
 echo    'tag/in3.img' >> Makefile
 echo '	touch tag/in' >> Makefile
@@ -324,6 +326,46 @@ if [ -d $EPUBDIR ] ; then
 	
 	echo "$EPUBDIR:" >> Makefile
 	echo "	mkdir $EPUBDIR" >> Makefile
+fi
+##### ###### #    # ##### 
+  #   #       #  #    #   
+  #   #####    ##     #   
+  #   #        ##     #   
+  #   #       #  #    #   
+  #   ###### #    #   #   
+
+if [ -d $TXTDIR ] ; then
+	INTXT=`ls *.in | sort -n | sed "s/.in$/.txt/;s/^/$TXTDIR\//" | paste -sd' '`
+	echo "tag/in3.txt: $TXTDIR/total.txt $INTXT" >> Makefile
+	echo "	touch tag/in3.txt" >> Makefile
+	DONE_TOTAL=0
+	DONE_INDEX=0
+	 
+	add_txt(){
+		echo "$TXTDIR/$1.txt: $TXTDIR/$1.min">>Makefile
+		echo "	nroff -min $TXTDIR/$1.min > $TXTDIR/$1.txt">>Makefile
+		echo "$TXTDIR/$1.min: $TXTDIR/$1.tbl">>Makefile
+		echo "	tbl $TXTDIR/$1.tbl > $TXTDIR/$1.min">>Makefile
+		echo "$TXTDIR/$1.tbl: $1.in3 tag/in3.img |$TXTDIR">>Makefile
+		echo "	in3tbl $1.in3 > $TXTDIR/$1.tbl">>Makefile
+		echo "$TXTDIR/$1.txt">>$UPLOADFILE
+		echo "$TXTDIR/$1.min">>$CLEANFILE
+		echo "$TXTDIR/$1.tbl">>$CLEANFILE
+	}
+	for FILE in $INBASE ; do
+		if [ $FILE = total ] ; then DONE_TOTAL=1 ; fi
+		if [ $FILE = index ] ; then DONE_INDEX=1 ; fi
+		add_txt $FILE
+	done
+	if [ $DONE_TOTAL = 0 ] ; then
+		add_txt total
+	fi
+	if [ $DONE_INDEX = 0 ] ; then
+		add_txt index
+	fi
+	echo "$TXTDIR:" >> Makefile
+	echo "	mkdir $TXTDIR" >> Makefile
+
 fi
 ######   ######   #######  
 #     #  #     #  #        
