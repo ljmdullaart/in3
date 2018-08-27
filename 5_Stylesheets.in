@@ -46,7 +46,7 @@ creates div-containers for specific text-elements:
 	left	left notes	·left { font-size: 80%; }
 	list	format for all lists	·list { background-color: #00DDDD; }
 	side	side notes (right hand side)	·side { font-size: 50%; background-color: #DD0000; }
-	table·note the layout of notes; mostly used to align notes	table·note td { vertical-allign: top; }
+	table·note	the layout of notes; mostly used to align notes	table·note td { vertical-allign: top; }
 	toc	Table of contents	·toc { color: #000000; background-color: #DDDDDD; width: 100%; } 
 
 .h2 Groff style sheet

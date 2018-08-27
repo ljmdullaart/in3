@@ -79,7 +79,7 @@ are implemented.
 	*markdown* *format* *request*	*allowed* *when*
 	use of _ or * emphasis	markdown=1 or inlineemp=1
 	use of [] links	markdown=1 or inlineemp=1
-	use of > instead of .pre markdown=1
+	use of > instead of .pre	markdown=1
 	==== for chapters	markdown=1
 	---- for sections	markdown=1
 	hashes for titles	markdown=1
