@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+
 my $DEBUG=0;
 my $DEB_IN=4;		#All input lines 
 my $DEB_PUSH=8;	#All push-outs
@@ -13,10 +14,21 @@ my $DEB_IMG=128;	#Image processing
 my $DEB_VARS=256;	# interpret and other vars
 my $DEB_TABLE=512;	#debug table processing
 
+my @output;
+sub pushout{
+	(my $txt)=@_;
+	push @output,$txt;
+	if ($DEB_PUSH & $DEBUG){
+		print STDERR "DEBUG $DEB_PUSH: $txt\n";
+	}
+}
 sub debug {
 	(my $level,my $msg)=@_;
-	if ($DEBUG & $level){
-		print STDERR "DEBUG $level: $msg\n";
+	if ($level & $DEBUG){
+		pushout ("<!-- DEBUG $level: $msg-->");
+	}
+	if ($DEB_PUSH & $DEBUG){
+		print STDERR "DEBUG $level $msg\n";
 	}
 }
 
@@ -60,15 +72,29 @@ you have an alternative perception of reality.
 
 }
 
-my $do_includes=1;
-my $part_only=0;
-my $continued=0;
-my $fileread=0;
-my $inalinea=0;
+my $do_includes=1;		# Include files when the {INCLUDE} tag is found
+my $part_only=0;		# Do not produce headers
 my $inquote=0;
 my $tcelopen=0;
 my $inli=0;
-my @in3;
+my @in3;				# The complete input-file
+
+#
+# _ __   __ _ _ __ ___  ___ 
+# | '_ \ / _` | '__/ __|/ _ \
+# | |_) | (_| | |  \__ \  __/
+# | .__/ \__,_|_|  |___/\___|
+# |_|                        
+#                                           _       
+#  __ _ _ __ __ _ _   _ _ __ ___   ___ _ __ | |_ ___ 
+# / _` | '__/ _` | | | | '_ ` _ \ / _ \ '_ \| __/ __|
+#| (_| | | | (_| | |_| | | | | | |  __/ | | | |_\__ \
+# \__,_|_|  \__, |\__,_|_| |_| |_|\___|_| |_|\__|___/
+#           |___/                                    
+#
+
+my $continued=0;		# argument is continued as next argument
+my $fileread=0;			# a file is read; no need to read stdin
 for (@ARGV){
 	if ($continued==1){
 		if (/([0-9]+)/){ $DEBUG=$1; $continued=0;}
@@ -124,6 +150,7 @@ my %variables=();
 my $mapnr=0;
 my $cover='';
 my @note;
+my $language='en';
 
 $variables{'interpret'}=1;
 
@@ -132,13 +159,19 @@ sub pushnote{
 	(my $txt)=@_;
 	push @note,$txt;
 }
-my @output;
-sub pushout{
-	(my $txt)=@_;
-	push @output,$txt;
-	debug($DEB_PUSH,"PUSHOUT: $txt");
-}
-
+#     _                                       _   
+#  __| | ___   ___ _   _ _ __ ___   ___ _ __ | |_ 
+# / _` |/ _ \ / __| | | | '_ ` _ \ / _ \ '_ \| __|
+#| (_| | (_) | (__| |_| | | | | | |  __/ | | | |_ 
+# \__,_|\___/ \___|\__,_|_| |_| |_|\___|_| |_|\__|
+#
+#        _       _           _     
+#   __ _| | ___ | |__   __ _| |___ 
+#  / _` | |/ _ \| '_ \ / _` | / __|
+# | (_| | | (_) | |_) | (_| | \__ \
+#  \__, |_|\___/|_.__/ \__,_|_|___/
+#  |___/     
+#
 
 for (@in3){
 	if (/^{TITLE}(.*)/){ $title=$1;}
@@ -149,6 +182,7 @@ for (@in3){
 	}
 	if (/^{COVER}(.*)/){ $cover=$1; }
 	if (/^{LIKE}/){$like=1;}
+	if (/^{LANGUAGE} ([^ ])/){$language=$1;}
 	if (/^{SIDE/){$side=1;}
 	if (/^{SET}([^ ]*) (.*)/){
 		my $val;
@@ -166,17 +200,26 @@ for (@in3){
 	}
 }
 
+#  _                    _               
+# | |__   ___  __ _  __| | ___ _ __ ___ 
+# | '_ \ / _ \/ _` |/ _` |/ _ \ '__/ __|
+# | | | |  __/ (_| | (_| |  __/ |  \__ \
+# |_| |_|\___|\__,_|\__,_|\___|_|  |___/
+#
 if ($part_only==0){
 	pushout ( "<!DOCTYPE HTML>");
-	pushout ( "<html>");
+	pushout ( "<html lang=\"$language\">");
 	pushout ( "<head>");
-	pushout ( "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">");
+	pushout ( "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
 	if (-f "stylesheet.css"){
 		pushout ( "<LINK HREF=\"stylesheet.css\" REL=\"stylesheet\" TYPE=\"text/css\">");
 	}
 	pushout ( "");
 	if ($title ne ''){
 	 	pushout ( "<title>$title</title>");
+	}
+	else {
+		pushout ( "<title>Untitled</title>");
 	}
 	pushout ( "</head>");
 	pushout ( "<body>");
@@ -195,32 +238,98 @@ if ($cover ne ''){
 	pushout ( "<img src=$cover alt=\"Cover\"><br>");
 }
 
+#       _ _                  
+#  __ _| (_)_ __   ___  __ _ 
+# / _` | | | '_ \ / _ \/ _` |
+#| (_| | | | | | |  __/ (_| |
+# \__,_|_|_|_| |_|\___|\__,_|
+#            
+#	-1	No alinea is open.
+#	0	simple alinea (no side or left note
+#	1	leftnote only
+#	2	side note only
+#	3	left and side note.
+
+my $inalinea=0;
+my $inalineatab=0;
+
 sub alineatabstart {
-	debug($DEB_ALINEA,"ALINEA START; alineatype=$alineatype;");
-	if ($alineatype==0){
-		pushout ( "<p><div class=\"alinea\">");
+	if ($inalineatab==0){
+		debug($DEB_ALINEA,"ALINEA TABLE START { alineatype=$alineatype;inalinea=$inalinea");
+		if ($alineatype==0){
+			pushout ( "<p><div class=\"alinea\">");
+		}
+		elsif ($alineatype==1){
+			pushout ( "<table class=note><tr><td><div class=\"leftnote\">");
+		}
+		elsif ($alineatype==2){
+			pushout ( "<table class=note><tr><td><div class=\"alinea\">");
+		}
+		elsif ($alineatype==3){
+		pushout ( "<table class=note><tr><td><div class=\"leftnote\">");
+		}
+		$inalinea=1;
+		debug($DEB_ALINEA,"ALINEA TABLE START } alineatype=$alineatype;inalinea=$inalinea");
+		$inalineatab=1;
+	}
+}
+	
+sub endalinea {
+	debug($DEB_ALINEA,"ALINEA END { alineatype=$alineatype;inalinea=$inalinea");
+	if ($inalineatab==0){ print "** ERROR ** End alinea outside an alineatab\n";}
+	if ($alineatype<0){}
+	elsif ($inalinea==0){}
+	elsif ($alineatype==0){
+		if ($inalinea>0){pushout("</div>");}
 	}
 	elsif ($alineatype==1){
-		pushout ( "<table class=note><tr><td style=\"width:15%\">");
+		pushout("</div>      </td>      </tr>")
+		#pushout(" </td>      </tr>")
 	}
 	elsif ($alineatype==2){
-		pushout ( "<table class=note><tr><td><div class=\"alinea\">");
+		pushout("</div>      </td>      </tr>")
+		#pushout(" </td>      </tr>")
 	}
 	elsif ($alineatype==3){
-		pushout ( "<table class=note><tr><td style=\"width:15%\">");
-	}
-	$inalinea=1;
-}
-sub alineatabend {
-	debug($DEB_ALINEA,"ALINEA END; alineatype=$alineatype;");
-	if ($alineatype==0){
-		if ($inalinea>0){pushout ( "</div>");}
-	}
-	elsif ($alineatype>0){
-		#pushout ( "</div></td></tr></table>");
-		pushout ( "</table>");
+		pushout("</div>      </td>      </tr>")
+		#pushout(" </td>      </tr>")
 	}
 	$inalinea=0;
+	debug($DEB_ALINEA,"ALINEA END } alineatype=$alineatype;inalinea=$inalinea");
+}
+sub alineatabend {
+	if ($inalineatab==1){
+		debug($DEB_ALINEA,"ALINEA TABLE END; {  alineatype=$alineatype;inalinea=$inalinea");
+		endalinea;
+		if ($alineatype>0){
+			#pushout ( "</div></td></tr></table>");
+			pushout ( "</table>");
+		}
+		$inalinea=0;
+		debug($DEB_ALINEA,"ALINEA TABLE END } alineatype=$alineatype;inalinea=$inalinea");
+		$inalineatab=0;
+	}
+}
+
+sub startalinea {
+	(my $newalineatype)=@_;
+	if ($inalineatab==0){ alineatabstart;}
+	if ($inalinea==1){ endalinea;}
+	debug($DEB_ALINEA,"ALINEA START{ alineatype=$alineatype; new type=$newalineatype");
+	if ($newalineatype != $alineatype){
+		alineatabend;
+		$alineatype=$newalineatype;
+		alineatabstart;
+	}
+	else {
+		if ($alineatype==0){pushout("<p><div class=\"alinea\">")}
+		# below, sizes of the columns must be given
+		elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
+		elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
+		elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
+		$inalinea=1;
+	}
+	debug($DEB_ALINEA,"ALINEA START} alineatype=$alineatype; new type=$newalineatype");
 }
 
 my $litteraltext=0;
@@ -261,39 +370,10 @@ for (@in3){
 	if (1==0){}
 	elsif (/^{ALINEA}([0-9])/){
 		my $newalineatype=$1;
-		debug($DEB_ALINEA,"ALINEA DIRECTIVE; alineatype=$alineatype; new type=$newalineatype");
-		if ($newalineatype != $alineatype){
-			alineatabend;
-			$alineatype=$newalineatype;
-			alineatabstart;
-		}
-		else {
-			if ($alineatype==0){pushout("<p><div class=\"alinea\">")}
-			# below, sizes of the columns must be given
-			elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
-			elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
-			elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
-			$inalinea=1;
-		}
+		startalinea($newalineatype);
 	}
 	elsif (/^{ALINEAEND}/){
-		if ($alineatype<0){}
-		elsif ($alineatype==0){
-			if ($inalinea>0){pushout("</div>");}
-		}
-		elsif ($alineatype==1){
-			pushout("</div>      </td>      </tr>")
-			#pushout(" </td>      </tr>")
-		}
-		elsif ($alineatype==2){
-			#pushout("</div>      </td>      </tr>")
-			pushout(" </td>      </tr>")
-		}
-		elsif ($alineatype==3){
-			#pushout("</div>      </td>      </tr>")
-			pushout(" </td>      </tr>")
-		}
-		$inalinea=0;
+		endalinea;
 	}
 	elsif (/^{AUTHOR}(.*)/){ }
 	elsif (/^{APPENDIX}(.*)/){
@@ -332,7 +412,7 @@ for (@in3){
 		pushout ("<h$num id=\"a$titnr\">$titnr $text</h$num>");
 		if ($alineatype >0){
 			$alineatype &=2;
-			pushout ("<table class=note>");
+			#pushout ("<table class=note>");
 		}
 	}
 	elsif (/^{HEADUNNUM ([0-9])}(.*)/){
@@ -357,10 +437,9 @@ for (@in3){
 			pushout("<img src=\"$image\" alt=\"$image>\">");
 		}
 		pushout ("<br>");
-		if ($alineatype >0){
-			$alineatype &=2;
-			pushout ("<table class=note>");
-		}
+		alineatabstart;
+	}
+	elsif (/^{LANGUAGE}/){
 	}
 	elsif (/^{LEFTNOTE}(.*)/){
 		my $text=$1;
@@ -394,6 +473,7 @@ for (@in3){
 		pushout("<div class=\"list\">$1");
 	}
 	elsif (/^{LISTALPHASTART}/){
+		if ($inalinea==0){startalinea($alineatype);}
 		pushout("<ol type=a>");
 	}
 	elsif (/^{LISTDASHEND}/){
@@ -407,6 +487,7 @@ for (@in3){
 		$inli=1;
 	}
 	elsif (/^{LISTDASHSTART}/){
+		if ($inalinea==0){startalinea($alineatype);}
 		pushout("<ul>");
 	}
 	elsif (/^{LISTNUMEND}/){
@@ -420,6 +501,7 @@ for (@in3){
 		pushout("<div class=\"list\">$1");
 	}
 	elsif (/^{LISTNUMSTART}/){
+		if ($inalinea==0){startalinea($alineatype);}
 		pushout("<ol type=1>");
 	}
 	elsif (/^{LITTERAL}(.*)/){
@@ -433,13 +515,13 @@ for (@in3){
 		alineatabend;
 	}
 	elsif (/^{MAPPICT}(.*)/){
-		pushout('<div align="center">');
+		pushout('<div  style="text-align:center">');
 		$mapnr++;
-		pushout("<img src=\"$1\" usemap=#map$mapnr border=\"0\" alt=\"map\">");
+		pushout("<img src=\"$1\" usemap=#map$mapnr  alt=\"map\">");
 		pushout("<map name=map$mapnr>");
 	}
 	elsif (/^{MAPFIELD}([^ ]*) (.*)/){
-		pushout("<area shape=rect coords=\"$2\" href=\"$1\">");
+		pushout("<area shape=rect coords=\"$2\" href=\"$1\" alt=\"$1,$2\">");
 	}
 	elsif (/^{MAPLINK}([^ ]*) (.*)/){
 		pushout("<area shape=rect coords=\"$2\" href=\"$1\">");
@@ -472,7 +554,7 @@ for (@in3){
 	elsif (/^{SIDENOTE}(.*)/){
 		my $text=$1;
 		pushout("</div></td><td style=\"vertical-align:top;width:25%\">");
-		pushout("<div class=side>$text</div>");
+		pushout("<div class=side>$text");
 	}
 	elsif (/^{SUBTITLE}(.*)/){
 	}
