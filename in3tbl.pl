@@ -408,6 +408,8 @@ for (@in3){
 		pushout(".dospark $epsfile $xn"."v $y"."v");
 		pushout(".br");
 	}
+	elsif (/^{LANGUAGE}/){
+	}
 	elsif (/^{LEFTNOTE}(.*)/){
 		pushout("$1");
 		pushout("T}\@T{");
