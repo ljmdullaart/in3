@@ -834,6 +834,12 @@ for (@input){
 		s/^\.img *//;
 		inpush("{IMAGE}$_");
 	}
+	elsif (/^\.lang /){
+		if (/^\.lang ([^ ]*)/){
+			inpush ("{LANGUAGE}$1");
+			debug ($TAGS,"Link: $1");
+		}
+	}
 	elsif (/^\.link /){
 		if (/^\.link ([^ ]*) (.*)/){
 			inpush ("{LINK}$1 $2");
