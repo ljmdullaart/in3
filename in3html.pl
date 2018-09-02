@@ -260,13 +260,13 @@ sub alineatabstart {
 			pushout ( "<p><div class=\"alinea\">");
 		}
 		elsif ($alineatype==1){
-			pushout ( "<table class=note><tr><td><div class=\"leftnote\">");
+			pushout ( "<table class=note><tr><td></td><td></td></tr><tr><td><div class=\"leftnote\">");
 		}
 		elsif ($alineatype==2){
-			pushout ( "<table class=note><tr><td><div class=\"alinea\">");
+			pushout ( "<table class=note><tr><td></td><td></td></tr><tr><td><div class=\"alinea\">");
 		}
 		elsif ($alineatype==3){
-		pushout ( "<table class=note><tr><td><div class=\"leftnote\">");
+		pushout ( "<table class=note><tr><td></td><td></td><td></td></tr><tr><td><div class=\"leftnote\">");
 		}
 		$inalinea=1;
 		debug($DEB_ALINEA,"ALINEA TABLE START } alineatype=$alineatype;inalinea=$inalinea");
