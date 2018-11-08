@@ -67,9 +67,9 @@ if [ $ODTS != 0 ] ; then
 fi
 
 
-INFILES=`ls *.in | egrep -v 'total.in' | sort -n | paste -sd' '`
-INFILES_noindex=`ls *.in | egrep -v 'index.in|total.in' | sort -n | paste -sd' '`
-INBASE=`ls *.in | egrep -v 'configure.in' | sort -n | sed 's/.in$//' | paste -sd' '`
+INFILES=`ls *.in  2> /dev/null | egrep -v 'total.in' | sort -n | paste -sd' '`
+INFILES_noindex=`ls *.in  2> /dev/null | egrep -v 'index.in|total.in' | sort -n | paste -sd' '`
+INBASE=`ls *.in  2> /dev/null | egrep -v 'configure.in' | sort -n | sed 's/.in$//' | paste -sd' '`
 
 if [ "$INFILES" = "" ] ; then
 	echo "No .in-files found"
@@ -178,7 +178,7 @@ if [ -d $HTMLDIR ] ; then
 	DONE_TOTAL=0
 	DONE_INDEX=0
 	
-	INHTML=`ls *.in | sort -n | sed 's/.in$/.html/' |sed "s/^/$HTMLDIR\//"| paste -sd' '`
+	INHTML=`ls *.in  2> /dev/null | sort -n | sed 's/.in$/.html/' |sed "s/^/$HTMLDIR\//"| paste -sd' '`
 	if [ ! -f index.in ] ; then INHTML="$INHTML $HTMLDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $HTMLDIR/total.html" ; fi
 	echo "tag/in3.html: $INHTML $HTMLDIR/header.htm" >> Makefile
@@ -221,7 +221,7 @@ if [ -d $WWWDIR ] ; then
 	DONE_TOTAL=0
 	DONE_INDEX=0
 	
-	INHTML=`ls *.in | sort -n | sed 's/.in$/.html/' |sed "s/^/$WWWDIR\//"| paste -sd' '`
+	INHTML=`ls *.in  2> /dev/null | sort -n | sed 's/.in$/.html/' |sed "s/^/$WWWDIR\//"| paste -sd' '`
 	if [ ! -f index.in ] ; then INHTML="$INHTML $WWWDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $WWWDIR/total.html" ; fi
 	echo "tag/in3.www: $INHTML" >> Makefile
@@ -275,7 +275,7 @@ if [ -d $EPUBDIR ] ; then
 	DONE_INDEX=0
 	pub_opt="--remove-paragraph-spacing-indent-size 0";
 	
-	INHTML=`ls *.in | sort -n | sed 's/.in$/.html/' |sed "s/^/$EPUBDIR\//"| paste -sd' '`
+	INHTML=`ls *.in  2> /dev/null | sort -n | sed 's/.in$/.html/' |sed "s/^/$EPUBDIR\//"| paste -sd' '`
 	if [ ! -f index.in ] ; then INHTML="$INHTML $EPUBDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $EPUBDIR/total.html" ; fi
 
@@ -335,7 +335,7 @@ fi
   #   ###### #    #   #   
 
 if [ -d $TXTDIR ] ; then
-	INTXT=`ls *.in | sort -n | sed "s/.in$/.txt/;s/^/$TXTDIR\//" | paste -sd' '`
+	INTXT=`ls *.in  2> /dev/null | sort -n | sed "s/.in$/.txt/;s/^/$TXTDIR\//" | paste -sd' '`
 	echo "tag/in3.txt: $TXTDIR/total.txt $INTXT" >> Makefile
 	echo "	touch tag/in3.txt" >> Makefile
 	DONE_TOTAL=0
@@ -375,7 +375,7 @@ fi
 #        #     #  #        
 #        ######   #     
 if [ -d $PDFDIR ] ; then
-	INPDF=`ls *.in | sort -n | sed "s/.in$/.pdf/;s/^/$PDFDIR\//" | paste -sd' '`
+	INPDF=`ls *.in  2> /dev/null | sort -n | sed "s/.in$/.pdf/;s/^/$PDFDIR\//" | paste -sd' '`
 	echo "tag/in3.pdf: $PDFDIR/total.pdf $INPDF" >> Makefile
 	echo "	touch tag/in3.pdf" >> Makefile
 	DONE_TOTAL=0
