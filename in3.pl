@@ -151,6 +151,15 @@ else {
 	}
 }
 
+if (open(my $META, '<', "meta.in")){
+	while (<$META>){
+		chomp;
+		if (/^\.set ([^ ][^ ]*) ([^ ]*)/){
+			push @input,".set $1 $2";
+		}
+	}
+	close $META;
+}
 		
 ########################################################
 
@@ -766,6 +775,13 @@ for (@input){
 	elsif (/^\.date/) {
 		debug($TAGS,".date");
 		inpush ("{TEXTNORMAL}$datestring");
+	}
+	elsif (/^\.dumpvar/){
+		inpush("{LINEBREAK}");
+		for my $key (keys %variables){
+			inpush ("{TEXTBOLD} DUMP: $key=$variables{$key}");
+			inpush("{LINEBREAK}");
+		}
 	}
 	elsif (/^\.global/){
 	}
