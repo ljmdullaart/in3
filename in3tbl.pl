@@ -145,6 +145,16 @@ my $cover='';
 $variables{'interpret'}=1;
 my @in3=<>;
 
+$variables{'cp1'}=10;
+$variables{'cp2'}=5;
+$variables{'cp3'}=5;
+$variables{'cp4'}=5;
+$variables{'cp5'}=5;
+$variables{'cp6'}=4;
+$variables{'cp7'}=4;
+$variables{'cp8'}=4;
+$variables{'cp9'}=2;
+
 ################################################################################
 #	Cover processing
 ################################################################################
@@ -329,8 +339,8 @@ for (@in3){
 	elsif (/^{HEADER ([0-9])}(.*)/){
 		alineatabend;
 		if ($1==1){
-			my $dist=20-2*$1;
-			pushout (".ne $dist"."v");
+			my $dist=$variables{'cp1'};
+			pushout(".ne $dist"."v");
 			# pushout(".bp")
 			if ($appendix==0){
 				pushout(".H $1 \"$2\"");
@@ -341,7 +351,8 @@ for (@in3){
 			}
 		}
 		else {
-			my $dist=20-2*$1;
+			my $var="cp$1";
+			my $dist=$variables{$var};
 			pushout (".ne $dist"."v");
 			pushout(".H $1 \"$2\"");
 		}
