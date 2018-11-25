@@ -62,7 +62,7 @@ if [ $ODTS != 0 ] ; then
 		BASE=${FILE%%.odt}
 		odt2txt --width=-1 $FILE > temporary.txt
 		txt2in temporary.txt > $BASE.in
-		rm temporary.txt 
+		rm -f temporary.txt 
 	done
 fi
 
@@ -452,7 +452,7 @@ CURIMG=`cat $INFILES | sed -n 's/^\.img *//p' | sed 's/ .*//'|sort -u`
 for IMAGE in $CURIMG ; do
 	mk_images
 	BASEIMAGE=${IMAGE%.*}
-	TMPA="$ALLIMAGE $IMAGE $BASEIMAGE.eps"
+	TMPA="$ALLIMAGE $IMAGE"
 	ALLIMAGE=$TMPA
 done
 echo "Images: $ALLIMAGE"
@@ -461,7 +461,7 @@ CURIMG=`cat $INFILES | sed -n 's/^\.map image *//p' | sed 's/ .*//'|sort -u`
 for IMAGE in $CURIMG ; do
 	mk_images
 	BASEIMAGE=${IMAGE%.*}
-	TMPA="$ALLIMAGE $IMAGE $BASEIMAGE.eps"
+	TMPA="$ALLIMAGE $IMAGE"
 	ALLIMAGE=$TMPA
 done
 echo "Images: $ALLIMAGE"
@@ -470,7 +470,7 @@ CURIMG=`cat $INFILES | sed -n 's/^\.cover *//p' | sed 's/ .*//'|sort -u`
 for IMAGE in $CURIMG ; do
 	mk_images
 	BASEIMAGE=${IMAGE%.*}
-	TMPA="$ALLIMAGE $IMAGE $BASEIMAGE.eps"
+	TMPA="$ALLIMAGE $IMAGE"
 	ALLIMAGE=$TMPA
 done
 echo "Images: $ALLIMAGE"
@@ -482,13 +482,13 @@ MAPFILES=`cat $INFILES | sed -n 's/^.map image *//p' | sed 's/ .*//'| paste -sd 
 echo "tag/in3.img: $ALLIMAGE|tag" >> Makefile
 if [ -d $EPUBDIR ] ; then
 	echo "	cp $ALLIMAGE $EPUBDIR">> Makefile
-	echo "	rm $EPUBDIR/*.eps">> Makefile
+	echo "	rm -f $EPUBDIR/*.eps">> Makefile
 
 fi
 if [ -d $WWWDIR ] ; then
 	if [ "$ALLIMAGE" != "" ] ; then
 		echo "	cp $ALLIMAGE $WWWDIR">> Makefile
-		echo "	rm $WWWDIR/*.eps">> Makefile
+		echo "	rm -f $WWWDIR/*.eps">> Makefile
 	fi
 fi
 echo "	touch tag/in3.img" >> Makefile
@@ -515,7 +515,7 @@ if [ $ODTS != 0 ] ; then
 		echo "$BASE.in: $FILE" >> Makefile
 		echo "	odt2txt --width=-1 $FILE > temporary.txt" >> Makefile
 		echo "	txt2in temporary.txt > $BASE.in" >> Makefile
-		echo "	rm temporary.txt " >> Makefile
+		echo "	rm -f temporary.txt " >> Makefile
 		echo "$BASE.in">>$CLEANFILE
 	done
 fi
