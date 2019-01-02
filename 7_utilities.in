@@ -20,3 +20,16 @@ There are two files that can be used to modify the resulting index-file:
 - index.bottom: this file is placed below the generated output
 
 Both files are copied litterally to the output.
+
+
+.h2 Mk_cover
+
+If a file
+.fix coverimage.png
+exists,
+.fix mk_cover
+wil create a standardized cover page. The cover page is
+placed in
+.fix cover.png.
+
+
