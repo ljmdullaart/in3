@@ -328,6 +328,7 @@ sub close_list {
 			elsif (/^\.b / )                 { s/^\.b *//;       inpush ("{TEXTBOLD}$_"); }
 			elsif (/^\.u / )                 { s/^\.u *//;       inpush ("{TEXTUNDERLINE}$_"); }
 			elsif (/^\.fix / )               { s/^\.fix *//;     inpush ("{TEXTFIX}$_"); }
+			elsif (/^\.fixed / )             { s/^\.fixed *//;   inpush ("{TEXTFIX}$_"); }
 			elsif (!(/^[-#@ 	]/))         {                   inpush ("{TEXTNORMAL}$_"); }
 			elsif ($types[$listlevel] eq '-'){s/^[-#@ 	]*//;inpush("{LISTDASHITEM}$_");}
 			elsif ($types[$listlevel] eq '#'){s/^[-#@ 	]*//;inpush("{LISTNUMITEM}$_");}
@@ -787,7 +788,7 @@ for (@input){
 	}
 	elsif (/^\.headerlink/){
 	}
-	elsif (/^\.fix (.*)/){
+	elsif (/^\.fix[ed]* *(.*)/){
 		my $textbody=$1;
 		debug ($TAGS,"Fixed request");
 		start_alinea;
