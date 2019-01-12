@@ -9,7 +9,7 @@ EPUBDIR=epub
 HTMLDIR=html
 TXTDIR=text
 
-banner in3 >> Makefile
+figlet in3 | sed 's/^/#  /' >> Makefile
 PWD=`pwd`
 WD=`basename $PWD`
 REST=''
@@ -426,7 +426,9 @@ ALLIMAGE=""
 
 mk_images(){
 	BASEIMAGE=${IMAGE%.*}
-	if [ -f $BASEIMAGE.xcf ] ; then
+	if [ "$BASEIMAGE" = "cover.png" ] && [ -f coverimage.png ] ; then
+		mk_cover
+	elif [ -f $BASEIMAGE.xcf ] ; then
 		echo "$IMAGE: $BASEIMAGE.xcf" >> Makefile
 		echo "	convert $BASEIMAGE.xcf $IMAGE" >> Makefile
 		echo "$IMAGE">>$CLEANFILE
