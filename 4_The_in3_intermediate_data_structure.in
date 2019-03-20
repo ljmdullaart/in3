@@ -22,6 +22,7 @@ should be fairly readable. The following tags are used:
 	IMAGE	filename	Include an image here
 	LINE	 	Draw a horizintal line
 	LINK	destination text	Generate a hyperlink, if applicable
+	LST	text	The line is in fixed on a separate line
 	MAPSTART	 	Start a clickable map
 	MAPPICT	filename	Use the image for the map
 	MAPFIELD	link coordinates	Create a click-field on the map

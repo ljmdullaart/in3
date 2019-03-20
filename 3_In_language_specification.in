@@ -45,6 +45,7 @@ The translation table for the % translations is the in3charmap.
 	i	text	italized text
 	pre	none	starts or stops a pre-formatted text
 	u	text	Underline text
+	lst	text	Put the line as a separate line as fixed
 
 .h3 Headers
 

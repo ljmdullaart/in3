@@ -511,6 +511,11 @@ for (@in3){
 		$text=~s/>/&gt;/g;
 		pushlit($text);
 	}
+	elsif (/^{LST}(.*)/){
+		my $line=$1;
+		$line=~s/	/\&nbsp;\&nbsp;\&nbsp;\&nbsp;/g;
+		pushout("<br><span class=\"fixed\">$line</span>");
+	}
 	elsif (/^{MAPSTART}/){
 		alineatabend;
 	}

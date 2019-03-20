@@ -474,6 +474,18 @@ for (@in3){
     elsif (/^{LITTERAL}(.*)/){
         pushlit($1);
     }
+	elsif (/^{LST}(.*)/){
+		pushout(".br");
+		if ( $1 ne ''){
+			my $txt=$1;
+			$txt=~s/\\$/\\\\/;
+			pushout(".ft CR");
+			pushout(".ps -2");
+			pushout("$txt");
+			pushout(".ps");
+			pushout(".ft");
+		}
+	}
 	elsif (/^{MAPFIELD}(.*)/){
       }
 	elsif (/^{MAPEND}(.*)/){

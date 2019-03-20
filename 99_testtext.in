@@ -137,8 +137,14 @@ vulputate ex, accumsan cursus nulla nisl et nibh.
 Curabitur at
 erat a justo lacinia fringilla quis quis purus. Nulla et vehicula
 nisl, nec gravida ligula. Quisque porta aliquam maximus. Aliquam
-iaculis massa ante, ac vestibulum risus semper at. Aliquam in
-volutpat tellus, sit amet aliquet risus. Sed vel ante condimentum,
+.lst	iaculis massa ante, ac
+.lst		vestibulum risus
+.lst			Aliquam in
+.lst				semper at.
+.lst			volutpat tellus,
+.lst		sit amet aliquet risus.
+.lst	Sed vel ante condimentum,
+.lst
 porta orci tempus, ultricies ligula. Sed laoreet eros sapien,
 vitae dictum nulla tincidunt quis.
 .appendix

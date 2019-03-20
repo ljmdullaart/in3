@@ -868,6 +868,11 @@ for (@input){
 		}
 		else { print STDERR "Unknown link command $_\n"; }
 	}
+	elsif (/^\.lst(.*)/){
+		start_alinea;
+		inpush ("{LST}$1");
+		debug ($TAGS,"LST $1");
+	}
 	elsif (/^\.map ([^ ]+) +(.*)/){
 		my $submap=$1;
 		my $args=$2;
