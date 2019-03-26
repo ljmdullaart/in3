@@ -265,6 +265,7 @@ for (@in3){
 			pushout(".ps -2");
 			for my $i (0..$#litblock){
 				pushout(".br");
+				$litblock[$i]=~s/\\/\\\\/g;
 				pushout("{LITTERAL}$litblock[$i]");
 				if (($i % 50)==49){
 					pushout("");
