@@ -28,3 +28,23 @@ plot sin(x) title 'Sine Function', tan(x) title 'Tangent'
 .pre
 
 .img gnuplot.png
+
+.fix eqn
+can also be used to generate an image. The 
+.fix .EQ
+and
+.fix .EN
+tags must be present and the sourcefile must end with
+.fix .eqn
+
+An example 
+.pre
+ .EQ
+
+ sqrt a+b = int a sup { i pi } d omega
+
+ .EN
+.pre
+
+gives:
+.img tsteqn.png

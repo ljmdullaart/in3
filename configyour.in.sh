@@ -443,6 +443,13 @@ mk_images(){
 		echo "	gnuplot $BASEIMAGE.gnuplot" >> Makefile
 		echo "$IMAGE">>$CLEANFILE
 		echo "$IMAGE">>$UPLOADFILE
+	elif [ -f $BASEIMAGE.eqn ] ; then
+		echo "$IMAGE: $BASEIMAGE.eqn" >> Makefile
+		echo "	eqn $BASEIMAGE.eqn > $BASEIMAGE.groff" >> Makefile
+		echo "	groff $BASEIMAGE.groff > $BASEIMAGE.ps" >> Makefile
+		echo "	ps2pdf $BASEIMAGE.ps > $BASEIMAGE.pdf" >> Makefile
+		echo "	convert -trim -density 600 $BASEIMAGE.pdf  $IMAGE" >> Makefile
+		echo "	rm $BASEIMAGE.groff $BASEIMAGE.ps $BASEIMAGE.pdf" >> Makefile
 	fi
 	echo "$BASEIMAGE.eps: $IMAGE" >> Makefile
 	echo "	convert $IMAGE $BASEIMAGE.eps" >> Makefile
