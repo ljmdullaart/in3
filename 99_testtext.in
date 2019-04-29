@@ -156,7 +156,15 @@ Nec faucibus elit fermentum nec. Duis
 in justo non risus tincidunt vestibulum. Sed gravida sodales augue,
 a pulvinar lorem tincidunt eget. Curabitur nec bibendum diam,
 rutrum aliquet elit. Sed aliquet nulla id nulla iaculis, sed fringilla
-ligula malesuada. Nunc sagittis et mi vel egestas. Vivamus mollis
+ligula malesuada. Nunc sagittis et mi vel egestas.
+
+.img tsteqn.png
+.img tsteqn.png 50
+.img tsteqn.png 25
+.img tsteqn.png 10
+.img tsteqn.png  5
+
+Vivamus mollis
 elementum purus, pharetra blandit elit suscipit ac.
 
 .h2 Curabitur id ante placerat

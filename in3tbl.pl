@@ -396,6 +396,11 @@ for (@in3){
 	}
 	elsif (/^{IMAGE}(.*)/){
 		my $image=$1;
+		my $scale=50;
+		if (/ ([0-9][0-9]*)$/){
+			$scale=$1;
+			$image=~s/ [0-9][0-9]*//;
+		}
 		debug($DEB_IMG,"Processing $image");
 		my $epsfile=$image; $epsfile=~s/\.[^.]+$/.eps/;
 		debug($DEB_IMG,"convert $image $epsfile");
@@ -404,6 +409,8 @@ for (@in3){
 		my $x; my $y; my $xn;
 		($x,$y)=split ('x',$imgsize);
 		$xn=($x*150+2000)/($x*5+1000); $y=$y*$xn/$x;
+		$xn=$scale*$xn/100;
+		$y=$scale*$y/100;
 		pushout(".br");
 		my $found=0;
 		my $yroom=$y+15;

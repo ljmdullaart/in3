@@ -426,15 +426,27 @@ for (@in3){
 		alineatabend;
 		pushout ("<br>");
 		my $image;my $text;
+		my $scale=100;
+		if (/ ([0-9][0-9]*)$/){
+			$scale=$1;
+			s/ *[0-9]*$//;
+		}
+		debug ($DEB_IMG, "scale=$scale  _=$_");
+		$scale=$scale*80/100;
 		if (/^{IMAGE}([^ ]*) (.*)/){
 			$image=$1;$text=$2;
-			pushout("<img src=\"$image\" alt=\"image for $text>\">");
+			debug ($DEB_IMG, "scale=$scale  image=$image text=$text");
+			pushout("<img src=\"$image\" width=\"$scale%\" height=\"$scale%\" alt=\"image for $text>\">");
 			pushout ("<br>");
 			pushout ($text);
 		}
+		elsif (/^{IMAGE}([^ ]*)/) {
+			$image=$1;
+			debug ($DEB_IMG, "scale=$scale  image=$image");
+			pushout("<img src=\"$image\" width=\"$scale%\" height=\"$scale%\" alt=\"$image>\">");
+		}
 		else {
-			$image=$1;$text=$2;
-			pushout("<img src=\"$image\" alt=\"$image>\">");
+			print "<!-- in3html could not do an image -->";
 		}
 		pushout ("<br>");
 		alineatabstart;

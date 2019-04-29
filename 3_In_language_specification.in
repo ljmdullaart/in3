@@ -62,7 +62,7 @@ The translation table for the % translations is the in3charmap.
 	cover	filename	use the image in filename as cover
 	global	variable value	set the variable to value globally
 	hr	none	horizontal line
-	img	image	include an image here
+	img	image [caption text] [scale]	include an image here
 	link	link text	provide a link
 	headerlink	link text	a link that is used only in the header
 	map	image  image_file	Map creates a clickable map in HTML or an image in PDF.
