@@ -8,25 +8,29 @@ use warnings;
 my $DEBUG=0;
 my $DEB_FILE=1;		#files that are opened or closed
 my $DEB_TABLE=2;		#all table-processing stuff
+my $DEB_CMD=4;			#Command found
 my $DEB_ALINEA=32;	#alinea processing
 my $DEB_CHAR=64;		#replace characters with GROFF escapes
 my $DEB_IMG=128;		#Image processing
+my $DEB_PUSH=512;		#all pushes on the output
 
 sub debug {
 	(my $level,my $msg)=@_;
 	if ($DEBUG & $level){
-		print STDERR "in3tbl DEBUG $level: $msg\n";
+		print "in3tbl DEBUG $level: $msg\n";
 	}
 }
 
 ################################################################################
 #	Alinea processing
 ################################################################################
-my $alineatype=-1;		# -1	Outside alineas
+my $alineatype=-1;	# -1	Outside alineas
 					#  0	Alinea without sidenotes
 					#  1	Leftnote
 					#  2	Sidenote right
 					#  3	Notes left & right
+my $inalinea=0;
+my $inalineacel=0;
 # The sizes below are taken somewhat arbitrarily. Tbl considers itself
 # free to change them anyway.
 my $LEFTNOTE=2;			
@@ -38,10 +42,22 @@ my $appendix=0;
 debug($DEB_ALINEA,"Initial alinea=-1");
 
 sub alineatabend{			
-	if ($alineatype>0){pushout (".TE");}
-	$alineatype=-1;
+	if ($inalineacel>0){
+		pushout ('T}');
+		$inalineacel=0;
+	}
+	if ($inalinea==1){
+		if ($alineatype>0){pushout (".TE");}
+		$alineatype=-1;
+		$inalinea=0;
+	}
+	
 }
 sub alineatabstart{
+	if ($inalinea==1){
+		alineatabend();
+	}
+	$inalinea=1;
 	if ($alineatype==0){
 	}
 	elsif ($alineatype==1){
@@ -50,6 +66,7 @@ sub alineatabstart{
 		pushout("tab(@);");
 		pushout("l l.");
 		pushout("T{");
+		$inalineacel=1;
 		pushout(".ll $LEFTNOTE"."c");
 	}
 	elsif ($alineatype==2){
@@ -58,6 +75,7 @@ sub alineatabstart{
 		pushout("tab(@);");
 		pushout("l lp6.");
 		pushout("T{");
+		$inalineacel=1;
 		pushout(".ll $actualbody"."c");
 	}
 	elsif ($alineatype==3){
@@ -66,6 +84,7 @@ sub alineatabstart{
 		pushout("tab(@);");
 		pushout("l l lp6.");
 		pushout("T{");
+		$inalineacel=1;
 		pushout(".ll $LEFTNOTE"."c");
 	}
 }
@@ -74,6 +93,7 @@ sub alineatabstart{
 my @output;
 sub pushout{
 	(my $txt)=@_;
+	debug ($DEB_PUSH,"--$txt--");
 	push @output,$txt;
 }
 
@@ -143,8 +163,32 @@ my $intable=0;
 my %variables=();
 my $cover='';
 $variables{'interpret'}=1;
-my @in3=<>;
 
+
+################################################################################
+
+my $gotinput=0;
+my @in3;
+
+for (@ARGV){
+	if (/^-h/){ print "in3tbl [-h] [-d<value>] [files]\n"; }
+	elsif (/^-d([0-9][0-9]*)/) {$DEBUG=$1;}
+	else {
+		if (open (my $FH, '<',$_)){
+			debug ($DEB_FILE,"opened $_ as input file");
+			my @curinput=<$FH>;
+			push @in3,@curinput;
+			$gotinput++;
+			close $FH;
+		}
+		else { print "in3tbl cannot open $_\n";}
+	}
+}
+if ($gotinput==0){
+	@in3=<STDIN>;
+}
+
+################################################################################
 $variables{'cp1'}=10;
 $variables{'cp2'}=5;
 $variables{'cp3'}=5;
@@ -207,6 +251,8 @@ if ($coversheet > 0){
 			pushout(".sp 2c");
 
 		}
+	}
+	for (@in3){
 		if (/^{SUBTITLE}(.*)/){
 			$subtitle=$1;
 			pushout(".ps +8");
@@ -219,6 +265,8 @@ if ($coversheet > 0){
 			pushout(".sp 3c");
 
 		}
+	}
+	for (@in3){
 		if (/^{AUTHOR}(.*)/){
 			$author=$1;
 			pushout(".sp 1c");
@@ -244,6 +292,7 @@ pushout(".ds pg*header ''- \\\\nP -''");
 # Main loop
 ################################################################################
 for (@in3){
+	if (/^{(..*)}/){ debug ($DEB_CMD,$1); }
 	chomp;
 	if ($inquote==1){
 		if (/^{QUOTE}/){}
@@ -307,9 +356,21 @@ for (@in3){
 			alineatabstart;
 		}
 		else {
-			if ($alineatype==1){pushout("T{");pushout(".ll $LEFTNOTE"."c");}
-			elsif ($alineatype==2){pushout("T{");pushout(".ll $actualbody"."c");}
-			elsif ($alineatype==3){pushout("T{");pushout(".ll $LEFTNOTE"."c");}
+			if ($alineatype==1){
+				pushout("T{");
+				$inalineacel=1;
+				pushout(".ll $LEFTNOTE"."c");
+			}
+			elsif ($alineatype==2){
+				pushout("T{");
+				$inalineacel=1;
+				pushout(".ll $actualbody"."c");
+			}
+			elsif ($alineatype==3){
+				pushout("T{");
+				$inalineacel=1;
+				pushout(".ll $LEFTNOTE"."c");
+			}
 		}
 		pushout(".ne 3");
 			
@@ -320,7 +381,8 @@ for (@in3){
 			pushout(".P");
 		}
 		elsif ($alineatype>0){
-			pushout("T}")
+			pushout("T}");
+			$inalineacel=0;
 		}
 	}
 	elsif (/^{APPENDIX}(.*)/){
@@ -411,6 +473,8 @@ for (@in3){
 		$xn=($x*150+2000)/($x*5+1000); $y=$y*$xn/$x;
 		$xn=$scale*$xn/100;
 		$y=$scale*$y/100;
+
+		alineatabend;
 		pushout(".br");
 		my $found=0;
 		my $yroom=$y+15;
@@ -421,7 +485,6 @@ for (@in3){
 				$found=1;
 			}
 		}
-		alineatabend;
 		if ($found == 0){pushout(".ne $y"."v");}
 		pushout(".ce 1");
 		pushout(".dospark $epsfile $xn"."v $y"."v");
@@ -432,6 +495,7 @@ for (@in3){
 	elsif (/^{LEFTNOTE}(.*)/){
 		pushout("$1");
 		pushout("T}\@T{");
+		$inalineacel=1;
 		pushout(".ll $actualbody"."c");
 	}
 	elsif (/^{LINE}/){
@@ -457,6 +521,7 @@ for (@in3){
 		pushout("$1");
 	}
 	elsif (/^{LISTALPHASTART}/){
+		alineatabend;
 		pushout(".AL a");
 	}
 	elsif (/^{LISTDASHEND}/){
@@ -467,6 +532,7 @@ for (@in3){
 		pushout("$1");
 	}
 	elsif (/^{LISTDASHSTART}/){
+		alineatabend;
 		pushout(".DL");
 	}
 	elsif (/^{LISTNUMEND}/){
@@ -477,6 +543,7 @@ for (@in3){
 		pushout("$1");
 	}
 	elsif (/^{LISTNUMSTART}/){
+		alineatabend;
 		pushout(".AL 1");
 	}
     elsif (/^{LITTERAL}(.*)/){
@@ -558,6 +625,7 @@ for (@in3){
 	}
 	elsif (/^{SIDENOTE}(.*)/){
 		pushout("T}\@T{");
+		$inalineacel=1;
 		pushout(".ll $SIDENOTE"."c");
 		pushout("$1");
 	}
