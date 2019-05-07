@@ -43,7 +43,6 @@ The translation table for the % translations is the in3charmap.
 	b	text	text must be written in bold
 	fix	text	fixed font text
 	i	text	italized text
-	pre	none	starts or stops a pre-formatted text
 	u	text	Underline text
 	lst	text	Put the line as a separate line as fixed
 
@@ -70,8 +69,44 @@ The translation table for the % translations is the in3charmap.
 	set	variable value	set the variable to value from now on
 	date	none	print the date on which the in to in3 processor ran.
 
-Tables, maps and lists are defined as block requests. They should start on a new alinea
+.h3 Blocks
+
+Tables, maps, images  and lists are defined as block requests. They should start on a new alinea
 and end with an alinea (i.e. a blank line).
+There are a few block-specific requests.
+
+	pre	none	starts or stops a pre-formatted text
+	block	type name	creates a specific block type with a specific name
+	block format	formatstring	specifies formats for the block
+	block	(without args)	close the block
+
+A block is a set of lines that are handled by an addtional program. The output-handlers
+should provide a comparable output for html, text etcetera, but the format may vary 
+wildly.
+Output handlers may even crash if the block contents poses an impossble problem
+for them. The output handler for text has a problem with anything graphical.
+
+There is some influence on the formatting possible 
+with the 
+.fix block format
+request, but it is up to the output handler to determine whether such a request is
+silently ignored or honnored. The general format of the format string is a number of
+.i variable=value
+pairs, separated by spaces. 
+Currently implemented is:
+
+	variable	html	www	pdf	txt	meaning
+	scale=75	x	-	-	-	Scale the output of the block to 75%
+
+The following block types are implemented:
+
+	pre	Acts the same as the pre request.
+	gnuplot	The external program gnuplot is used to create an image that is included.
+	eqn	The lines are fed through eqn to provide a graphical image.
+	pic	The lines are processed by pic to provide a graphical image.
+
+If the name of the block is missing, there will be some random name, which is
+most likely relatively unique.
 
 .h2 Markdown
 Enthousiastic markdown users would like to use mark-down syntax. The following requests 

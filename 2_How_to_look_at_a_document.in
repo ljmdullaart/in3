@@ -9,6 +9,7 @@ A document consists of a number of pages. A page has the following structure:
 .img in_page.png
 
 A page consists of a
+
 -	header, which should be static
 -	a set of alineas that provide the actual content
 -	a foot note section, which is specific for that page
@@ -18,6 +19,7 @@ Headers and footers should be static, because in some output formats (f.e. HTML)
 they are printed only once.
 
 An alinea consists of three parts:
+
 -	a left-note part
 -	the alinea body
 -	the side-note part.
@@ -32,6 +34,7 @@ Left and side notes follow a different pattern.
 .h3 Left notes
 Left notes apear as a column on the right of the text. The columnn for left notes starts
 at the first alinea that uses a left note and the column ends at:
+
 -	a .back request
 -	a header (at any level)
 

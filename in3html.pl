@@ -332,6 +332,14 @@ sub startalinea {
 	debug($DEB_ALINEA,"ALINEA START} alineatype=$alineatype; new type=$newalineatype");
 }
 
+
+#  _     _            _        
+# | |__ | | ___   ___| | _____ 
+# | '_ \| |/ _ \ / __| |/ / __|
+# | |_) | | (_) | (__|   <\__ \
+# |_.__/|_|\___/ \___|_|\_\___/
+#
+
 my $litteraltext=0;
 my @litblock;
 sub pushlit{
@@ -340,6 +348,103 @@ sub pushlit{
 	push @litblock,$text;
 }
 	
+my @block;
+my $blocktype='none';
+my $blockname='none';
+my $blockformat='';
+sub block_push {
+	(my $text)=@_;
+	push @block,$text;
+}
+sub block_end {
+	my $blockscale=75;
+	if($blockformat ne ''){
+		if ($blockformat=~/scale=(\d+)/){ $blockscale=$1; }
+	}
+
+	if ($blocktype eq 'pre'){ 
+		# Do nothing; pre-blocks are handled as {LITTERAL}
+	}
+	elsif ($blocktype eq 'gnuplot'){
+		if ($blockname eq 'none') {
+			my $random=int(rand(1000000));
+			$blockname="gen_$random";
+		}
+
+		if (open (my $GNUPLOT,'>',"block_$blockname.gnuplot")){
+			my $x=800*$blockscale/100;
+			my $y=600*$blockscale/100;
+			print $GNUPLOT "set terminal png size $x,$y enhanced font \"Helvetica,8\"";
+			print $GNUPLOT "\nset output 'block_$blockname.png'\n";
+			for (@block){ print $GNUPLOT "$_\n"; }
+			close $GNUPLOT;
+			my $b_image;
+			system("gnuplot block_$blockname.gnuplot");
+			$b_image="block_$blockname.png";
+			debug ($DEB_IMG, "  image=$b_image");
+			pushout("<img src=\"$b_image\" alt=\"$b_image>\">");
+		}
+		else {
+			print STDERR "in3html cannot open $blockname.gnuplot\n";
+		}
+	}
+	elsif ($blocktype eq 'eqn'){
+		my $density=800*$blockscale/100;
+		if ($blockname eq 'none') {
+			my $random=int(rand(1000000));
+			$blockname="gen_$random";
+		}
+		my $ffn="block_$blockname";
+		if (open my $EQN, '>',"$ffn.eqn"){
+			print $EQN ".EQ\n";
+			for (@block){
+				print $EQN "$_\n";
+			}
+			print $EQN ".EN\n";
+			close $EQN;
+			system ("eqn $ffn.eqn > $ffn.groff");
+			system ("groff $ffn.groff > $ffn.ps");
+			system ("ps2pdf $ffn.ps > $ffn.pdf");
+			system ("convert -trim -density $density $ffn.pdf  $ffn.png");
+			system ("rm $ffn.groff $ffn.ps $ffn.pdf");
+			debug ($DEB_IMG, "  image=$ffn.png");
+			pushout("<img src=\"$ffn.png\" alt=\"$ffn>\">");
+		}
+	}
+	elsif ($blocktype eq 'pic'){
+		my $density=500*$blockscale/100;
+		if ($blockname eq 'none') {
+			my $random=int(rand(1000000));
+			$blockname="gen_$random";
+		}
+		my $ffn="block_$blockname";
+		if (open my $PIC, '>',"$ffn.pic"){
+			print $PIC ".PS\n";
+			for (@block){
+				print $PIC "$_\n";
+			}
+			print $PIC ".PE\n";
+			close $PIC;
+			system ("pic $ffn.pic > $ffn.groff");
+			system ("groff $ffn.groff > $ffn.ps");
+			system ("ps2pdf $ffn.ps > $ffn.pdf");
+			system ("convert -trim -density $density $ffn.pdf  $ffn.png");
+			system ("rm $ffn.groff $ffn.ps $ffn.pdf");
+			debug ($DEB_IMG, "  image=$ffn.png");
+			pushout("<img src=\"$ffn.png\" alt=\"$ffn>\">");
+		}
+	}
+	else {
+		pushout ('<p>');
+		for (@block){ pushout ($_); }
+		pushout ('</p>');
+	}
+	undef @block;
+	$blocktype='none';
+	$blockname='none';
+	$blockformat='';
+
+}
 
 for (@in3){
 	if (/^{TITLE}(.*)/){ pushout("<h1>$1</h1>");}
@@ -378,6 +483,19 @@ for (@in3){
 	elsif (/^{AUTHOR}(.*)/){ }
 	elsif (/^{APPENDIX}(.*)/){
 		$appendix=$headnum[1];
+	}
+	elsif (/^{BLOCKSTART}(.+) (.+)/){
+		$blocktype=$1;
+		$blockname=$2;
+	}
+	elsif (/^{BLOCKFORMAT}(.*)/){
+		$blockformat=$1;
+	}
+	elsif (/^{BLOCK ([^}]+)}(.*)/){
+		block_push($2);
+	}
+	elsif (/^{BLOCKEND}/){
+		block_end();
 	}
 	elsif (/^{COVER}(.*)/){ }
 	elsif (/^{INCLUDE}(.*)/){

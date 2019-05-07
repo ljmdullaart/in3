@@ -183,6 +183,7 @@ if [ -d $HTMLDIR ] ; then
 	if [ ! -f total.in ] ; then INHTML="$INHTML $HTMLDIR/total.html" ; fi
 	echo "tag/in3.html: $INHTML $HTMLDIR/header.htm" >> Makefile
 
+	echo "	cp block_*.png $HTMLDIR" >> Makefile
 	echo "	touch tag/in3.html" >> Makefile
 	echo "tag/in3.html">>$CLEANFILE
 	
@@ -225,6 +226,7 @@ if [ -d $WWWDIR ] ; then
 	if [ ! -f index.in ] ; then INHTML="$INHTML $WWWDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $WWWDIR/total.html" ; fi
 	echo "tag/in3.www: $INHTML" >> Makefile
+	echo "	cp block_*.png $WWWDIR" >> Makefile
 	echo "	touch tag/in3.www" >> Makefile
 	echo "tag/in3.www">>$CLEANFILE
 
@@ -294,6 +296,7 @@ if [ -d $EPUBDIR ] ; then
 	fi
 	
 	echo "tag/in3.epub: $EPUBDIR/$WD.epub" >> Makefile
+	echo "	cp block_*.png $EPUBDIR" >> Makefile
 	echo "	touch tag/in3.epub" >> Makefile
 	echo "$EPUBDIR/$WD.epub: $INHTML $EPUBDIR/index.html" >> Makefile
 	echo "	cd $EPUBDIR ; ebook-convert index.html $WD.epub $pub_opt" >> Makefile
@@ -347,7 +350,7 @@ if [ -d $TXTDIR ] ; then
 		echo "$TXTDIR/$1.min: $TXTDIR/$1.tbl">>Makefile
 		echo "	tbl $TXTDIR/$1.tbl > $TXTDIR/$1.min">>Makefile
 		echo "$TXTDIR/$1.tbl: $1.in3 tag/in3.img |$TXTDIR">>Makefile
-		echo "	in3tbl $1.in3 > $TXTDIR/$1.tbl">>Makefile
+		echo "	egrep -v '^{BLOCK' $1.in3 | in3tbl > $TXTDIR/$1.tbl">>Makefile
 		echo "$TXTDIR/$1.txt">>$UPLOADFILE
 		echo "$TXTDIR/$1.min">>$CLEANFILE
 		echo "$TXTDIR/$1.tbl">>$CLEANFILE
@@ -387,7 +390,7 @@ if [ -d $PDFDIR ] ; then
 		echo "$PDFDIR/$1.ps: $PDFDIR/$1.min">>Makefile
 		echo "	groff -min $PDFDIR/$1.min > $PDFDIR/$1.ps">>Makefile
 		echo "$PDFDIR/$1.min: $PDFDIR/$1.tbl">>Makefile
-		echo "	tbl $PDFDIR/$1.tbl > $PDFDIR/$1.min">>Makefile
+		echo "	pic $PDFDIR/$1.tbl | tbl | eqn > $PDFDIR/$1.min">>Makefile
 		echo "$PDFDIR/$1.tbl: $1.in3 tag/in3.img |$PDFDIR">>Makefile
 		echo "	in3tbl $1.in3 > $PDFDIR/$1.tbl">>Makefile
 		echo "$PDFDIR/$1.pdf">>$CLEANFILE
@@ -541,6 +544,8 @@ echo "tag/clean.in:" >> Makefile
 cat $CLEANFILE | while read F ; do
 	echo "	rm -f $F" >> Makefile
 done
+
+echo "	rm -f block_* */block_*" >> Makefile
 echo "	touch tag/clean.in" >> Makefile
 
 rm -f $CLEANFILE

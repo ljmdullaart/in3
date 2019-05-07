@@ -94,10 +94,7 @@ tempora incidunt ut labore
 et dolore magnam aliquam
 .u quaerat
 voluptatem. Ut enim ad minima veniam,
--	quis nostrum exercitationem
-.fix ullam corporis
-suscipit laboriosam, nisi ut aliquid ex
-ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate
+-	quis nostrum exercitationem fix ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate
 -	elit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo
 voluptas nulla pariatur?
 
@@ -170,9 +167,17 @@ elementum purus, pharetra blandit elit suscipit ac.
 .h2 Curabitur id ante placerat
 Porttitor sapien non, tincidunt tellus.
 Sed tristique molestie purus in euismod. Donec ac risus lacinia,
-consectetur tortor eget, iaculis nulla. In posuere sollicitudin
-purus, ut facilisis dolor rhoncus sed. Integer sit amet tellus
-arcu. Praesent non ex nec ligula finibus posuere. Donec efficitur
+consectetur tortor eget, iaculis nulla.
+
+.block pre
+In posuere sollicitudin
+purus, ut facilisis
+dolor rhoncus sed.
+Integer sit amet tellus
+arcu.
+.block
+
+Praesent non ex nec ligula finibus posuere. Donec efficitur
 bibendum purus non suscipit. Cras feugiat tempor nibh, in interdum
 sapien varius vitae.
 
@@ -181,10 +186,40 @@ Praesent nec tincidunt metus.
 Phasellus eu diam vitae nulla convallis pretium in eget ligula.
 Aenean viverra mauris non lorem accumsan facilisis. Mauris venenatis
 finibus augue. Quisque arcu turpis, eleifend venenatis turpis
-ac, pulvinar euismod mi. Donec feugiat, eros sed finibus commodo,
+
+Now follows a gnuplot-block, named t1.
+
+.block gnuplot t1
+plot sin(x) title 'Sine Function', tan(x) title 'Tangent'
+.block
+
+Ac, pulvinar euismod mi. Donec feugiat, eros sed finibus commodo,
 nisi mi malesuada lacus, eu laoreet est lacus sit amet velit.
+
+A block with an equation:
+
+.block eqn 1
+.block format scale=25
+Expected~Value~=~sum from {i=l} to inf pi sub 1 X sub i
+.block
+
+
 Proin eget nisl est. Proin semper, elit in accumsan gravida, nibh
-tortor pulvinar mauris, ut lacinia lectus nulla id est. Phasellus
+tortor pulvinar mauris, ut lacinia lectus nulla id est.
+
+.block pic 2
+.block format scale=50
+ellipse "document";
+arrow;
+box "\fIpic\fP(1)"
+arrow;
+box width 1.2 "\fIgtbl\fP(1) or \fIgeqn\fP(1)" "(optional)" dashed;
+arrow;
+box "\fIgtroff\fP(1)";
+arrow;
+ellipse "PostScript"
+.block
+Phasellus
 quis hendrerit nisl. Nulla venenatis justo nec velit pellentesque
 congue. In mattis mattis velit, aliquet fermentum nulla maximus
 eget. Aenean quis mauris imperdiet, pharetra odio tempor, tincidunt

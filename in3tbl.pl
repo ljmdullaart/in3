@@ -2,9 +2,13 @@
 #INSTALL@ /usr/local/bin/in3tbl
 use strict;
 use warnings;
-################################################################################
-#	Debugging where required
-################################################################################
+#       _      _                 
+#    __| | ___| |__  _   _  __ _ 
+#   / _` |/ _ \ '_ \| | | |/ _` |
+#  | (_| |  __/ |_) | |_| | (_| |
+#   \__,_|\___|_.__/ \__,_|\__, |
+#                          |___/ 
+#
 my $DEBUG=0;
 my $DEB_FILE=1;		#files that are opened or closed
 my $DEB_TABLE=2;		#all table-processing stuff
@@ -21,9 +25,12 @@ sub debug {
 	}
 }
 
-################################################################################
-#	Alinea processing
-################################################################################
+#         _ _                  
+#    __ _| (_)_ __   ___  __ _ 
+#   / _` | | | '_ \ / _ \/ _` |
+#  | (_| | | | | | |  __/ (_| |
+#   \__,_|_|_|_| |_|\___|\__,_|
+#			    
 my $alineatype=-1;	# -1	Outside alineas
 					#  0	Alinea without sidenotes
 					#  1	Leftnote
@@ -34,7 +41,7 @@ my $inalineacel=0;
 # The sizes below are taken somewhat arbitrarily. Tbl considers itself
 # free to change them anyway.
 my $LEFTNOTE=2;			
-my $BODYTEXT=11;
+my $BODYTEXT=10;
 my $SIDENOTE=4;
 my $actualbody=$LEFTNOTE+$BODYTEXT+$SIDENOTE;
 my $appendix=0;
@@ -90,6 +97,11 @@ sub alineatabstart{
 }
 
 ################################################################################
+# _ __  _   _ ___| |__   ___  _   _| |_ 
+#| '_ \| | | / __| '_ \ / _ \| | | | __|
+#| |_) | |_| \__ \ | | | (_) | |_| | |_ 
+#| .__/ \__,_|___/_| |_|\___/ \__,_|\__|
+#|_| 
 my @output;
 sub pushout{
 	(my $txt)=@_;
@@ -99,9 +111,12 @@ sub pushout{
 
 
 ################################################################################
-# Macro for encapsulated postsrcipt files (typically images)
-#
-################################################################################
+#      _                            _                                      
+#   __| | ___  ___ _ __   __ _ _ __| | __     _ __ ___   __ _  ___ _ __ ___  
+#  / _` |/ _ \/ __| '_ \ / _` | '__| |/ /    | '_ ` _ \ / _` |/ __| '__/ _ \ 
+# | (_| | (_) \__ \ |_) | (_| | |  |   <     | | | | | | (_| | (__| | | (_) |
+#  \__,_|\___/|___/ .__/ \__,_|_|  |_|\_\    |_| |_| |_|\__,_|\___|_|  \___/ 
+# 
 sub img_macro {
 print ".de dospark
 .psbb \\\\\$1
@@ -113,16 +128,22 @@ print ".de dospark
 .if \\\\\$3 .nr desht (u; \\\\\$3p)
 .nr xht 0
 .if (\\\\n[desht]>\\\\n[.ps]) .nr xht \\\\n[desht]-\\\\n[.ps]
-\\X’ps: import \\\\\$1 \\
+\\X'ps: import \\\\\$1 \\
 \\\\n[llx] \\\\n[lly] \\\\n[urx] \\\\n[ury] \\
-\\\\n[deswd] \\\\n[desht]’\\
-\\h’\\\\n[deswd]u’\\x’-\\\\n[xht]u’
+\\\\n[deswd] \\\\n[desht]'\\
+\\h'\\\\n[deswd]u'\\x'-\\\\n[xht]u'
 ..
 ";
 }
 
 ################################################################################
-#
+#      _         _           _               _   
+#  ___| |_ _   _| | ___  ___| |__   ___  ___| |_ 
+# / __| __| | | | |/ _ \/ __| '_ \ / _ \/ _ \ __|
+# \__ \ |_| |_| | |  __/\__ \ | | |  __/  __/ |_ 
+# |___/\__|\__, |_|\___||___/_| |_|\___|\___|\__|
+#          |___/                                 
+
 # If a style sheet for roff exists, copy is to the output. Otherwise
 # use some default styling.
 #
@@ -144,7 +165,118 @@ sub stylesheet {
 	}
 }
 ################################################################################
+#  _     _            _    
+# | |__ | | ___   ___| | __
+# | '_ \| |/ _ \ / __| |/ /
+# | |_) | | (_) | (__|   < 
+# |_.__/|_|\___/ \___|_|\_\
+# 
 
+my @block;
+my $blocktype='none';
+my $blockname='none';
+my $blockformat='';
+
+
+sub block_push {
+	(my $txt)=@_;
+	push @block,$txt;
+}
+
+sub block_end {
+	my $blockscale=75;
+	if($blockformat ne ''){
+		if ($blockformat=~/scale=(\d+)/){ $blockscale=$1; }
+	}
+	if ($blocktype eq 'pre'){
+		# do nothing; pre is handled as {LITTERAL}
+	}
+	elsif ($blocktype eq 'gnuplot'){
+        if ($blockname eq 'none') {
+            my $random=int(rand(1000000));
+            $blockname="gen_$random";
+        }
+
+        if (open (my $GNUPLOT,'>',"block_$blockname.gnuplot")){
+            print $GNUPLOT 'set terminal postscript eps';
+            print $GNUPLOT "\nset output 'block_$blockname.eps'\n";
+            for (@block){ print $GNUPLOT "$_\n"; }
+            close $GNUPLOT;
+            my $b_image;
+            system("gnuplot block_$blockname.gnuplot");
+            $b_image="block_$blockname.eps";
+			my $scale=$blockscale;
+			my $epsfile="block_$blockname.eps";
+			debug($DEB_IMG,"Processing $epsfile");
+			my $imgsize=` imageinfo --geom $epsfile`;
+			my $x; my $y; my $xn;
+			($x,$y)=split ('x',$imgsize);
+			$xn=($x*150+2000)/($x*5+1000); $y=$y*$xn/$x;
+			$xn=$scale*$xn/100;
+			$y=$scale*$y/100;
+
+			alineatabend;
+			pushout(".br");
+			my $found=0;
+			my $yroom=$y+15;
+			for (my $i=0; $i<10;$i++){
+				my $qout=$#output;
+				if ($output[$qout-$i]=~/^\.ne/){
+					$output[$qout-$i]=".ne $yroom"."v";
+					$found=1;
+				}
+			}
+			if ($found == 0){pushout(".ne $y"."v");}
+			pushout(".ce 1");
+			pushout(".dospark $epsfile $xn"."v $y"."v");
+			pushout(".br");
+        }
+        else {
+            print STDERR "in3html cannot open $blockname.gnuplot\n";
+        }
+
+	}
+	elsif ($blocktype eq 'eqn'){
+		pushout (".br");
+		pushout (".EQ");
+		for (@block){
+			pushout ($_);
+		}
+		pushout (".EN");
+		pushout (".br");
+
+	}
+	elsif ($blocktype eq 'pic'){
+		pushout (".br");
+		pushout (".PS");
+		for (@block){
+			pushout ($_);
+		}
+		pushout (".PE");
+		pushout (".br");
+
+	}
+	else {
+		for (@block){
+			pushout ($_);
+		}
+	}
+
+	undef @block;
+	$blocktype='none';
+	$blockname='none';
+	$blockformat='';
+}
+
+
+
+################################################################################
+#  _ _ _   _                 _ 
+# | (_) |_| |_ ___ _ __ __ _| |
+# | | | __| __/ _ \ '__/ _` | |
+# | | | |_| ||  __/ | | (_| | |
+# |_|_|\__|\__\___|_|  \__,_|_|
+# 
 my $litteraltext=0;
 my $litlines=2;
 my @litblock;
@@ -155,8 +287,14 @@ sub pushlit{
       push @litblock,$text;
 }
 
-my $inquote=0;
 ################################################################################
+#  _       _ _                         
+# (_)_ __ (_) |_  __   ____ _ _ __ ___ 
+# | | '_ \| | __| \ \ / / _` | '__/ __|
+# | | | | | | |_   \ V / (_| | |  \__ \
+# |_|_| |_|_|\__|   \_/ \__,_|_|  |___/
+# 
+my $inquote=0;
 
 my @thistable;
 my $intable=0;
@@ -166,6 +304,13 @@ $variables{'interpret'}=1;
 
 
 ################################################################################
+#                                             _       
+#   __ _ _ __ __ _ _   _ _ __ ___   ___ _ __ | |_ ___ 
+#  / _` | '__/ _` | | | | '_ ` _ \ / _ \ '_ \| __/ __|
+# | (_| | | | (_| | |_| | | | | | |  __/ | | | |_\__ \
+#  \__,_|_|  \__, |\__,_|_| |_| |_|\___|_| |_|\__|___/
+#            |___/                                    
+
 
 my $gotinput=0;
 my @in3;
@@ -199,9 +344,12 @@ $variables{'cp7'}=4;
 $variables{'cp8'}=4;
 $variables{'cp9'}=2;
 
-################################################################################
-#	Cover processing
-################################################################################
+#                          
+#   ___ _____   _____ _ __ 
+#  / __/ _ \ \ / / _ \ '__|
+# | (_| (_) \ V /  __/ |   
+#  \___\___/ \_/ \___|_|   
+#  
 
 for (@in3){
 	if (/^{COVER}(.*)/){ $cover=$1;}
@@ -222,9 +370,12 @@ if ($cover ne ''){
 	pushout(".nr P 0");
 
 }
-################################################################################
-#	Cover sheet  processing
-################################################################################
+#                              _               _   
+#   ___ _____   _____ _ __ ___| |__   ___  ___| |_ 
+#  / __/ _ \ \ / / _ \ '__/ __| '_ \ / _ \/ _ \ __|
+# | (_| (_) \ V /  __/ |  \__ \ | | |  __/  __/ |_ 
+#  \___\___/ \_/ \___|_|  |___/_| |_|\___|\___|\__|
+#
 
 my $coversheet=0;
 my $title;
@@ -288,9 +439,13 @@ if ($coversheet > 0){
 ################################################################################
 pushout(".ds pg*header ''- \\\\nP -''");
 
-################################################################################
-# Main loop
-################################################################################
+#                  _            _                   
+#  _ __ ___   __ _(_)_ __      | | ___   ___  _ __  
+# | '_ ` _ \ / _` | | '_ \     | |/ _ \ / _ \| '_ \ 
+# | | | | | | (_| | | | | |    | | (_) | (_) | |_) |
+# |_| |_| |_|\__,_|_|_| |_|    |_|\___/ \___/| .__/ 
+#                                            |_|
+
 for (@in3){
 	if (/^{(..*)}/){ debug ($DEB_CMD,$1); }
 	chomp;
@@ -394,6 +549,19 @@ for (@in3){
 
 	}
 	elsif (/^{AUTHOR}/){
+	}
+	elsif (/^{BLOCKSTART}(.+) (.+)/){
+		$blocktype=$1;
+		$blockname=$2;
+	}
+	elsif (/^{BLOCKFORMAT}(.*)/){
+		$blockformat=$1;
+	}
+	elsif (/^{BLOCK [^}]*}(.*)/){
+		block_push($1);
+	}
+	elsif (/^{BLOCKEND}/){
+		block_end();
 	}
 	elsif (/^{COVER}/){
 	}

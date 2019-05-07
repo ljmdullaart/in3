@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use Time::localtime;
+use Digest::MD5 qw(md5);
 
 ########################################################
 
@@ -514,7 +515,9 @@ sub start_alinea{
 #        #     #  #######           #        #     #     # 
 
 my $inpre=0;
-
+my $inblock=0;
+my $blocktype='none';
+my $blockname='';
 
 ########################################################
 
@@ -574,7 +577,44 @@ for (@input){
 	debug (128, "== $_");
 	debug (128,"========================================================");
 	
-	if (/^\.pre/){
+	if (/^\.block/){
+		debug ($TAGS,"Block-tag (was: $inblock)");
+
+		if ($inblock==0){
+			$inblock=1;
+			if (/^.block ([a-z]+) ([a-z0-9A-Z]+)/){
+				$blocktype=$1;
+				$blockname=$2;
+			}
+			elsif (/^.block ([a-z]+)/){
+				$blocktype=$1;
+				$blockname='none';
+			}
+			else { 
+				$blocktype='none';
+				$blockname='none';
+			}
+			inpush("{BLOCKSTART}$blocktype $blockname");
+		}
+		else {
+			if (/^.block format (.*)/){
+				inpush ("{BLOCKFORMAT}$1");
+			}
+			else {
+				$inblock=0;
+				inpush ("{BLOCKEND}");
+			}
+		};
+	}
+	elsif ($inblock>0){
+		if ($blocktype eq 'pre'){
+			inpush("{LITTERAL}$_");
+		}
+		else {
+			inpush("{BLOCK $blocktype}$_");
+		}
+	}
+	elsif (/^\.pre/){
 		debug ($TAGS,"Pre-tag (was: $inpre)");
 		if ($inpre==0){$inpre=1;}
 		else {$inpre=0};
