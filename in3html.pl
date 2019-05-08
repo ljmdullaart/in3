@@ -276,7 +276,7 @@ sub alineatabstart {
 	
 sub endalinea {
 	debug($DEB_ALINEA,"ALINEA END { alineatype=$alineatype;inalinea=$inalinea");
-	if ($inalineatab==0){ print "** ERROR ** End alinea outside an alineatab\n";}
+	if ($inalineatab==0){ print STDERR "** ERROR ** End alinea outside an alineatab\n";}
 	if ($alineatype<0){}
 	elsif ($inalinea==0){}
 	elsif ($alineatype==0){
@@ -465,11 +465,13 @@ for (@in3){
 	if($litteraltext==1){
 		if (/^{LITTERAL}/){}
 		else {
+			alineatabend;
 			pushout("<pre>");
 			for my $i (0..$#litblock){ pushout("$litblock[$i]"); }
 			pushout("</pre>");
 			undef @litblock;
 			$litteraltext=0;
+			$inalinea=0;
 		}
 	}
 	if (1==0){}
@@ -485,6 +487,7 @@ for (@in3){
 		$appendix=$headnum[1];
 	}
 	elsif (/^{BLOCKSTART}(.+) (.+)/){
+		alineatabend;
 		$blocktype=$1;
 		$blockname=$2;
 	}
@@ -554,14 +557,16 @@ for (@in3){
 		if (/^{IMAGE}([^ ]*) (.*)/){
 			$image=$1;$text=$2;
 			debug ($DEB_IMG, "scale=$scale  image=$image text=$text");
-			pushout("<img src=\"$image\" width=\"$scale%\" height=\"$scale%\" alt=\"image for $text>\">");
+			pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"image for $text>\">");
+			#pushout("<img src=\"$image\" width=\"$scale%\" height=\"$scale%\" alt=\"image for $text>\">");
 			pushout ("<br>");
 			pushout ($text);
 		}
 		elsif (/^{IMAGE}([^ ]*)/) {
 			$image=$1;
 			debug ($DEB_IMG, "scale=$scale  image=$image");
-			pushout("<img src=\"$image\" width=\"$scale%\" height=\"$scale%\" alt=\"$image>\">");
+			pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"$image>\">");
+			#pushout("<img src=\"$image\" width=\"$scale%\" height=\"$scale%\" alt=\"$image>\">");
 		}
 		else {
 			print "<!-- in3html could not do an image -->";
@@ -688,8 +693,10 @@ for (@in3){
 	}
 	elsif (/^{SIDENOTE}(.*)/){
 		my $text=$1;
-		pushout("</div></td><td style=\"vertical-align:top;width:25%\">");
-		pushout("<div class=side>$text");
+		if ($inalinea>0){
+			pushout("</div></td><td style=\"vertical-align:top;width:25%\">");
+			pushout("<div class=side>$text");
+		}
 	}
 	elsif (/^{SUBTITLE}(.*)/){
 	}

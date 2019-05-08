@@ -18,6 +18,13 @@ div.cel {
 	background-color: #BBBBBB;
 	border: 1px solid black;
 }
+div.list {
+	background-color: #FEFEFE;
+}
+div.side {
+	font-size: 75%
+}
+
 table.normal {
 	color: #111111;
 	background-color: #BBBBBB;

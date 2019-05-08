@@ -13,6 +13,7 @@ my $DEBUG=0;
 my $DEB_FILE=1;		#files that are opened or closed
 my $DEB_TABLE=2;		#all table-processing stuff
 my $DEB_CMD=4;			#Command found
+my $DEB_NOTE=8;			# Notes
 my $DEB_ALINEA=32;	#alinea processing
 my $DEB_CHAR=64;		#replace characters with GROFF escapes
 my $DEB_IMG=128;		#Image processing
@@ -36,6 +37,7 @@ my $alineatype=-1;	# -1	Outside alineas
 					#  1	Leftnote
 					#  2	Sidenote right
 					#  3	Notes left & right
+my $inlist=0;
 my $inalinea=0;
 my $inalineacel=0;
 # The sizes below are taken somewhat arbitrarily. Tbl considers itself
@@ -55,10 +57,13 @@ sub alineatabend{
 	}
 	if ($inalinea==1){
 		if ($alineatype>0){pushout (".TE");}
+		debug($DEB_ALINEA,"alinea tab end alineatype=$alineatype");
 		$alineatype=-1;
 		$inalinea=0;
 	}
-	
+	$inalinea=0;
+	debug($DEB_ALINEA,"alinea tab end exit alineatype=$alineatype inalinea=$inalinea");
+	pushout (".ll 12c");
 }
 sub alineatabstart{
 	if ($inalinea==1){
@@ -70,6 +75,7 @@ sub alineatabstart{
 	elsif ($alineatype==1){
 		$actualbody=$BODYTEXT+$SIDENOTE;
 		pushout(".TS");
+		$inalinea=1;
 		pushout("tab(@);");
 		pushout("l l.");
 		pushout("T{");
@@ -79,6 +85,7 @@ sub alineatabstart{
 	elsif ($alineatype==2){
 		$actualbody=$LEFTNOTE+$BODYTEXT;
 		pushout(".TS");
+		$inalinea=1;
 		pushout("tab(@);");
 		pushout("l lp6.");
 		pushout("T{");
@@ -88,6 +95,7 @@ sub alineatabstart{
 	elsif ($alineatype==3){
 		$actualbody=$BODYTEXT;
 		pushout(".TS");
+		$inalinea=1;
 		pushout("tab(@);");
 		pushout("l l lp6.");
 		pushout("T{");
@@ -185,6 +193,7 @@ sub block_push {
 
 sub block_end {
 	my $blockscale=75;
+	alineatabend;
 	if($blockformat ne ''){
 		if ($blockformat=~/scale=(\d+)/){ $blockscale=$1; }
 	}
@@ -456,7 +465,7 @@ for (@in3){
 	if($litteraltext==1){
 		if (/^{LITTERAL}/){}
 		else {
-			pushout(".P");
+			alineatabend;
 			if ($litlines>50){
 				$litlines=$litlines-50;
 				pushout(".ne 50v");
@@ -478,6 +487,7 @@ for (@in3){
 					pushout(".ft");
 					pushout(".B2");
 					pushout(".P");
+					alineatabend;
 					if ($litlines>50){
 						$litlines=$litlines-50;
 						pushout(".ne 50v");
@@ -662,6 +672,7 @@ for (@in3){
 	}
 	elsif (/^{LEFTNOTE}(.*)/){
 		pushout("$1");
+		debug ($DEB_NOTE,"leftnote --$1-- type=$alineatype, inalinea=$inalinea, inalineacel=$inalineacel");
 		pushout("T}\@T{");
 		$inalineacel=1;
 		pushout(".ll $actualbody"."c");
@@ -683,36 +694,45 @@ for (@in3){
 	}
 	elsif (/^{LISTALPHAEND}/){
 		pushout(".LE 1");
+		$inlist=0;
 	}
 	elsif (/^{LISTALPHAITEM}(.*)/){
 		pushout(".LI");
 		pushout("$1");
+		$inlist=1;
 	}
 	elsif (/^{LISTALPHASTART}/){
 		alineatabend;
 		pushout(".AL a");
+		$inlist=1;
 	}
 	elsif (/^{LISTDASHEND}/){
 		pushout(".LE 1");
+		$inlist=0;
 	}
 	elsif (/^{LISTDASHITEM}(.*)/){
 		pushout(".LI");
 		pushout("$1");
+		$inlist=1;
 	}
 	elsif (/^{LISTDASHSTART}/){
 		alineatabend;
 		pushout(".DL");
+		$inlist=1;
 	}
 	elsif (/^{LISTNUMEND}/){
 		pushout(".LE 1");
+		$inlist=0;
 	}
 	elsif (/^{LISTNUMITEM}(.*)/){
 		pushout(".LI");
 		pushout("$1");
+		$inlist=1;
 	}
 	elsif (/^{LISTNUMSTART}/){
 		alineatabend;
 		pushout(".AL 1");
+		$inlist=1;
 	}
     elsif (/^{LITTERAL}(.*)/){
         pushlit($1);
@@ -792,23 +812,19 @@ for (@in3){
 		elsif ($1 eq 'H6'){ $val=$2-1; pushout(".nr H6 $val");}
 	}
 	elsif (/^{SIDENOTE}(.*)/){
-		pushout("T}\@T{");
-		$inalineacel=1;
-		pushout(".ll $SIDENOTE"."c");
-		pushout("$1");
+		debug ($DEB_NOTE,"sidenote --$1-- type=$alineatype, inalinea=$inalinea, inalineacel=$inalineacel");
+		if ($inalinea>0){
+			pushout("T}\@T{");
+			$inalineacel=1;
+			pushout(".ll $SIDENOTE"."c");
+			pushout("$1");
+		}
 	}
 	elsif (/^{SUBTITLE}/){
 	}
 	elsif (/^{TABLEEND}/){
 		$intable=0;
-		if ($alineatype<0){}
-		elsif ($alineatype==0){
-			pushout(".P");
-		}
-		elsif ($alineatype>0){
-			pushout(".TE");
-			pushout(".P");
-		}
+		alineatabend;
 		$alineatype=-1;
 		pushout(".ne 20v");
 		pushout(".TS H");
@@ -923,21 +939,35 @@ for (@in3){
 			push @thistable,$_;
 		}
 		else {
+			if (($inalinea==0)&&($inlist==0)){
+				alineatabstart();
+			}
 			pushout(".B \"$1\"");
 		}
 	}
 	elsif (/^{TEXTFIX}(.*)/){
-		pushout(".ft CR");
-		pushout(".ps -2");
-		pushout("$1");
-		pushout(".ps");
-		pushout(".ft");
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			if (($inalinea==0)&&($inlist==0)){
+				alineatabstart();
+			}
+			pushout(".ft CR");
+			pushout(".ps -2");
+			pushout("$1");
+			pushout(".ps");
+			pushout(".ft");
+		}
 	}
 	elsif (/^{TEXTNORMAL}(.*)/){
 		if ($intable>0){
 			push @thistable,$_;
 		}
 		else {
+			if (($inalinea==0)&&($inlist==0)){
+				alineatabstart();
+			}
 			if (/^{TEXTNORMAL}(\..*)/){
 				pushout(" $1");
 			}
@@ -951,6 +981,9 @@ for (@in3){
 			push @thistable,$_;
 		}
 		else {
+			if (($inalinea==0)&&($inlist==0)){
+				alineatabstart();
+			}
 			s/^{TEXTITALIC}//;
 			s/"/\\[rq]/g;
 			pushout(".I \" $_ \"");
@@ -961,6 +994,9 @@ for (@in3){
 			push @thistable,$_;
 		}
 		else {
+			if (($inalinea==0)&&($inlist==0)){
+				alineatabstart();
+			}
 			pushout(".underline \"$1\"");
 		}
 	}

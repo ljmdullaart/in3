@@ -228,8 +228,9 @@ quam.
 .h1 Nam ex ante
 Aliquet sit amet dolor id, malesuada commodo justo.
 Sed nisl ligula, maximus in sem non, convallis interdum lectus.
-Duis ac eros non orci pharetra vulputate ac non purus. Praesent
-at mattis augue. Lorem ipsum dolor sit amet, consectetur adipiscing
+Duis ac eros non orci pharetra vulputate ac non purus.
+.side Praesent at mattis augue.
+Lorem ipsum dolor sit amet, consectetur adipiscing
 elit. Maecenas elit metus, dapibus sed purus eu, tincidunt hendrerit
 quam. Sed id arcu dictum, interdum nisl vulputate, faucibus urna.
 Aliquam erat volutpat. Aliquam pulvinar porta erat at rhoncus.
@@ -237,17 +238,22 @@ Aenean quis fermentum risus. Phasellus porttitor velit eros, in
 posuere quam tincidunt ac.
 
 .h2 Phasellus ullamcorper ut magna nec rhoncus
-Phasellus hendrerit
-dui nec eros molestie, nec gravida ex commodo. Nam ornare odio
+
+Phasellus	hendrerit dui nec eros molestie, nec gravida ex commodo. Nam ornare odio
 ut ipsum faucibus, vitae consectetur orci facilisis. Integer sit
 amet nunc vulputate, venenatis dolor eget, consectetur diam. Praesent
 placerat dignissim ex, ut luctus nunc fringilla nec. Quisque facilisis
 faucibus malesuada. Suspendisse interdum neque ac blandit placerat.
-Aliquam erat volutpat. Vestibulum bibendum, tellus vel sodales
+
+Aliquam	erat volutpat. Vestibulum bibendum, tellus vel sodales
 ultrices, risus dolor tristique mi, vitae porta nisl est condimentum
-dui. Curabitur ut orci lorem. Morbi ullamcorper tincidunt urna
+
+dui.
+Curabitur	ut orci lorem. Morbi ullamcorper tincidunt urna
 sit amet luctus. Donec elementum lectus finibus, pellentesque
-felis vel, placerat purus. Nullam feugiat hendrerit nisi, eu maximus
+felis vel.
+.side placerat purus
+Nullam feugiat hendrerit nisi, eu maximus
 lorem bibendum vitae. Fusce eget tortor tincidunt, mollis enim
 pharetra, venenatis enim.
 

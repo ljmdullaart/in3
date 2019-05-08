@@ -581,6 +581,7 @@ for (@input){
 		debug ($TAGS,"Block-tag (was: $inblock)");
 
 		if ($inblock==0){
+			close_alinea;
 			$inblock=1;
 			if (/^.block ([a-z]+) ([a-z0-9A-Z]+)/){
 				$blocktype=$1;
@@ -616,12 +617,18 @@ for (@input){
 	}
 	elsif (/^\.pre/){
 		debug ($TAGS,"Pre-tag (was: $inpre)");
-		if ($inpre==0){$inpre=1;}
+		if ($inpre==0){
+			$inpre=1;
+			close_alinea;
+		}
 		else {$inpre=0};
 	}
 	elsif (/^\`\`\`/){
 		debug ($TAGS,"Pre-tag (was: $inpre)");
-		if ($inpre==0){$inpre=1;}
+		if ($inpre==0){
+			$inpre=1;
+			close_alinea;
+		}
 		else {$inpre=0};
 	}
 	elsif ($inpre>0){
