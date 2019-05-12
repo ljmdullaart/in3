@@ -296,9 +296,14 @@ if [ -d $EPUBDIR ] ; then
 	fi
 	
 	echo "tag/in3.epub: $EPUBDIR/$WD.epub" >> Makefile
-	echo "	cp block_*.png $EPUBDIR" >> Makefile
 	echo "	touch tag/in3.epub" >> Makefile
 	echo "$EPUBDIR/$WD.epub: $INHTML $EPUBDIR/index.html" >> Makefile
+	echo "	cp *.png $EPUBDIR" >> Makefile
+	if [ -f epubstylesheet.css ] ; then
+		echo "	cp epubstylesheet.css $EPUBDIR/stylesheet.css" >> Makefile
+	elif [ -f stylesheet.css ] ; then
+		echo "	cp stylesheet.css $EPUBDIR" >> Makefile
+	fi
 	echo "	cd $EPUBDIR ; ebook-convert index.html $WD.epub $pub_opt" >> Makefile
 	echo "tag/in3.epub">>$CLEANFILE
 	echo "$EPUBDIR/$WD.epub">>$UPLOADFILE

@@ -5,6 +5,7 @@ use warnings;
 
 
 my $DEBUG=0;
+my $DEB_BLOCK=2;	#Block=stuff
 my $DEB_IN=4;		#All input lines 
 my $DEB_PUSH=8;	#All push-outs
 my $DEB_HEAD=16;	# Put headers in the debug-stream
@@ -276,7 +277,7 @@ sub alineatabstart {
 	
 sub endalinea {
 	debug($DEB_ALINEA,"ALINEA END { alineatype=$alineatype;inalinea=$inalinea");
-	if ($inalineatab==0){ print STDERR "** ERROR ** End alinea outside an alineatab\n";}
+	if ($inalineatab==0){ debug($DEB_ALINEA,"** ERROR ** End alinea outside an alineatab");}
 	if ($alineatype<0){}
 	elsif ($inalinea==0){}
 	elsif ($alineatype==0){
@@ -354,18 +355,61 @@ my $blockname='none';
 my $blockformat='';
 sub block_push {
 	(my $text)=@_;
+	debug($DEB_BLOCK,"block-push $text");
 	push @block,$text;
 }
 sub block_end {
-	my $blockscale=75;
+	my $blockscale=25;
 	if($blockformat ne ''){
+		debug($DEB_BLOCK,"block format $blockformat");
 		if ($blockformat=~/scale=(\d+)/){ $blockscale=$1; }
+
 	}
 
 	if ($blocktype eq 'pre'){ 
+		debug($DEB_BLOCK,"block type pre");
 		# Do nothing; pre-blocks are handled as {LITTERAL}
 	}
+	elsif ($blocktype eq 'texeqn'){
+		debug($DEB_BLOCK,"block type texeqn");
+		my $density=600*$blockscale/100;
+		if ($blockname eq 'none') {
+			my $random=int(rand(1000000));
+			$blockname="gen_$random";
+		}
+		if (open (my $TEXEQN,'>',"block_$blockname.tex")){
+			print $TEXEQN "\\documentclass{article}\n";
+			print $TEXEQN "\\usepackage{amsmath}\n";
+			print $TEXEQN "\\usepackage{amssymb}\n";
+			print $TEXEQN "\\usepackage{algorithm2e}\n";
+			print $TEXEQN "\\begin{document}\n";
+			print $TEXEQN "\\begin{titlepage}\n";
+			print $TEXEQN "\\begin{equation*}\n";
+			for (@block){
+				print $TEXEQN "$_\n";
+			}
+			print $TEXEQN "\\end{equation*}\n";
+			print $TEXEQN "\\end{titlepage}\n";
+			print $TEXEQN "\\end{document}\n";
+			close $TEXEQN;
+            my $b_image;
+            my $d_image;
+            $b_image="block_$blockname.png";
+            $d_image="block_$blockname.dvi";
+            debug($DEB_BLOCK,"latex block_$blockname.tex > /dev/null 2>/dev/null");
+            debug($DEB_BLOCK,"convert  -trim  -density $density  $d_image  $b_image");
+            system("latex block_$blockname.tex > /dev/null 2>/dev/null");
+            system("convert  -trim  -density $density  $d_image  $b_image");
+			debug ($DEB_IMG, "  image=$b_image");
+			pushout("<img src=\"$b_image\" alt=\"$b_image>\">");
+		}
+		else {
+			print STDERR "in3html cannot open $blockname\n";
+		}
+																													#
+	}
 	elsif ($blocktype eq 'gnuplot'){
+		debug($DEB_BLOCK,"block type gnuplot");
 		if ($blockname eq 'none') {
 			my $random=int(rand(1000000));
 			$blockname="gen_$random";
@@ -389,6 +433,7 @@ sub block_end {
 		}
 	}
 	elsif ($blocktype eq 'eqn'){
+		debug($DEB_BLOCK,"block type eqn");
 		my $density=800*$blockscale/100;
 		if ($blockname eq 'none') {
 			my $random=int(rand(1000000));

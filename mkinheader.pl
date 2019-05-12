@@ -165,7 +165,7 @@ for (@in){
 	if ($type eq 'header'){
 		$inline=charmapper($inline);
 	}
-	my $c;
+	my $c='';;
 	if ($inline=~/^index/){ $prev_c=0;}
 	if ($inline=~/^total/){ $prev_c=0;}
 	elsif ($inline=~/^([0-9]*)_(.*).in:.h([123]) (.*)/){

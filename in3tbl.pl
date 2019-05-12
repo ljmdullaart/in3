@@ -192,7 +192,7 @@ sub block_push {
 }
 
 sub block_end {
-	my $blockscale=75;
+	my $blockscale=25;
 	alineatabend;
 	if($blockformat ne ''){
 		if ($blockformat=~/scale=(\d+)/){ $blockscale=$1; }
@@ -241,7 +241,66 @@ sub block_end {
 			pushout(".br");
         }
         else {
-            print STDERR "in3html cannot open $blockname.gnuplot\n";
+            print STDERR "in3tbl cannot open $blockname.gnuplot\n";
+        }
+
+	}
+	elsif ($blocktype eq 'texeqn'){
+		my $density=600*$blockscale/100;
+        if ($blockname eq 'none') {
+            my $random=int(rand(1000000));
+            $blockname="gen_$random";
+        }
+        if (open (my $TEXEQN,'>',"block_$blockname.tex")){
+		
+			print $TEXEQN "\\documentclass{article}\n";
+			print $TEXEQN "\\usepackage{amsmath}\n";
+			print $TEXEQN "\\usepackage{amssymb}\n";
+			print $TEXEQN "\\usepackage{algorithm2e}\n";
+			print $TEXEQN "\\begin{document}\n";
+			print $TEXEQN "\\begin{titlepage}\n";
+			print $TEXEQN "\\begin{equation*}\n";
+            for (@block){ 
+				#s/\\/\\\\/g;
+				print $TEXEQN "$_\n";
+			}
+			print $TEXEQN "\\end{equation*}\n";
+			print $TEXEQN "\\end{titlepage}\n";
+			print $TEXEQN "\\end{document}\n";
+            close $TEXEQN;
+            my $b_image;
+            my $d_image;
+            $b_image="block_$blockname.eps";
+            $d_image="block_$blockname.dvi";
+            system("latex block_$blockname.tex");
+			system("convert  -trim  -density $density  $d_image  $b_image");
+			my $scale=$blockscale;
+			my $epsfile="block_$blockname.eps";
+			debug($DEB_IMG,"Processing $epsfile");
+			my $imgsize=` imageinfo --geom $epsfile`;
+			my $x; my $y; my $xn;
+			($x,$y)=split ('x',$imgsize);
+			$xn=($x*150+2000)/($x*5+1000); $y=$y*$xn/$x;
+			$xn=$scale*$xn/50;
+			$y=$scale*$y/50;
+			alineatabend;
+			pushout(".br");
+			my $found=0;
+			my $yroom=$y+15;
+			for (my $i=0; $i<10;$i++){
+				my $qout=$#output;
+				if ($output[$qout-$i]=~/^\.ne/){
+					$output[$qout-$i]=".ne $yroom"."v";
+					$found=1;
+				}
+			}
+			if ($found == 0){pushout(".ne $y"."v");}
+			pushout(".ce 1");
+			pushout(".dospark $epsfile $xn"."v $y"."v");
+			pushout(".br");
+        }
+        else {
+            print STDERR "in3tbl cannot open $blockname\n";
         }
 
 	}
