@@ -3553,3 +3553,15 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .de underline
 .  nop \\$1\l'|0\[ul]'
 ..
+.\" Superscripts (ex tmac.e) (current versions without extra line space)
+.\" (reinstate commented versions to restore extra line space)
+.\" .ds { \v'-0.3m'\x'-0.2m'\\s[\\n[.s]*8u/10u]
+.ds { \v'-0.3m'\\s[\\n[.s]*9u/12u]
+.ds } \s0\v'0.3m'
+.\" Subscripts
+.\" .ds < \v'0.3m'\x'0.2m'\s[\\n[.s]*8u/10u]
+.ds < \v'0.3m'\s[\\n[.s]*9u/12u]
+.ds > \s0\v'-0.3m'
+.\" Up and Down (like sup/sub but no size change)
+.ds UP \v'-0.3m'\x'-0.3m'
+.ds DOWN \v'0.3m'\x'0.3m'

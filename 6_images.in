@@ -8,7 +8,12 @@ There is a sequence to the matching:
 
 - If an .xcf exists, use that, else
 - if a .dia exists, use that one, else
-- if a .gnuplot exists, use that
+- if a .gnuplot exists, use that, else
+- if a .eqn exists, use that
+
+Note that gnuplot and eqn images can be created in blocks, which
+keeps the inormation with the rest of the text, and which may be
+more flexible.
 
 Example of a .xcf image: The image below is defined as 
 .fix img  IMG_9039.png

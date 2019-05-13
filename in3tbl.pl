@@ -26,6 +26,23 @@ sub debug {
 	}
 }
 
+
+################################################################################
+#  _       _ _                         
+# (_)_ __ (_) |_  __   ____ _ _ __ ___ 
+# | | '_ \| | __| \ \ / / _` | '__/ __|
+# | | | | | | |_   \ V / (_| | |  \__ \
+# |_|_| |_|_|\__|   \_/ \__,_|_|  |___/
+# 
+my $inquote=0;
+
+my @thistable;
+my $intable=0;
+my %variables=();
+my $cover='';
+$variables{'interpret'}=1;
+$variables{'blockscale'}=100;
+$variables{'blockinline'}=0;
 #         _ _                  
 #    __ _| (_)_ __   ___  __ _ 
 #   / _` | | | '_ \ / _ \/ _` |
@@ -184,6 +201,7 @@ my @block;
 my $blocktype='none';
 my $blockname='none';
 my $blockformat='';
+my $blockinline=0;
 
 
 sub block_push {
@@ -192,10 +210,15 @@ sub block_push {
 }
 
 sub block_end {
-	my $blockscale=25;
-	alineatabend;
+	my $blockscale=$variables{'blockscale'};
+	$blockinline=$variables{'blockinline'};
+
 	if($blockformat ne ''){
 		if ($blockformat=~/scale=(\d+)/){ $blockscale=$1; }
+		if ($blockformat=~/inline/){ $blockinline=1;}
+	}
+	if ($blockinline==0){
+		alineatabend;
 	}
 	if ($blocktype eq 'pre'){
 		# do nothing; pre is handled as {LITTERAL}
@@ -246,7 +269,7 @@ sub block_end {
 
 	}
 	elsif ($blocktype eq 'texeqn'){
-		my $density=600*$blockscale/100;
+		my $density=1000;
         if ($blockname eq 'none') {
             my $random=int(rand(1000000));
             $blockname="gen_$random";
@@ -272,7 +295,7 @@ sub block_end {
             my $d_image;
             $b_image="block_$blockname.eps";
             $d_image="block_$blockname.dvi";
-            system("latex block_$blockname.tex");
+            system("latex block_$blockname.tex > /dev/null 2>/dev/null");
 			system("convert  -trim  -density $density  $d_image  $b_image");
 			my $scale=$blockscale;
 			my $epsfile="block_$blockname.eps";
@@ -281,8 +304,8 @@ sub block_end {
 			my $x; my $y; my $xn;
 			($x,$y)=split ('x',$imgsize);
 			$xn=($x*150+2000)/($x*5+1000); $y=$y*$xn/$x;
-			$xn=$scale*$xn/50;
-			$y=$scale*$y/50;
+			$xn=$scale*$xn/100;
+			$y=$scale*$y/100;
 			alineatabend;
 			pushout(".br");
 			my $found=0;
@@ -305,23 +328,43 @@ sub block_end {
 
 	}
 	elsif ($blocktype eq 'eqn'){
-		pushout (".br");
-		pushout (".EQ");
-		for (@block){
-			pushout ($_);
+		if ($blockinline==0){
+			pushout (".br");
+			pushout (".EQ");
 		}
-		pushout (".EN");
-		pushout (".br");
+		else {
+			pushout ('.EQ');
+			pushout('delim $$');
+			pushout (".EN");
+		}
+		for (@block){
+			if ($blockinline==0){
+				pushout ($_);
+			}
+			else {
+				pushout ("\$$_\$");
+			}
+
+		}
+		if ($blockinline==0){
+			pushout (".EN");
+			pushout (".br");
+		}
+		else {
+			pushout ('.EQ');
+			pushout('delim off');
+			pushout (".EN");
+		}
 
 	}
 	elsif ($blocktype eq 'pic'){
-		pushout (".br");
+		if ($blockinline==0){pushout (".br");}
 		pushout (".PS");
 		for (@block){
 			pushout ($_);
 		}
 		pushout (".PE");
-		pushout (".br");
+		if ($blockinline==0){pushout (".br");}
 
 	}
 	else {
@@ -334,6 +377,7 @@ sub block_end {
 	$blocktype='none';
 	$blockname='none';
 	$blockformat='';
+	$blockinline=0;
 }
 
 
@@ -355,20 +399,6 @@ sub pushlit{
       push @litblock,$text;
 }
 
-################################################################################
-#  _       _ _                         
-# (_)_ __ (_) |_  __   ____ _ _ __ ___ 
-# | | '_ \| | __| \ \ / / _` | '__/ __|
-# | | | | | | |_   \ V / (_| | |  \__ \
-# |_|_| |_|_|\__|   \_/ \__,_|_|  |___/
-# 
-my $inquote=0;
-
-my @thistable;
-my $intable=0;
-my %variables=();
-my $cover='';
-$variables{'interpret'}=1;
 
 
 ################################################################################
@@ -879,7 +909,33 @@ for (@in3){
 			pushout("$1");
 		}
 	}
+	elsif (/^{SUBSCRIPT}(.*)/){
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			if (($inalinea==0)&&($inlist==0)){
+				alineatabstart();
+			}
+			pushout(".DOWN");
+			pushout("$1");
+			pushout(".UP");
+		}
+	}
 	elsif (/^{SUBTITLE}/){
+	}
+	elsif (/^{SUPERSCRIPT}(.*)/){
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			if (($inalinea==0)&&($inlist==0)){
+				alineatabstart();
+			}
+			pushout(".UP");
+			pushout("$1");
+			pushout(".DOWN");
+		}
 	}
 	elsif (/^{TABLEEND}/){
 		$intable=0;
@@ -970,6 +1026,16 @@ for (@in3){
 			elsif (/{TEXTBOLD}(.*)/){
 				my $text=$1;
 				$outline=~s/T}$/.B "$text"\nT}/;
+				debug($DEB_TABLE,"BOLD: outline=$outline");
+			}
+			elsif (/{SUBSCRIPT}(.*)/){
+				my $text=$1;
+				$outline=~s/T}$/\\d $text \\u/;
+				debug($DEB_TABLE,"BOLD: outline=$outline");
+			}
+			elsif (/{SUPERSCRIPT}(.*)/){
+				my $text=$1;
+				$outline=~s/T}$/\\u $text \\d/;
 				debug($DEB_TABLE,"BOLD: outline=$outline");
 			}
 			elsif (/{TEXTUNDERLINE}(.*)/){

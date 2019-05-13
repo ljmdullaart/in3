@@ -208,7 +208,6 @@ Proin eget nisl est. Proin semper, elit in accumsan gravida, nibh
 tortor pulvinar mauris, ut lacinia lectus nulla id est.
 
 .block pic 2
-.block format scale=50
 ellipse "document";
 arrow;
 box "\fIpic\fP(1)"
@@ -262,35 +261,54 @@ commodo.
 A Tex-block:
 
 .block texeqn 4
-.block format scale=25
 F(x) = \int^a_b \frac{1}{3}x^3
 .block
 
+subscript superscript
 Cras interdum purus eu enim egestas suscipit. Nullam
 bibendum, ante molestie hendrerit placerat, tortor justo mollis
 neque, et tincidunt augue nunc nec neque. Donec pulvinar sed magna
 eu bibendum. Ut feugiat eros sit amet metus consequat dictum.
-Vivamus lobortis posuere lectus eget ullamcorper. Donec tincidunt
+Vivamus lobortis posuere
+.sub lectus
+eget ullamcorper. Donec tincidunt
 risus volutpat, elementum risus eget, viverra nisl. Quisque auctor
 sit amet est quis mollis. Suspendisse malesuada magna augue, eleifend
-ullamcorper lorem volutpat non. Sed eget erat quis sem dignissim
+pero no hai ullamcorper
+.sup lorem
+volutpat non. Sed eget erat quis sem dignissim
 varius sit amet non metus.
 
 Integer venenatis eu sapien ut dignissim. Integer sit amet odio
-at nibh tempus imperdiet in sed diam. Ut augue est, convallis
+at nibh tempus
+.block eqn inlinetest
+.block format inline
+a sub 2 over b
+.block
+imperdiet in sed diam. Ut augue est, convallis
 in magna et, auctor ullamcorper dui. Sed at augue aliquam, mollis
+.block eqn inlinetest2
+.block format inline
+a sub 2
+.block
 arcu non, hendrerit leo. Nulla nec mollis velit. Phasellus a enim
 felis. Donec vulputate, massa pulvinar lacinia molestie, leo nulla
 euismod lorem, id consequat turpis risus non orci. Donec turpis
 lectus, posuere ac fringilla ac, tempor id dui. Nulla pellentesque
+.block eqn inlinetest3
+.block format inline
+{ a sub 2 over b} over deler
+.block
 metus non massa bibendum, at accumsan nisi porttitor. Maecenas
 suscipit enim tincidunt feugiat euismod. Nullam aliquet, enim
 in aliquam rhoncus, justo leo rutrum quam, id blandit magna velit
 sit amet velit. Phasellus convallis mi ac tellus sagittis, non
 euismod justo imperdiet.
 
+.h2 inline test
 Sed nec efficitur ipsum. Nunc eget odio purus. Proin hendrerit
 ultricies purus nec interdum. Vestibulum efficitur odio magna.
+.inline eqn a sub 1 , a sub 2 , a sub 3 , ...
 Maecenas erat lacus, elementum eget justo quis, faucibus hendrerit
 nisl. Etiam elit ipsum, volutpat a semper vitae, ultricies sit
 amet odio. Nam in ex odio. Morbi quis sem pulvinar, imperdiet

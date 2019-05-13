@@ -27,6 +27,7 @@ my $leftnote;
 my $level;
 my $bodytext;
 my @reflist;		# all references with .ref
+my $blockcount=0;
 ########################################################
 
 #     #  #######  #        ######   
@@ -124,6 +125,7 @@ else {
 				if (open(my $IN,'<',$file)){
 					if ($ch>0){
 						push @input,".set H1 $ch";
+						$variables{"H1"}=$ch;
 					}
 					while (<$IN>){
 						push @input,$_;
@@ -581,7 +583,7 @@ for (@input){
 		debug ($TAGS,"Block-tag (was: $inblock)");
 
 		if ($inblock==0){
-			close_alinea;
+	#		#close_alinea;
 			$inblock=1;
 			if (/^.block ([a-z]+) ([a-z0-9A-Z]+)/){
 				$blocktype=$1;
@@ -605,7 +607,33 @@ for (@input){
 				$inblock=0;
 				inpush ("{BLOCKEND}");
 			}
-		};
+		}
+	}
+	elsif (/^\.inline/){
+		my $ch;
+		my $type;
+		my $content;
+		my $blockname;
+		if (/^\.inline ([a-z]+) (.*)/){
+			my $type=$1;
+			my $content=$2;
+			if (exists $variables{"H1"} ){
+				$ch=$variables{"H1"}
+			}
+			else {
+				$ch=0;
+			}
+			$blockcount++;
+			$blockname="inline.$ch.$blockcount";
+			inpush("{BLOCKSTART}$type $blockname");
+			inpush ("{BLOCKFORMAT}inline");
+			inpush("{BLOCK $blocktype}$content");
+			inpush ("{BLOCKEND}");
+		}
+		else {
+			#silently ignore
+		}
+
 	}
 	elsif ($inblock>0){
 		if ($blocktype eq 'pre'){
@@ -995,8 +1023,14 @@ for (@input){
 	elsif (/^\.title (.*)/) {
 		inpush("{TITLE}$1");
 	}
+	elsif (/^\.sub (.*)/) {
+		inpush ("{SUBSCRIPT}$1");
+	}
 	elsif (/^\.subtitle (.*)/) {
 		inpush("{SUBTITLE}$1");
+	}
+	elsif (/^\.sup (.*)/) {
+		inpush ("{SUPERSCRIPT}$1");
 	}
 	elsif (/^\.toc([0-9]*) (.*)/){
 		# Depricated 'toc' request

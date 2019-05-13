@@ -173,7 +173,8 @@ sub pushnote{
 #  \__, |_|\___/|_.__/ \__,_|_|___/
 #  |___/     
 #
-
+$variables{'blockscale'}=100;
+$variables{'blockinline'}=0;
 for (@in3){
 	if (/^{TITLE}(.*)/){ $title=$1;}
 	elsif($title eq ''){
@@ -353,17 +354,22 @@ my @block;
 my $blocktype='none';
 my $blockname='none';
 my $blockformat='';
+my $blockinline=0;
 sub block_push {
 	(my $text)=@_;
 	debug($DEB_BLOCK,"block-push $text");
 	push @block,$text;
 }
 sub block_end {
-	my $blockscale=25;
+	$blockinline=$variables{'blockinline'};
+	my $blockscale=$variables{'blockscale'};;
 	if($blockformat ne ''){
 		debug($DEB_BLOCK,"block format $blockformat");
 		if ($blockformat=~/scale=(\d+)/){ $blockscale=$1; }
-
+		if ($blockformat=~/inline/){ $blockinline=1; }
+	}
+	if ($blockinline==0){
+		alineatabend;
 	}
 
 	if ($blocktype eq 'pre'){ 
@@ -372,7 +378,7 @@ sub block_end {
 	}
 	elsif ($blocktype eq 'texeqn'){
 		debug($DEB_BLOCK,"block type texeqn");
-		my $density=600*$blockscale/100;
+		my $density=1000;
 		if ($blockname eq 'none') {
 			my $random=int(rand(1000000));
 			$blockname="gen_$random";
@@ -401,12 +407,16 @@ sub block_end {
             system("latex block_$blockname.tex > /dev/null 2>/dev/null");
             system("convert  -trim  -density $density  $d_image  $b_image");
 			debug ($DEB_IMG, "  image=$b_image");
-			pushout("<img src=\"$b_image\" alt=\"$b_image>\">");
+			my $imgsize=` imageinfo --geom $b_image`;
+            my $x; my $y; my $yn;
+            ($x,$y)=split ('x',$imgsize);
+			$yn=$y*$blockscale/10500;
+			my $ysize=$yn.'em';
+			pushout("<img src=\"$b_image\" alt=\"$b_image\" style=\"height:$ysize;vertical-align:middle\">");
 		}
 		else {
 			print STDERR "in3html cannot open $blockname\n";
 		}
-																													#
 	}
 	elsif ($blocktype eq 'gnuplot'){
 		debug($DEB_BLOCK,"block type gnuplot");
@@ -426,7 +436,7 @@ sub block_end {
 			system("gnuplot block_$blockname.gnuplot");
 			$b_image="block_$blockname.png";
 			debug ($DEB_IMG, "  image=$b_image");
-			pushout("<img src=\"$b_image\" alt=\"$b_image>\">");
+			pushout("<img src=\"$b_image\" alt=\"$b_image>\" width=\"$x\">");
 		}
 		else {
 			print STDERR "in3html cannot open $blockname.gnuplot\n";
@@ -434,7 +444,7 @@ sub block_end {
 	}
 	elsif ($blocktype eq 'eqn'){
 		debug($DEB_BLOCK,"block type eqn");
-		my $density=800*$blockscale/100;
+		my $density=1000;
 		if ($blockname eq 'none') {
 			my $random=int(rand(1000000));
 			$blockname="gen_$random";
@@ -453,11 +463,18 @@ sub block_end {
 			system ("convert -trim -density $density $ffn.pdf  $ffn.png");
 			system ("rm $ffn.groff $ffn.ps $ffn.pdf");
 			debug ($DEB_IMG, "  image=$ffn.png");
-			pushout("<img src=\"$ffn.png\" alt=\"$ffn>\">");
+			debug ($DEB_IMG, "  image=$ffn.png");
+			my $imgsize=` imageinfo --geom $ffn.png`;
+            my $x; my $y; my $yn;
+            ($x,$y)=split ('x',$imgsize);
+			$yn=$y*$blockscale/10500;
+			my $ysize=$yn.'em';
+			pushout("<img src=\"$ffn.png\" alt=\"$ffn>\" style=\"height:$ysize;vertical-align:middle\">");
 		}
 	}
 	elsif ($blocktype eq 'pic'){
-		my $density=500*$blockscale/100;
+		my $density=1000;
+		my $x=800*$blockscale/100;
 		if ($blockname eq 'none') {
 			my $random=int(rand(1000000));
 			$blockname="gen_$random";
@@ -476,7 +493,8 @@ sub block_end {
 			system ("convert -trim -density $density $ffn.pdf  $ffn.png");
 			system ("rm $ffn.groff $ffn.ps $ffn.pdf");
 			debug ($DEB_IMG, "  image=$ffn.png");
-			pushout("<img src=\"$ffn.png\" alt=\"$ffn>\">");
+			my $imgsize=` imageinfo --geom $ffn.png`;
+			pushout("<img src=\"$ffn.png\" alt=\"$ffn\" width=\"$x\">");
 		}
 	}
 	else {
@@ -488,6 +506,7 @@ sub block_end {
 	$blocktype='none';
 	$blockname='none';
 	$blockformat='';
+	$blockinline=0;
 
 }
 
@@ -532,7 +551,6 @@ for (@in3){
 		$appendix=$headnum[1];
 	}
 	elsif (/^{BLOCKSTART}(.+) (.+)/){
-		alineatabend;
 		$blocktype=$1;
 		$blockname=$2;
 	}
@@ -786,6 +804,12 @@ for (@in3){
 	}
 	elsif (/^{TABLEEND}/){
 			pushout ("</table>");
+	}
+	elsif (/^{SUBSCRIPT}(.*)/){
+		pushout("<sub>$1</sub>");
+	}
+	elsif (/^{SUPERSCRIPT}(.*)/){
+		pushout("<sup>$1</sup>");
 	}
 	elsif (/^{TEXTBOLD}(.*)/){
 		pushout("<b>$1</b>");
