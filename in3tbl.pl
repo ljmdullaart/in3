@@ -303,24 +303,30 @@ sub block_end {
 			my $imgsize=` imageinfo --geom $epsfile`;
 			my $x; my $y; my $xn;
 			($x,$y)=split ('x',$imgsize);
-			$xn=($x*150+2000)/($x*5+1000); $y=$y*$xn/$x;
+			$xn=$x/12; $y=$y/12;
 			$xn=$scale*$xn/100;
 			$y=$scale*$y/100;
-			alineatabend;
-			pushout(".br");
-			my $found=0;
-			my $yroom=$y+15;
-			for (my $i=0; $i<10;$i++){
-				my $qout=$#output;
-				if ($output[$qout-$i]=~/^\.ne/){
-					$output[$qout-$i]=".ne $yroom"."v";
-					$found=1;
+			if ($blockinline==0){
+				alineatabend;
+				pushout(".br");
+				my $found=0;
+				my $yroom=$y+15;
+				for (my $i=0; $i<10;$i++){
+					my $qout=$#output;
+					if ($output[$qout-$i]=~/^\.ne/){
+						$output[$qout-$i]=".ne $yroom"."v";
+						$found=1;
+					}
 				}
+				if ($found == 0){pushout(".ne $y"."v");}
+				pushout(".ce 1");
 			}
-			if ($found == 0){pushout(".ne $y"."v");}
-			pushout(".ce 1");
+			pushout("\\v'.1'");
 			pushout(".dospark $epsfile $xn"."v $y"."v");
-			pushout(".br");
+			pushout("\\v'-.1'");
+			if ($blockinline==0){
+				pushout(".br");
+			}
         }
         else {
             print STDERR "in3tbl cannot open $blockname\n";
