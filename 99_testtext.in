@@ -314,6 +314,7 @@ nisl. Etiam elit ipsum, volutpat a semper vitae, ultricies sit
 amet odio. Nam in ex odio. Morbi quis sem pulvinar, imperdiet
 eros eu, rhoncus velit. Mauris eu egestas elit, non varius odio.
 Donec aliquet, velit a faucibus porttitor, diam elit commodo massa,
+.inline texeqn \alpha_1^2 + 2 \alpha_1 \beta_2 + \beta_2^2 
 nec ullamcorper erat nisi vitae dui. Etiam quis quam sit amet
 purus posuere luctus eget vitae enim. Aliquam quis sodales erat,
 in lobortis orci. Maecenas maximus, nunc molestie elementum molestie,
