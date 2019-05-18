@@ -404,13 +404,13 @@ sub block_end {
             $d_image="block_$blockname.dvi";
             debug($DEB_BLOCK,"latex block_$blockname.tex > /dev/null 2>/dev/null");
             debug($DEB_BLOCK,"convert  -trim  -density $density  $d_image  $b_image");
-            system("latex block_$blockname.tex > /dev/null 2>/dev/null");
+            system("echo '' | latex block_$blockname.tex > /dev/null 2>/dev/null");
             system("convert  -trim  -density $density  $d_image  $b_image");
 			debug ($DEB_IMG, "  image=$b_image");
 			my $imgsize=` imageinfo --geom $b_image`;
             my $x; my $y; my $yn;
             ($x,$y)=split ('x',$imgsize);
-			$yn=$y*$blockscale/10500;
+			$yn=$y*$blockscale/11500;
 			my $ysize=$yn.'em';
 			pushout("<img src=\"$b_image\" alt=\"$b_image\" style=\"height:$ysize;vertical-align:middle\">");
 		}
