@@ -361,6 +361,7 @@ sub block_push {
 	push @block,$text;
 }
 sub block_end {
+	my $density;
 	$blockinline=$variables{'blockinline'};
 	my $blockscale=$variables{'blockscale'};;
 	if($blockformat ne ''){
@@ -376,9 +377,51 @@ sub block_end {
 		debug($DEB_BLOCK,"block type pre");
 		# Do nothing; pre-blocks are handled as {LITTERAL}
 	}
+	elsif ($blocktype eq 'music'){
+		debug($DEB_BLOCK,"block type music");
+		$density=1000;
+		if ($blockname eq 'none') {
+			my $random=int(rand(1000000));
+			$blockname="gen_$random";
+		}
+		if (open (my $MUSIC, '>',"block_$blockname.ly")){
+			print $MUSIC "\\version \"2.18.2\"\n";
+			print $MUSIC "\\book {\n";
+  			print $MUSIC "\\paper {\n";
+  			print $MUSIC "indent = 0\\mm\n";
+  			print $MUSIC "line-width = 110\\mm\n";
+  			print $MUSIC "oddHeaderMarkup = \"\"\n";
+  			print $MUSIC "evenHeaderMarkup = \"\"\n";
+  			print $MUSIC "oddFooterMarkup = \"\"\n";
+  			print $MUSIC "evenFooterMarkup = \"\"\n";
+  			print $MUSIC "}\n";
+  			print $MUSIC "\\header {\n";
+    		print $MUSIC "tagline = \"\"\n";
+  			print $MUSIC "}\n";
+			for (@block){
+				print $MUSIC "$_\n";
+			}
+  			print $MUSIC "}\n";
+			close $MUSIC;
+            my $b_image;
+            $b_image="block_$blockname.png";
+			system ("lilypond --png  -dresolution=500  block_$blockname.ly");
+			system ("convert -trim block_$blockname.png block_$blockname.tmp.png");
+			system ("mv block_$blockname.tmp.png block_$blockname.png");
+			my $imgsize=` imageinfo --geom $b_image`;
+            my $x; my $y; my $yn;
+            ($x,$y)=split ('x',$imgsize);
+			$yn=$y*$blockscale/11500;
+			my $ysize=$yn.'em';
+			pushout("<img src=\"$b_image\" alt=\"$b_image\" style=\"height:$ysize;vertical-align:middle\">");
+		}
+		else {
+			print STDERR "in3html cannot open $blockname\n";
+		}
+	}
 	elsif ($blocktype eq 'texeqn'){
 		debug($DEB_BLOCK,"block type texeqn");
-		my $density=1000;
+		$density=1000;
 		if ($blockname eq 'none') {
 			my $random=int(rand(1000000));
 			$blockname="gen_$random";
@@ -444,7 +487,7 @@ sub block_end {
 	}
 	elsif ($blocktype eq 'eqn'){
 		debug($DEB_BLOCK,"block type eqn");
-		my $density=1000;
+		$density=1000;
 		if ($blockname eq 'none') {
 			my $random=int(rand(1000000));
 			$blockname="gen_$random";

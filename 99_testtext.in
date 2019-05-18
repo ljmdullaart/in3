@@ -196,7 +196,7 @@ plot sin(x) title 'Sine Function', tan(x) title 'Tangent'
 Ac, pulvinar euismod mi. Donec feugiat, eros sed finibus commodo,
 nisi mi malesuada lacus, eu laoreet est lacus sit amet velit.
 
-A block with an equation:
+A block with an equation and format scale=25:
 
 .block eqn 1
 .block format scale=25
@@ -219,7 +219,29 @@ arrow;
 ellipse "PostScript"
 .block
 Phasellus
-quis hendrerit nisl. Nulla venenatis justo nec velit pellentesque
+quis hendrerit nisl.
+
+.block music
+\score {
+  <<
+    \new MensuralVoice = "discantus" \relative c'' {
+      \hide Score.BarNumber {
+        c1\melisma bes a g\melismaEnd
+        f\breve
+        \[ f1\melisma a c\breve d\melismaEnd \]
+        c\longa
+        c\breve\melisma a1 g1\melismaEnd
+        fis\longa^\signumcongruentiae
+      }
+    }
+    \new Lyrics \lyricsto "discantus" {
+      San -- ctus, San -- ctus, San -- ctus
+    }
+  >>
+}
+.block
+
+Nulla venenatis justo nec velit pellentesque
 congue. In mattis mattis velit, aliquet fermentum nulla maximus
 eget. Aenean quis mauris imperdiet, pharetra odio tempor, tincidunt
 quam.
@@ -320,7 +342,14 @@ purus posuere luctus eget vitae enim. Aliquam quis sodales erat,
 in lobortis orci. Maecenas maximus, nunc molestie elementum molestie,
 lorem orci cursus purus, eget ornare odio diam vel justo. Sed
 vehicula facilisis felis, ac tincidunt massa vehicula in.
-
+.block music
+.block format inline
+  \score {
+    \relative {
+      c'4 d e f
+    }
+  }
+.block
 Etiam ornare purus sagittis nibh vulputate, sed lobortis ipsum
 mollis. Ut eget enim massa. Quisque venenatis nibh massa, at facilisis
 diam maximus vel. Vivamus sed mi sit amet risus aliquam imperdiet.

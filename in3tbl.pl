@@ -17,6 +17,7 @@ my $DEB_NOTE=8;			# Notes
 my $DEB_ALINEA=32;	#alinea processing
 my $DEB_CHAR=64;		#replace characters with GROFF escapes
 my $DEB_IMG=128;		#Image processing
+my $DEB_BLOCK=256;		#all pushes on the output
 my $DEB_PUSH=512;		#all pushes on the output
 
 sub debug {
@@ -223,6 +224,73 @@ sub block_end {
 	if ($blocktype eq 'pre'){
 		# do nothing; pre is handled as {LITTERAL}
 	}
+    elsif ($blocktype eq 'music'){
+        debug($DEB_BLOCK,"block type music");
+        my $density=1000;
+        if ($blockname eq 'none') {
+            my $random=int(rand(1000000));
+            $blockname="gen_$random";
+        }
+        system ("rm block_$blockname.*");
+        if (open (my $MUSIC, '>',"block_$blockname.ly")){
+            print $MUSIC "\\version \"2.18.2\"\n";
+            print $MUSIC "\\book {\n";
+            print $MUSIC "\\paper {\n";
+            print $MUSIC "indent = 0\\mm\n";
+            print $MUSIC "line-width = 110\\mm\n";
+            print $MUSIC "oddHeaderMarkup = \"\"\n";
+            print $MUSIC "evenHeaderMarkup = \"\"\n";
+            print $MUSIC "oddFooterMarkup = \"\"\n";
+            print $MUSIC "evenFooterMarkup = \"\"\n";
+            print $MUSIC "}\n";
+            print $MUSIC "\\header {\n";
+            print $MUSIC "tagline = \"\"\n";
+            print $MUSIC "}\n";
+            for (@block){
+                print $MUSIC "$_\n";
+            }
+            print $MUSIC "}\n";
+            close $MUSIC;
+            my $b_image;
+            $b_image="block_$blockname.png";
+            system ("lilypond -dbackend=eps  -dresolution=500 -dpreview block_$blockname.ly");
+			my $scale=$blockscale;
+			my $epsfile="block_$blockname.eps";
+			debug($DEB_IMG,"Processing $epsfile");
+			my $imgsize=` imageinfo --geom $epsfile`;
+			my $x; my $y; my $xn;
+			($x,$y)=split ('x',$imgsize);
+			$xn=$x/12; $y=$y/12;
+			$xn=$scale*$xn/100;
+			$y=$scale*$y/100;
+			if ($blockinline==0){
+				alineatabend;
+				pushout(".br");
+				my $found=0;
+				my $yroom=$y+15;
+				for (my $i=0; $i<10;$i++){
+					my $qout=$#output;
+					if ($output[$qout-$i]=~/^\.ne/){
+						$output[$qout-$i]=".ne $yroom"."v";
+						$found=1;
+					}
+				}
+				if ($found == 0){pushout(".ne $y"."v");}
+				pushout(".ce 1");
+			}
+			pushout("\\v'.25'");
+			pushout(".dospark $epsfile $xn"."v $y"."v");
+			pushout("\\v'-.25'");
+			if ($blockinline==0){
+				pushout(".br");
+			}
+
+        }
+        else {
+            print STDERR "in3tbl cannot open $blockname\n";
+        }
+    }
+
 	elsif ($blocktype eq 'gnuplot'){
         if ($blockname eq 'none') {
             my $random=int(rand(1000000));
