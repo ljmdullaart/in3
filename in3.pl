@@ -585,13 +585,21 @@ for (@input){
 		if ($inblock==0){
 	#		#close_alinea;
 			$inblock=1;
+			my $ch=0;
 			if (/^.block ([a-z]+) ([a-z0-9A-Z]+)/){
 				$blocktype=$1;
 				$blockname=$2;
 			}
 			elsif (/^.block ([a-z]+)/){
 				$blocktype=$1;
-				$blockname='none';
+				if (exists $variables{"H1"} ){
+					$ch=$variables{"H1"}
+				}
+				else {
+					$ch=0;
+				}
+				$blockcount++;
+				$blockname="inline.$ch.$blockcount";
 			}
 			else { 
 				$blocktype='none';
