@@ -44,6 +44,7 @@ my $cover='';
 $variables{'interpret'}=1;
 $variables{'blockscale'}=100;
 $variables{'blockinline'}=0;
+$variables{'imgsize'}=15;
 #         _ _                  
 #    __ _| (_)_ __   ___  __ _ 
 #   / _` | | | '_ \ / _ \/ _` |
@@ -799,7 +800,7 @@ for (@in3){
 	}
 	elsif (/^{IMAGE}(.*)/){
 		my $image=$1;
-		my $scale=50;
+		my $scale=100;
 		if (/ ([0-9][0-9]*)$/){
 			$scale=$1;
 			$image=~s/ [0-9][0-9]*//;
@@ -807,28 +808,28 @@ for (@in3){
 		debug($DEB_IMG,"Processing $image");
 		my $epsfile=$image; $epsfile=~s/\.[^.]+$/.eps/;
 		debug($DEB_IMG,"convert $image $epsfile");
-		system("convert $image $epsfile");
+		system("convert -label ' ' $image $epsfile");
 		my $imgsize=` imageinfo --geom $image`;
 		my $x; my $y; my $xn;
 		($x,$y)=split ('x',$imgsize);
-		$xn=($x*150+2000)/($x*5+1000); $y=$y*$xn/$x;
+		$xn=$variables{'imgsize'}; $y=$y*$xn/$x;
 		$xn=$scale*$xn/100;
 		$y=$scale*$y/100;
 
 		alineatabend;
 		pushout(".br");
 		my $found=0;
-		my $yroom=$y+15;
+		my $yroom=$y+1.5;
 		for (my $i=0; $i<10;$i++){
 			my $qout=$#output;
 			if ($output[$qout-$i]=~/^\.ne/){
-				$output[$qout-$i]=".ne $yroom"."v";
+				$output[$qout-$i]=".ne $yroom"."c";
 				$found=1;
 			}
 		}
-		if ($found == 0){pushout(".ne $y"."v");}
+		if ($found == 0){pushout(".ne $yroom"."c");}
 		pushout(".ce 1");
-		pushout(".dospark $epsfile $xn"."v $y"."v");
+		pushout(".dospark $epsfile $xn"."c $y"."c");
 		pushout(".br");
 	}
 	elsif (/^{LANGUAGE}/){
@@ -1154,7 +1155,7 @@ for (@in3){
 			}
 			pushout(".ft CR");
 			pushout(".ps -2");
-			pushout("$1");
+			pushout(" $1");
 			pushout(".ps");
 			pushout(".ft");
 		}
