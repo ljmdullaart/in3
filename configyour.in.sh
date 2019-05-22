@@ -21,6 +21,7 @@ VERBOSE=0
 CLEANFILE=/tmp/in.clean.$$
 UPLOADFILE=/tmp/in.upload.$$
 
+
 TMP=/tmp/in3.$$.tmp
 if [ -f destination ] ; then
 	. destination
@@ -226,7 +227,6 @@ if [ -d $WWWDIR ] ; then
 	if [ ! -f index.in ] ; then INHTML="$INHTML $WWWDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $WWWDIR/total.html" ; fi
 	echo "tag/in3.www: $INHTML" >> Makefile
-	echo "	cp block_*.png $WWWDIR" >> Makefile
 	echo "	touch tag/in3.www" >> Makefile
 	echo "tag/in3.www">>$CLEANFILE
 
@@ -240,6 +240,10 @@ if [ -d $WWWDIR ] ; then
 	add_www(){
 		echo "$WWWDIR/$1.html: $1.in3 header |$WWWDIR ">>Makefile
 		echo "	in3html $1.in3 > $WWWDIR/$1.html">>Makefile
+		if grep '^\.BLOCK' $1.in3  > /dev/null ; then
+			echo "	cp block_*.png $WWWDIR" >> Makefile
+			echo "$WWWDIR/block_*png">>$CLEANFILE
+		fi
 		echo "$WWWDIR/$1.html">>$CLEANFILE
 		echo "$WWWDIR/$1.html">>$UPLOADFILE
 	}
