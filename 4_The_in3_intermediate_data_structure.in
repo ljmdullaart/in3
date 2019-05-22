@@ -20,13 +20,13 @@ should be fairly readable. The following tags are used:
 	COVER	imagefile	Use the image in imagefile as cover
 	DEBUG level	message	Debugging information. Discarded.
 	IMAGE	filename	Include an image here
-	LINE	 	Draw a horizintal line
+	LINE	 	Draw a horizontal line
 	LINK	destination text	Generate a hyperlink, if applicable
 	LST	text	The line is in fixed on a separate line
 	MAPSTART	 	Start a clickable map
 	MAPPICT	filename	Use the image for the map
 	MAPFIELD	link coordinates	Create a click-field on the map
-	MAPEND	 	End the currend map
+	MAPEND	 	End the current map
 	NOP	 	No Operation; line is discarded
 	SET	variable value	Set variable to value
 	SUBTITLE	text	Create a subtitle for the document
@@ -58,7 +58,7 @@ should be fairly readable. The following tags are used:
 	LISTNUMSTART	level	Start a numeric-list
 	LISTNUMITEM	text	numeric list item
 	LITTERAL	text	text to be outputted as pre-formatted text
-	<rs=3>TABLECEL	text	Create a table cel with text as content
+	<rs=3>TABLECEL	text	Create a table cell with text as content
 	rs=x	Tag that allows the cell to span rows
 	cs=x	Tag that allows the cell to span columns
 	TABLEEND		End of a table

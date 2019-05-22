@@ -12,7 +12,7 @@ The goal of
 is to provide meta-information about the text. It is not meant to generate output.
 In a 
 .fix meta.in
-you generaly provide information like:
+you generally provide information like:
 
 	title	The title of the complete document
 	subtitle	The subtitle of the complete document
@@ -42,7 +42,7 @@ creates div-containers for specific text-elements:
 	class/style	text element	example
 	alinea	standard alinea	·alinea { background-color: #DDDD00; }
 	fixed	font for fixed character-width	·fixed { font-family:courier, "courier new", monospace; }
-	cel	cel in a normal table	·cel { background-color: #DD00DD; }
+	cel	cell in a normal table	·cel { background-color: #DD00DD; }
 	left	left notes	·left { font-size: 80%; }
 	list	format for all lists	·list { background-color: #00DDDD; }
 	side	side notes (right hand side)	·side { font-size: 50%; background-color: #DD0000; }

@@ -3,7 +3,7 @@
 .h1 In language specification
 .h2 Special Characters
 
-Some chararacters have a special meaning.
+Some characters have a special meaning.
 
 	*Character*	*When*	*Meaning*
 	{tab}	always	Tab is an indication that a format construct (leftnote, table or list) is used
@@ -25,7 +25,7 @@ The translation table for the % translations is the in3charmap.
 	back	none	Ends a section with left notes
 	br	none	force a line break
 	note	text	text is a footnote
-	side	side note text	Specifies a referal to sidenotes
+	side	side note text	Specifies a referral to sidenotes
 
 .h3 Lists
 
@@ -58,7 +58,7 @@ The translation table for the % translations is the in3charmap.
 
 	request	argument	meaning
 	author	text	specify the name(s) of the author(s)
-	cover	filename	use the image in filename as cover
+	cover	file name	use the image in file name as cover
 	global	variable value	set the variable to value globally
 	hr	none	horizontal line
 	img	image captiontext scale	include an image here; captiontext is optional; scale is optional, but it must be numbers only
@@ -80,17 +80,17 @@ There are a few block-specific requests.
 	block format	formatstring	specifies formats for the block
 	block	(without args)	close the block
 
-A block is a set of lines that are handled by an addtional program. The output-handlers
-should provide a comparable output for html, text etcetera, but the format may vary 
+A block is a set of lines that are handled by an additional program. The output-handlers
+should provide a comparable output for HTML, text etcetera, but the format may vary 
 wildly.
-Output handlers may even crash if the block contents poses an impossble problem
+Output handlers may even crash if the block contents poses an impossible problem
 for them. The output handler for text has a problem with anything graphical.
 
 There is some influence on the formatting possible 
 with the 
 .fix block format
 request, but it is up to the output handler to determine whether such a request is
-silently ignored or honnored. The general format of the format string is a number of
+silently ignored or honored. The general format of the format string is a number of
 .i variable=value
 pairs, separated by spaces. 
 Currently implemented is:
@@ -109,7 +109,7 @@ If the name of the block is missing, there will be some random name, which is
 most likely relatively unique.
 
 .h2 Markdown
-Enthousiastic markdown users would like to use mark-down syntax. The following requests 
+Enthusiastic markdown users would like to use mark-down syntax. The following requests 
 are implemented.
 
 	*markdown* *format* *request*	*allowed* *when*
@@ -123,7 +123,7 @@ are implemented.
 
 .h2 Variables
 
-The concept of variables is used to control the behaviour of the in-scripts. Variables may be
+The concept of variables is used to control the behavior of the in-scripts. Variables may be
 set globally or from a point in the text. If a variable is set as global, the last value in the
 input file is used from the beginning. Global variables may be overridden by set requests.
 
@@ -144,7 +144,7 @@ Variables may have initial values
 
 	variable	initial value
 	interpret	1
-	H1	if the filename starts with a number and an underscore, the value of that number (e.g. 3_title: H1=3)
+	H1	if the file name starts with a number and an underscore, the value of that number (e.g. 3_title: H1=3)
 	markdown	0, but if -m is given: 1
 	inlineemp	1
 

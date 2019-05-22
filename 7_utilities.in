@@ -20,7 +20,7 @@ There are two files that can be used to modify the resulting index-file:
 - index.top: this file is placed before the generated output
 - index.bottom: this file is placed below the generated output
 
-Both files are copied litterally to the output.
+Both files are copied literally to the output.
 
 
 .h2 Mk_cover
@@ -29,7 +29,7 @@ If a file
 .fix coverimage.png
 exists,
 .fix mk_cover
-wil create a standardized cover page. The cover page is
+will create a standardized cover page. The cover page is
 placed in
 .fix cover.png.
 
