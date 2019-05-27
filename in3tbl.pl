@@ -364,7 +364,7 @@ sub block_end {
             my $d_image;
             $b_image="block_$blockname.eps";
             $d_image="block_$blockname.dvi";
-            system("latex block_$blockname.tex > /dev/null 2>/dev/null");
+            system("echo '' |latex block_$blockname.tex > /dev/null 2>/dev/null");
 			system("convert  -trim  -density $density  $d_image  $b_image");
 			my $scale=$blockscale;
 			my $epsfile="block_$blockname.eps";
