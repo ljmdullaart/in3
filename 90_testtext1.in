@@ -1,0 +1,159 @@
+.header
+
+.set markdown 1
+
+# In3 handling markdown format #
+
+test Previous was a title with a hash.
+Obvoiously, we set markdown to 1.
+
+Title with equals below
+======================
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+sed _do_ eiusmod *tempor* incididunt ut labore et
+dolore magna aliqua. Ut enim ad minim veniam, quis
+
+
+Title with dashes below
+--------------
+
+Duis aute irure  dolor in reprehenderit in voluptate velit esse cillum dolore eu.
+
+1.	nostrud _exercitation_ ullamco test numlist with markdown underscore
+2.	ea *commodo* consequat test with markdown bold.
+
+Fugiat nulla pariatur. Excepteur [http://ljm.name](markdown link) occaecat cupidatat
+non proident, sunt in culpa qui officia deserunt mollit
+anim id est laborum. Below is a table with some markdown requests.
+ 
+	Vestibulum	non	risus eget purus semper	interdum. Etiam tincidunt
+	eu mi sed	pellentesque.	Maecenas	euismod massa nec nisl vulputate
+	mattis.	Morbi _luctus_ nisl	justo,	et scelerisque elit sollicitudin
+	nec. Pel	entesque	feugiat urna sit	amet ex venenatis, sed auctor
+	mi blandit.	Suspendisse	gravida ac lacus	eget maximus. Morbi eget
+	purus mol	is,	sollicitudin ipsum eu,	dapibus risus. Mauris molestie
+	fringilla	leo.	Sed *mauris* vestibulum eu	sem faucibus eleifend.
+
+    Phasellus et quam est. In ut turpis ultricies, blandit turpis
+    at, lobortis quam. Duis convallis pretium feugiat. In hac habitasse
+    platea dictumst. Curabitur quis pretium nunc. Morbi ut elit magna.
+
+Praesent laoreet ornare purus, sit amet bibendum metus venenatis
+vel.
+And a test with a mark-down block.
+
+>Cras congue felis a arcu feugiat malesuada venenatis sit
+>amet magna. Mauris interdum pellentesque urna vel pulvinar.
+
+Curabitur id sodales risus. Sed a congue est.
+
+Aenean rhoncus metus diam, vel aliquam risus suscipit in. Sed
+arcu risus, vehicula eu felis sed, placerat placerat ipsum. Nam
+ipsum sapien, suscipit vulputate vestibulum sed, pharetra nec
+ante.
+And yet another type of markdown block.
+
+```
+Duis eget arcu vel metus interdum eleifend non vel leo.
+Fusce ultrices imperdiet ante, id ornare enim venenatis et. Nam
+eu luctus nibh. Suspendisse id gravida turpis, at blandit sapien.
+```
+
+Ut consequat ex tellus, ac efficitur mauris efficitur vel. Phasellus
+vel lectus imperdiet, eleifend risus vitae, aliquam orci. Nam
+vulputate porta nisi quis pretium. Pellentesque vel lectus ornare,
+
+@ alphalist with at-signs
+@ beta list in3-style
+
+a. gammalist with markdown a,b,c
+b. deltalist
+
+interdum eros in, aliquam eros. Integer metus leo, commodo et
+lobortis in, tincidunt sed sapien. Pellentesque a quam dapibus,
+eleifend diam a, ultricies augue.
+
+
+.set markdown 0
+
+.h1 In-type formatting tests
+
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
+laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis
+et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam
+voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia
+test furtheron with markdown=0.
+
+@ alphalist again with at-signs
+@ beta list
+
+a. gammalist, markdown style.
+b. deltalist. This does not work anymore
+
+consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro
+test dashlist with some formatting.
+
+-	quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci
+.b velit, sed quia
+non numquam eius
+.i modi
+tempora incidunt ut labore
+et dolore magnam aliquam
+.u quaerat
+voluptatem. Ut enim ad minima veniam,
+-	quis nostrum exercitationem fix ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate
+-	elit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo
+voluptas nulla pariatur?
+
+
+Lorem ipsum dolor sit amet,
+.b consectetur adipiscing test bold text
+elit. Sed vitae
+urna sit amet lacus lacinia placerat id placerat lacus. Duis sagittis yet another table test.
+
+	vel metus	eget scelerisque.	Nullam ultricies	euismod nulla, faucibus
+	feugiat	lectus malesuada	vel. Integer	fringilla tortor a mauris
+	venenatis,	id faucibus mi	auctor. Etiam	odio libero, cursus vel
+	orci eget,	ultricies maximus	metus. Praesent	lorem lorem, lobortis
+	quis turpis	et, maximus 	tincidunt nisl.	Aliquam eleifend arcu
+	turpis,	vitae consequat	libero hendrerit	in.
+
+Nulla venenatis orci vitae interdum tincidunt. Mauris id felis
+a metus euismod sodales. Nam pulvinar neque vel magna efficitur,
+ac cursus leo iaculis. Fusce elementum, neque id bibendum pellentesque,
+eros tellus venenatis velit, quis mattis diam neque eleifend ex.
+Pellentesque vel mauris nec mauris viverra molestie. 
+And a table test with some row and colspans.
+
+	<cs=2>Mauris	<cs=3>ultricies
+	ultricies	odio,	luctus	maximus	leo
+	<rs=2>pellentesque	ut.	Fusce	pulvinar	libero
+	eu	dui	porttitor,	sed
+	varius	 nulla	<cs=3>mattis.
+
+
+Nunc in aliquam orci. Morbi in purus porta, congue nisi molestie,
+molestie quam. Sed gravida quis dolor ullamcorper fringilla. Maecenas
+vitae feugiat nunc. Pellentesque rhoncus lacus ac magna ullamcorper
+euismod. Nunc sagittis, sem faucibus commodo convallis, leo neque
+vulputate ex, accumsan cursus nulla nisl et nibh test the variables that are set.
+
+.dumpvar
+
+Curabitur at
+erat a justo lacinia fringilla quis quis purus. Nulla et vehicula
+nisl, nec gravida ligula. Quisque porta aliquam maximus. Aliquam 
+test lst for listings without box.
+
+.lst	iaculis massa ante, ac
+.lst		vestibulum risus
+.lst			Aliquam in
+.lst				semper at.
+.lst			volutpat tellus,
+.lst		sit amet aliquet risus.
+.lst	Sed vel ante condimentum,
+.lst
+
+porta orci tempus, ultricies ligula. Sed laoreet eros sapien,
+vitae dictum nulla tincidunt quis.

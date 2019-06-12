@@ -28,6 +28,7 @@ sub debug {
 }
 
 
+
 ################################################################################
 #  _       _ _                         
 # (_)_ __ (_) |_  __   ____ _ _ __ ___ 
@@ -45,6 +46,11 @@ $variables{'interpret'}=1;
 $variables{'blockscale'}=100;
 $variables{'blockinline'}=0;
 $variables{'imgsize'}=15;
+$variables{'linelength'}=17;
+$variables{'indent'}=2;
+$variables{'leftnote'}=2;
+$variables{'sidenote'}=2;
+
 #         _ _                  
 #    __ _| (_)_ __   ___  __ _ 
 #   / _` | | | '_ \ / _ \/ _` |
@@ -82,7 +88,6 @@ sub alineatabend{
 	}
 	$inalinea=0;
 	debug($DEB_ALINEA,"alinea tab end exit alineatype=$alineatype inalinea=$inalinea");
-	pushout (".ll 12c");
 }
 sub alineatabstart{
 	if ($inalinea==1){
@@ -90,36 +95,37 @@ sub alineatabstart{
 	}
 	$inalinea=1;
 	if ($alineatype==0){
+		#$actualbody=$variables{'linelength'}-$variables{'indent'};
+		#pushout(".ll $variables{'linelength'}c");
+		my $defll=$variables{'linelength'}-$variables{'indent'};
+		pushout(".ll $defll".'c');
 	}
 	elsif ($alineatype==1){
-		$actualbody=$BODYTEXT+$SIDENOTE;
+		$actualbody=$variables{'linelength'}-$variables{'indent'}-$variables{'leftnote'}-0.05;
 		pushout(".TS");
 		$inalinea=1;
 		pushout("tab(@);");
-		pushout("l l.");
+		pushout("lw($variables{'leftnote'}c) lw($actualbody"."c).");
 		pushout("T{");
 		$inalineacel=1;
-		pushout(".ll $LEFTNOTE"."c");
 	}
 	elsif ($alineatype==2){
-		$actualbody=$LEFTNOTE+$BODYTEXT;
+		$actualbody=$variables{'linelength'}-$variables{'indent'}-$variables{'sidenote'}-0.05;
 		pushout(".TS");
 		$inalinea=1;
 		pushout("tab(@);");
-		pushout("l lp6.");
+		pushout("lw($actualbody"."c) lp6w($variables{'sidenote'}c).");
 		pushout("T{");
 		$inalineacel=1;
-		pushout(".ll $actualbody"."c");
 	}
 	elsif ($alineatype==3){
-		$actualbody=$BODYTEXT;
+		$actualbody=$variables{'linelength'}-$variables{'indent'}-$variables{'sidenote'}-$variables{'leftnote'}-0.15;
 		pushout(".TS");
 		$inalinea=1;
 		pushout("tab(@);");
-		pushout("l l lp6.");
+		pushout("lw($variables{'leftnote'}c) lw($actualbody"."c) lp6.");
 		pushout("T{");
 		$inalineacel=1;
-		pushout(".ll $LEFTNOTE"."c");
 	}
 }
 
@@ -133,7 +139,8 @@ my @output;
 sub pushout{
 	(my $txt)=@_;
 	debug ($DEB_PUSH,"--$txt--");
-	push @output,$txt;
+	if ($txt=~/^ *$/){}
+	else {push @output,$txt;}
 }
 
 
@@ -176,6 +183,8 @@ print ".de dospark
 #
 ################################################################################
 sub stylesheet {
+	my $defll=$variables{'linelength'}-$variables{'indent'};
+	push @output, ".ll $defll".'c';
 	if (open (my $STYLE,'<',"stylesheet.mm")){
 		debug ($DEB_FILE,"Stylesheet found");
 		while (<$STYLE>){chomp;push @output,$_;}
@@ -214,7 +223,6 @@ sub block_push {
 sub block_end {
 	my $blockscale=$variables{'blockscale'};
 	$blockinline=$variables{'blockinline'};
-
 	if($blockformat ne ''){
 		if ($blockformat=~/scale=(\d+)/){ $blockscale=$1; }
 		if ($blockformat=~/inline/){ $blockinline=1;}
@@ -262,8 +270,8 @@ sub block_end {
 			my $x; my $y; my $xn;
 			($x,$y)=split ('x',$imgsize);
 			$xn=$x/12; $y=$y/12;
-			$xn=$scale*$xn/100;
-			$y=$scale*$y/100;
+			$xn=$scale*$xn/200;
+			$y=$scale*$y/200;
 			if ($blockinline==0){
 				alineatabend;
 				pushout(".br");
@@ -279,9 +287,10 @@ sub block_end {
 				if ($found == 0){pushout(".ne $y"."v");}
 				pushout(".ce 1");
 			}
-			pushout("\\v'.25'");
+			my $up=$y/20;
+			pushout("\\v'$up"."c'");
 			pushout(".dospark $epsfile $xn"."v $y"."v");
-			pushout("\\v'-.25'");
+			pushout("\\v'-$up"."c'");
 			if ($blockinline==0){
 				pushout(".br");
 			}
@@ -610,7 +619,7 @@ if ($coversheet > 0){
 }
 
 ################################################################################
-pushout(".ds pg*header ''- \\\\nP -''");
+#pushout(".ll 21"."c");
 
 #                  _            _                   
 #  _ __ ___   __ _(_)_ __      | | ___   ___  _ __  
@@ -637,6 +646,8 @@ for (@in3){
 			else {
 				pushout(".ne ".$litlines."v");
 			}
+			my $defll=$variables{'linelength'}-$variables{'indent'};
+			pushout(".ll $defll".'c');
 			pushout(".B1");
 			pushout(".ft CR");
 			pushout(".ps -2");
@@ -688,17 +699,14 @@ for (@in3){
 			if ($alineatype==1){
 				pushout("T{");
 				$inalineacel=1;
-				pushout(".ll $LEFTNOTE"."c");
 			}
 			elsif ($alineatype==2){
 				pushout("T{");
 				$inalineacel=1;
-				pushout(".ll $actualbody"."c");
 			}
 			elsif ($alineatype==3){
 				pushout("T{");
 				$inalineacel=1;
-				pushout(".ll $LEFTNOTE"."c");
 			}
 		}
 		pushout(".ne 3");
@@ -725,17 +733,37 @@ for (@in3){
 	elsif (/^{AUTHOR}/){
 	}
 	elsif (/^{BLOCKSTART}(.+) (.+)/){
-		$blocktype=$1;
-		$blockname=$2;
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			$blocktype=$1;
+			$blockname=$2;
+		}
 	}
 	elsif (/^{BLOCKFORMAT}(.*)/){
-		$blockformat=$1;
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			$blockformat=$1;
+		}
 	}
 	elsif (/^{BLOCK [^}]*}(.*)/){
-		block_push($1);
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			block_push($1);
+		}
 	}
 	elsif (/^{BLOCKEND}/){
-		block_end();
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			block_end();
+		}
 	}
 	elsif (/^{COVER}/){
 	}
@@ -805,10 +833,13 @@ for (@in3){
 			$scale=$1;
 			$image=~s/ [0-9][0-9]*//;
 		}
+		my $defll=$variables{'linelength'}-$variables{'indent'};
+		pushout(".ll $defll".'c');
+		pushout(".SP");
 		debug($DEB_IMG,"Processing $image");
 		my $epsfile=$image; $epsfile=~s/\.[^.]+$/.eps/;
 		debug($DEB_IMG,"convert $image $epsfile");
-		system("convert -label ' ' $image $epsfile");
+		system("convert -trim $image $epsfile");
 		my $imgsize=` imageinfo --geom $image`;
 		my $x; my $y; my $xn;
 		($x,$y)=split ('x',$imgsize);
@@ -819,7 +850,7 @@ for (@in3){
 		alineatabend;
 		pushout(".br");
 		my $found=0;
-		my $yroom=$y+1.5;
+		my $yroom=$y+5;
 		for (my $i=0; $i<10;$i++){
 			my $qout=$#output;
 			if ($output[$qout-$i]=~/^\.ne/){
@@ -839,7 +870,6 @@ for (@in3){
 		debug ($DEB_NOTE,"leftnote --$1-- type=$alineatype, inalinea=$inalinea, inalineacel=$inalineacel");
 		pushout("T}\@T{");
 		$inalineacel=1;
-		pushout(".ll $actualbody"."c");
 	}
 	elsif (/^{LINE}/){
 		alineatabend;
@@ -980,7 +1010,6 @@ for (@in3){
 		if ($inalinea>0){
 			pushout("T}\@T{");
 			$inalineacel=1;
-			pushout(".ll $SIDENOTE"."c");
 			pushout("$1");
 		}
 	}
@@ -1080,7 +1109,12 @@ for (@in3){
 					if (/<br>/){
 						$text=~s/<br>/\n.br\n/g;
 					}
-					$text="T{\n$text\nT}";
+					if ($text ne ''){
+						$text="T{\n$text\nT}";
+					}
+					else {
+						$text="T{\nT}";
+					}
 
 				}
 				if ($frst==1){
@@ -1095,31 +1129,72 @@ for (@in3){
 			}
 			elsif (/{TEXTNORMAL}(.*)/){ 	#Seen as an extension of the last cell
 				my $text=$1;
-				$outline=~s/T}$/$text\nT}/;
+				if ($text ne ''){
+					$outline=~s/T}$/$text\nT}/;
+				}
 				debug($DEB_TABLE,"NORMAL: outline=$outline");
 			}
 			elsif (/{TEXTBOLD}(.*)/){
 				my $text=$1;
-				$outline=~s/T}$/.B "$text"\nT}/;
+				if ($text ne ''){
+					$outline=~s/T}$/.B "$text"\nT}/;
+				}
 				debug($DEB_TABLE,"BOLD: outline=$outline");
 			}
 			elsif (/{SUBSCRIPT}(.*)/){
 				my $text=$1;
-				$outline=~s/T}$/\\d $text \\u/;
+				if ($text ne ''){
+					$outline=~s/T}$/\\d $text \\u/;
+				}
 				debug($DEB_TABLE,"BOLD: outline=$outline");
 			}
 			elsif (/{SUPERSCRIPT}(.*)/){
 				my $text=$1;
-				$outline=~s/T}$/\\u $text \\d/;
+				if ($text ne ''){
+					$outline=~s/T}$/\\u $text \\d/;
+				}
 				debug($DEB_TABLE,"BOLD: outline=$outline");
 			}
 			elsif (/{TEXTUNDERLINE}(.*)/){
 				my $text=$1;
-				$outline=~s/T}$/.underline "$text"\nT}/;
+				if ($text ne ''){
+					$outline=~s/T}$/.underline "$text"\nT}/;
+				}
 				debug($DEB_TABLE,"UNDL: outline=$outline");
 			}
+		    elsif (/^{BLOCKSTART}(.+) (.+)/){
+		        $blocktype=$1;
+        		$blockname=$2;
+    		}
+    		elsif (/^{BLOCKFORMAT}(.*)/){
+        		$blockformat=$1;
+    		}
+    		elsif (/^{BLOCK [^}]*}(.*)/){
+        		block_push($1);
+    		}
+    		elsif (/^{BLOCKEND}/){
+				my $endedcell=0;
+				$outline='' unless defined $outline;
+				chomp $outline;
+				if($outline=~/T}$/){
+					$outline=~s/T}$//;
+					$endedcell=1;
+				}
+				chomp $outline;
+				if ($outline=~/^[ 	]*$/){}
+				else {pushout ($outline);}
+        		block_end();
+				if ($endedcell==1){
+					$endedcell=0;
+					$outline='T}'
+				}
+				else {
+					$outline='';
+				}
+    		}
 			elsif(/{TABLEROWEND}/){
 				$outline='' unless defined $outline;
+				chomp $outline;
 				if ($outline=~/^	*$/){}
 				else {pushout ($outline);}
 			}
@@ -1315,8 +1390,7 @@ for (@output){
 	}
 }
 for (@output){
-	if ($_ =~ '-EMPTY LINE-'){
-		print "$_\n";
+	if ($_ =~/^$/){
 	}
 	else {
 		print "$_\n";

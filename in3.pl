@@ -106,6 +106,7 @@ if ($#ARGV<0){
 else {
 	my $what='';
 	for (@ARGV){
+		debug (1, "arg=$_");
 		if ($what eq ''){
 			if (1==0){}
 			elsif (/^--$/){ while (<STDIN>){push @input,$_;}}
@@ -332,6 +333,7 @@ sub close_list {
 			elsif (/^\.u / )                 { s/^\.u *//;       inpush ("{TEXTUNDERLINE}$_"); }
 			elsif (/^\.fix / )               { s/^\.fix *//;     inpush ("{TEXTFIX}$_"); }
 			elsif (/^\.fixed / )             { s/^\.fixed *//;   inpush ("{TEXTFIX}$_"); }
+			elsif (/^\.inline / )            { inline($_,'force'); }
 			elsif (!(/^[-#@ 	]/))         {                   inpush ("{TEXTNORMAL}$_"); }
 			elsif ($types[$listlevel] eq '-'){s/^[-#@ 	]*//;inpush("{LISTDASHITEM}$_");}
 			elsif ($types[$listlevel] eq '#'){s/^[-#@ 	]*//;inpush("{LISTNUMITEM}$_");}
@@ -460,7 +462,14 @@ sub close_table{
 			}
 			for ($x=0; $x<$maxx;$x++){
 				if (! defined $output_table[$x][$y]){$output_table[$x][$y]=' ';}
-				inpush("{TABLECEL}$output_table[$x][$y]");
+				if ($output_table[$x][$y]=~/^\.inline/){
+					inpush("{TABLECEL}");
+					inline ($output_table[$x][$y]);
+				}
+				else {
+					inpush("{TABLECEL}$output_table[$x][$y]");
+				}
+					
 			}
 			inpush( "{TABLEROWEND}");
 		}
@@ -470,6 +479,46 @@ sub close_table{
 	$intable=0;
 }
 
+########################################################
+
+# #    # #      # #    # ###### 
+# ##   # #      # ##   # #      
+# # #  # #      # # #  # #####  
+# #  # # #      # #  # # #      
+# #   ## #      # #   ## #      
+# #    # ###### # #    # ###### 
+
+sub inline {
+	(my $inp,my $force)=@_;
+	my $ch;
+	my $type;
+	my $content;
+	my $blockname;
+	if ($inp=~/^\.inline ([a-z]+) (.*)/){
+		my $type=$1;
+		my $content=$2;
+		if (exists $variables{"H1"} ){
+			$ch=$variables{"H1"}
+		}
+		else {
+			$ch=0;
+		}
+		$blockcount++;
+		$blockname="inline.$ch.$blockcount";
+		if (($inlist>0) && ($force ne 'force')) {
+			push @thislist,"$inp";
+		}
+		else {
+			inpush("{BLOCKSTART}$type $blockname");
+			inpush ("{BLOCKFORMAT}inline");
+			inpush("{BLOCK $type}$content");
+			inpush ("{BLOCKEND}");
+		}
+	}
+	else {
+		#silently ignore
+	}
+}
 ########################################################
 
    #     #        ###  #     #  #######     #     
@@ -618,30 +667,7 @@ for (@input){
 		}
 	}
 	elsif (/^\.inline/){
-		my $ch;
-		my $type;
-		my $content;
-		my $blockname;
-		if (/^\.inline ([a-z]+) (.*)/){
-			my $type=$1;
-			my $content=$2;
-			if (exists $variables{"H1"} ){
-				$ch=$variables{"H1"}
-			}
-			else {
-				$ch=0;
-			}
-			$blockcount++;
-			$blockname="inline.$ch.$blockcount";
-			inpush("{BLOCKSTART}$type $blockname");
-			inpush ("{BLOCKFORMAT}inline");
-			inpush("{BLOCK $blocktype}$content");
-			inpush ("{BLOCKEND}");
-		}
-		else {
-			#silently ignore
-		}
-
+		inline($_,' ');
 	}
 	elsif ($inblock>0){
 		if ($blocktype eq 'pre'){

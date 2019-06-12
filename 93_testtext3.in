@@ -1,0 +1,106 @@
+.h1 inline test
+Sed nec efficitur ipsum. Nunc eget odio purus. Proin hendrerit
+ultricies purus nec interdum. Vestibulum efficitur odio magna
+test with an inline eqn block.
+.inline eqn a sub 1 , a sub 2 , a sub 3 , ...
+Maecenas erat lacus, elementum eget justo quis, faucibus hendrerit
+nisl. Etiam elit ipsum, volutpat a semper vitae, ultricies sit
+amet odio. Nam in ex odio. Morbi quis sem pulvinar, imperdiet
+eros eu, rhoncus velit. Mauris eu egestas elit, non varius odio.
+Donec aliquet, velit a faucibus porttitor, diam elit commodo massa,
+and test a texeqn inline.
+.inline texeqn \alpha_1^2 + 2 \alpha_1 \beta_2 + \beta_2^2 
+nec ullamcorper erat nisi vitae dui. Etiam quis quam sit amet
+purus posuere luctus eget vitae enim. Aliquam quis sodales erat,
+in lobortis orci. Maecenas maximus, nunc molestie elementum molestie,
+lorem orci cursus purus, eget ornare odio diam vel justo. Sed
+vehicula facilisis felis, ac tincidunt massa vehicula in.
+A test with inline music.
+.block music
+.block format inline
+  \score {
+    \relative {
+      c'4 d e f
+    }
+  }
+.block
+Etiam ornare purus sagittis nibh vulputate, sed lobortis ipsum
+mollis. Ut eget enim massa. Quisque venenatis nibh massa, at facilisis
+diam maximus vel. Vivamus sed mi sit amet risus aliquam imperdiet.
+Vestibulum neque nisi, commodo id lorem quis, volutpat laoreet
+sapien. Sed dictum lorem at justo pellentesque maximus. Sed ac
+test table with inline eqn and music.
+
+	char	subscript	result
+	a	b	.inline eqn a sub b
+	b	c	.inline eqn b sub c
+	c	a	.inline eqn c sub a
+	<cs=2>More complex	.inline eqn  sum from 1=0 to m i * a sub i
+	<cs=2>With music	.inline music \score { \relative { c'4 d e f } }
+
+Erat ac erat viverra commodo sollicitudin ac lorem. Phasellus
+ut molestie nunc, sit amet vestibulum erat. Nunc vel enim quis
+lorem posuere ultricies. Mauris ut ullamcorper lacus.
+
+Morbi aliquam nibh at imperdiet tempus. Phasellus vel quam tellus.
+A test with a dashlist containing italic, an equation and music.
+
+- In lists, you can use
+.i all sorts of
+text
+- equations
+.inline eqn sum from i=a to b  i sup 2
+- 
+.inline music \score { \relative { c'4 a b c d e f g} }
+
+Pellentesque vitae condimentum massa. Vestibulum sodales, leo
+nec fermentum suscipit, lectus nibh ultricies nunc, eget porttitor
+mi sapien nec dui. In non suscipit ante, blandit tincidunt tortor.
+Maecenas at enim luctus tortor finibus facilisis. Suspendisse
+in lacinia quam. Nulla iaculis rutrum ullamcorper. Proin a arcu
+rutrum, efficitur nulla vel, blandit est. Nulla tempus auctor
+placerat. Vivamus non lacus quis augue sollicitudin imperdiet.
+Nulla facilisi. Class aptent taciti sociosqu ad litora torquent
+per conubia nostra, per inceptos himenaeos. Nullam ultrices, arcu
+at faucibus fermentum, ex mauris viverra sapien, quis pellentesque
+tortor justo eu nulla. Donec eget arcu quam. Nulla dui sapien,
+feugiat sit amet elementum id, condimentum et est.
+
+Vivamus ultrices arcu mauris, id feugiat ante pulvinar eget. Sed
+elit nisl, rhoncus at dapibus vitae, suscipit euismod sem. Sed
+ut bibendum augue. Integer volutpat varius mauris. Nam luctus
+mi pulvinar, mattis sem a, dictum lacus. Cras eu fringilla ipsum.
+Donec id aliquam metus. Duis congue ligula vel felis dignissim
+rutrum. Suspendisse vitae nisl orci.
+
+Cras et consectetur massa. Quisque ac scelerisque sapien, sit
+amet lacinia ante. Morbi scelerisque neque nibh. Cras mattis,
+enim molestie condimentum vulputate, neque risus euismod risus,
+ac auctor sem leo non ante. Donec elementum, enim vitae placerat
+consectetur, magna lorem imperdiet elit, semper vulputate mauris
+mauris non eros. Pellentesque feugiat et mauris condimentum tempus.
+Quisque nec placerat libero. Maecenas magna leo, accumsan sit
+amet faucibus eu, fermentum vitae felis. Duis tristique volutpat
+tellus, vel ultricies felis. Aenean gravida consequat sodales.
+
+Ut efficitur accumsan massa, et gravida felis malesuada non. Nunc
+suscipit mi nec bibendum bibendum. Aenean fringilla, enim eget
+egestas dignissim, dui purus fermentum ipsum, nec dapibus arcu
+mauris in erat. Cras pulvinar lobortis fringilla. Maecenas vitae
+nisi eu enim consectetur convallis. Nunc ut viverra lectus. Maecenas
+tincidunt eros sed massa sollicitudin semper. Pellentesque rhoncus
+ultrices magna, sed rutrum dolor dignissim nec. Aliquam maximus
+volutpat odio, in interdum nisl iaculis sit amet. Morbi turpis
+erat, pharetra sed bibendum ac, pellentesque at est. Etiam id
+tortor laoreet, suscipit ex vel, eleifend nisl. Phasellus nec
+risus eu ex accumsan aliquam. Praesent nec euismod augue. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit. Fusce id est
+gravida, vestibulum dui in, molestie sapien.
+
+Etiam aliquet, nisi sit amet consectetur rhoncus, mauris augue
+maximus augue, ut pretium ipsum libero vitae velit. Integer convallis
+nisi velit, vitae sodales risus pulvinar sed. Nam vestibulum vehicula
+lorem, id pharetra nulla. Proin vel pharetra orci. Sed tempus
+volutpat nulla eu dapibus. Mauris vitae nisi at tortor tincidunt
+finibus quis ut dui. Vivamus dictum maximus diam vitae aliquet.
+Maecenas feugiat viverra suscipit. Sed fringilla nec dui vel consectetur.

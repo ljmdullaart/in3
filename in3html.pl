@@ -411,7 +411,7 @@ sub block_end {
 			my $imgsize=` imageinfo --geom $b_image`;
             my $x; my $y; my $yn;
             ($x,$y)=split ('x',$imgsize);
-			$yn=$y*$blockscale/11500;
+			$yn=$y*$blockscale/14000;
 			my $ysize=$yn.'em';
 			pushout("<img src=\"$b_image\" alt=\"$b_image\" style=\"height:$ysize;vertical-align:middle\">");
 		}
@@ -453,7 +453,7 @@ sub block_end {
 			my $imgsize=` imageinfo --geom $b_image`;
             my $x; my $y; my $yn;
             ($x,$y)=split ('x',$imgsize);
-			$yn=$y*$blockscale/11500;
+			$yn=$y*$blockscale/14000;
 			my $ysize=$yn.'em';
 			pushout("<img src=\"$b_image\" alt=\"$b_image\" style=\"height:$ysize;vertical-align:middle\">");
 		}
@@ -510,7 +510,7 @@ sub block_end {
 			my $imgsize=` imageinfo --geom $ffn.png`;
             my $x; my $y; my $yn;
             ($x,$y)=split ('x',$imgsize);
-			$yn=$y*$blockscale/10500;
+			$yn=$y*$blockscale/14000;
 			my $ysize=$yn.'em';
 			pushout("<img src=\"$ffn.png\" alt=\"$ffn>\" style=\"height:$ysize;vertical-align:middle\">");
 		}

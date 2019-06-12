@@ -4,3 +4,4 @@
 .nr Hs 1
 .nr Hps 0
 .ds HP  14 12 12 0 0 0 0
+.ds pg*header ''- \\nP -''

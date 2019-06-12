@@ -1,0 +1,184 @@
+.header
+
+.h1 Sed hendrerit nisi risus
+
+Nec faucibus elit fermentum nec. Duis
+in justo non risus tincidunt vestibulum. Sed gravida sodales augue,
+a pulvinar lorem tincidunt eget. Curabitur nec bibendum diam,
+rutrum aliquet elit. Sed aliquet nulla id nulla iaculis, sed fringilla
+ligula malesuada. Nunc sagittis et mi vel egestas.
+A test for images of different sizes.
+
+.img tsteqn.png
+.img tsteqn.png 50
+.img tsteqn.png 25
+.img tsteqn.png 10
+.img tsteqn.png  5
+
+Vivamus mollis
+elementum purus, pharetra blandit elit suscipit ac.
+
+.h2 Curabitur id ante placerat
+Porttitor sapien non, tincidunt tellus.
+Sed tristique molestie purus in euismod. Donec ac risus lacinia,
+consectetur tortor eget, test a pre-block iaculis nulla.
+
+.block pre
+In posuere sollicitudin
+purus, ut facilisis
+dolor rhoncus sed.
+Integer sit amet tellus
+arcu.
+.block
+
+Praesent non ex nec ligula finibus posuere. Donec efficitur
+bibendum purus non suscipit. Cras feugiat tempor nibh, in interdum
+sapien varius vitae.
+
+.h2 Aenean vulputate iaculis fringilla
+Praesent nec tincidunt metus.
+Phasellus eu diam vitae nulla convallis pretium in eget ligula.
+Aenean viverra mauris non lorem accumsan facilisis. Mauris venenatis
+finibus augue. Quisque arcu turpis, eleifend venenatis turpis
+
+Now follows a test of a gnuplot-block, named t1.
+
+.block gnuplot t1
+plot sin(x) title 'Sine Function', tan(x) title 'Tangent'
+.block
+
+Ac, pulvinar euismod mi. Donec feugiat, eros sed finibus commodo,
+nisi mi malesuada lacus, eu laoreet est lacus sit amet velit.
+
+A test of a block with an equation and format scale=25:
+
+.block eqn 1
+.block format scale=25
+Expected~Value~=~sum from {i=l} to inf pi sub 1 X sub i
+.block
+
+
+Proin eget nisl est. Proin semper, elit in accumsan gravida, nibh
+tortor pulvinar mauris, ut lacinia lectus nulla id est block
+with pic language.
+
+.block pic 2
+ellipse "document";
+arrow;
+box "\fIpic\fP(1)"
+arrow;
+box width 1.2 "\fIgtbl\fP(1) or \fIgeqn\fP(1)" "(optional)" dashed;
+arrow;
+box "\fIgtroff\fP(1)";
+arrow;
+ellipse "PostScript"
+.block
+Phasellus
+quis hendrerit nisl test a music block.
+
+.block music
+\score {
+  <<
+    \new MensuralVoice = "discantus" \relative c'' {
+      \hide Score.BarNumber {
+        c1\melisma bes a g\melismaEnd
+        f\breve
+        \[ f1\melisma a c\breve d\melismaEnd \]
+        c\longa
+        c\breve\melisma a1 g1\melismaEnd
+        fis\longa^\signumcongruentiae
+      }
+    }
+    \new Lyrics \lyricsto "discantus" {
+      San -- ctus, San -- ctus, San -- ctus
+    }
+  >>
+}
+.block
+
+Nulla venenatis justo nec velit pellentesque
+congue. In mattis mattis velit, aliquet fermentum nulla maximus
+eget. Aenean quis mauris imperdiet, pharetra odio tempor, tincidunt
+quam.
+
+.h1 Nam ex ante
+Aliquet sit amet dolor id, malesuada commodo justo.
+Sed nisl ligula, maximus in sem non, convallis interdum lectus.
+Duis ac eros non orci pharetra vulputate ac non purus.
+.side This is a side note
+Lorem ipsum dolor sit amet, consectetur adipiscing
+elit. Maecenas elit metus, dapibus sed purus eu, tincidunt hendrerit
+quam. Sed id arcu dictum, interdum nisl vulputate, faucibus urna.
+Aliquam erat volutpat. Aliquam pulvinar porta erat at rhoncus.
+Aenean quis fermentum risus. Phasellus porttitor velit eros, in
+posuere quam tincidunt ac.
+
+.h2 Phasellus ullamcorper ut magna nec rhoncus
+
+Phasellus	hendrerit dui nec eros molestie, nec gravida ex commodo. Nam ornare odio
+ut ipsum faucibus, vitae consectetur orci facilisis. Integer sit
+amet nunc vulputate, venenatis dolor eget, consectetur diam. Praesent
+placerat dignissim ex, ut luctus nunc fringilla nec. Quisque facilisis
+faucibus malesuada. Suspendisse interdum neque ac blandit placerat test
+side notes and leftnotes.
+
+Aliquam	erat volutpat. Vestibulum bibendum, tellus vel sodales
+ultrices, risus dolor tristique mi, vitae porta nisl est condimentum
+dui.
+Curabitur	ut orci lorem. Morbi ullamcorper tincidunt urna
+sit amet luctus. Donec elementum lectus finibus, pellentesque
+felis vel.
+.side placerat purus
+Nullam feugiat hendrerit nisi, eu maximus
+lorem bibendum vitae. Fusce eget tortor tincidunt, mollis enim
+pharetra, venenatis enim.
+
+.h2 Proin sollicitudin nec quam ut sagittis
+Donec pharetra elementum
+commodo.
+A test with a Tex-block:
+
+.block texeqn 4
+F(x) = \int^a_b \frac{1}{3}x^3
+.block
+
+subscript superscript
+Cras interdum purus eu enim egestas suscipit. Nullam
+bibendum, ante molestie hendrerit placerat, tortor justo mollis
+neque, et tincidunt augue nunc nec neque. Donec pulvinar sed magna
+eu bibendum. Ut feugiat eros sit amet metus consequat dictum.
+Vivamus lobortis posuere
+.sub lectus
+eget ullamcorper. Donec tincidunt
+risus volutpat, elementum risus eget, viverra nisl. Quisque auctor
+sit amet est quis mollis. Suspendisse malesuada magna augue, eleifend
+pero no hai ullamcorper
+.sup lorem
+volutpat non. Sed eget erat quis sem dignissim
+varius sit amet non metus.
+
+Integer venenatis eu sapien ut dignissim. Integer test inline eqn  sit amet odio
+at nibh tempus
+.block eqn inlinetest
+.block format inline
+a sub 2 over b
+.block
+imperdiet in sed diam. Ut augue est, convallis
+in magna et, auctor ullamcorper dui. Sed at augue aliquam, mollis
+.block eqn inlinetest2
+.block format inline
+a sub 2
+.block
+arcu non, hendrerit leo. Nulla nec mollis velit. Phasellus a enim
+felis. Donec vulputate, massa pulvinar lacinia molestie, leo nulla
+euismod lorem, id consequat turpis risus non orci. Donec turpis
+lectus, posuere ac fringilla ac, tempor id dui. Nulla pellentesque
+.block eqn inlinetest3
+.block format inline
+{ a sub 2 over b} over deler
+.block
+metus non massa bibendum, at accumsan nisi porttitor. Maecenas
+suscipit enim tincidunt feugiat euismod. Nullam aliquet, enim
+in aliquam rhoncus, justo leo rutrum quam, id blandit magna velit
+sit amet velit. Phasellus convallis mi ac tellus sagittis, non
+euismod justo imperdiet.
