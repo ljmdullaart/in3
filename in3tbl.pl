@@ -270,8 +270,8 @@ sub block_end {
 			my $x; my $y; my $xn;
 			($x,$y)=split ('x',$imgsize);
 			$xn=$x/12; $y=$y/12;
-			$xn=$scale*$xn/200;
-			$y=$scale*$y/200;
+			$xn=$scale*$xn/400;
+			$y=$scale*$y/400;
 			if ($blockinline==0){
 				alineatabend;
 				pushout(".br");
@@ -839,7 +839,8 @@ for (@in3){
 		debug($DEB_IMG,"Processing $image");
 		my $epsfile=$image; $epsfile=~s/\.[^.]+$/.eps/;
 		debug($DEB_IMG,"convert $image $epsfile");
-		system("convert -trim $image $epsfile");
+		#system("convert -trim $image $epsfile");
+		system("convert  $image  pnm:- | convert -trim - $epsfile");
 		my $imgsize=` imageinfo --geom $image`;
 		my $x; my $y; my $xn;
 		($x,$y)=split ('x',$imgsize);
