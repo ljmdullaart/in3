@@ -77,7 +77,7 @@ my $do_includes=1;		# Include files when the {INCLUDE} tag is found
 my $part_only=0;		# Do not produce headers
 my $inquote=0;
 my $tcelopen=0;
-my $inli=0;
+my $inlist=0;
 my @in3;				# The complete input-file
 
 #
@@ -536,7 +536,12 @@ sub block_end {
 			system ("convert -trim -density $density $ffn.pdf  $ffn.png");
 			system ("rm $ffn.groff $ffn.ps $ffn.pdf");
 			debug ($DEB_IMG, "  image=$ffn.png");
-			my $imgsize=` imageinfo --geom $ffn.png`;
+			if ($blockinline==1){
+				$blockinline=0;
+				my $imgsize=` imageinfo --geom $ffn.png`;
+				(my $xsize, my $ysize)=split('x',$imgsize);
+				$x=$xsize*40/$ysize;
+			}
 			pushout("<img src=\"$ffn.png\" alt=\"$ffn\" width=\"$x\">");
 		}
 	}
@@ -650,8 +655,10 @@ for (@in3){
 		if ($alineatype >0){$alineatype &=2;}
 	}
 	elsif (/^{IMAGE}(.*)/){
-		alineatabend;
-		pushout ("<br>");
+		if ($inlist==0){
+			alineatabend;
+			pushout ("<br>");
+		}
 		my $image;my $text;
 		my $scale=100;
 		if (/ ([0-9][0-9]*)$/){
@@ -704,13 +711,13 @@ for (@in3){
 		}
 	}
 	elsif (/^{LISTALPHAEND}/){
-		if($inli>0){pushout("</div></li>");$inli=0;}
+		if($inlist>0){pushout("</div></li>");$inlist=0;}
 		pushout("</ol>");
 	}
 	elsif (/^{LISTALPHAITEM}(.*)/){
-		if($inli>0){pushout("</div></li>");$inli=0;}
+		if($inlist>0){pushout("</div></li>");$inlist=0;}
 		pushout("<li>");
-		$inli=1;
+		$inlist=1;
 		pushout("<div class=\"list\">$1");
 	}
 	elsif (/^{LISTALPHASTART}/){
@@ -718,27 +725,27 @@ for (@in3){
 		pushout("<ol type=a>");
 	}
 	elsif (/^{LISTDASHEND}/){
-		if($inli>0){pushout("</div></li>");$inli=0;}
+		if($inlist>0){pushout("</div></li>");$inlist=0;}
 		pushout("</ul>");
 	}
 	elsif (/^{LISTDASHITEM}(.*)/){
-		if($inli>0){pushout("</div></li>");$inli=0;}
+		if($inlist>0){pushout("</div></li>");$inlist=0;}
 		pushout("<li>");
 		pushout("<div class=\"list\">$1");
-		$inli=1;
+		$inlist=1;
 	}
 	elsif (/^{LISTDASHSTART}/){
 		if ($inalinea==0){startalinea($alineatype);}
 		pushout("<ul>");
 	}
 	elsif (/^{LISTNUMEND}/){
-		if($inli>0){pushout("</div></li>");$inli=0;}
+		if($inlist>0){pushout("</div></li>");$inlist=0;}
 		pushout("</ol>");
 	}
 	elsif (/^{LISTNUMITEM}(.*)/){
-		if($inli>0){pushout("</div></li>");$inli=0;}
+		if($inlist>0){pushout("</div></li>");$inlist=0;}
 		pushout("<li>");
-		$inli=1;
+		$inlist=1;
 		pushout("<div class=\"list\">$1");
 	}
 	elsif (/^{LISTNUMSTART}/){

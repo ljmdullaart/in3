@@ -270,8 +270,8 @@ sub block_end {
 			my $x; my $y; my $xn;
 			($x,$y)=split ('x',$imgsize);
 			$xn=$x/12; $y=$y/12;
-			$xn=$scale*$xn/400;
-			$y=$scale*$y/400;
+			$xn=$scale*$xn/250;
+			$y=$scale*$y/250;
 			if ($blockinline==0){
 				alineatabend;
 				pushout(".br");
@@ -442,6 +442,7 @@ sub block_end {
 
 	}
 	elsif ($blocktype eq 'pic'){
+		# pic does not support in-line pictures. Therefore, in3tbl does not support them either.
 		if ($blockinline==0){pushout (".br");}
 		pushout (".PS");
 		for (@block){
@@ -834,8 +835,10 @@ for (@in3){
 			$image=~s/ [0-9][0-9]*//;
 		}
 		my $defll=$variables{'linelength'}-$variables{'indent'};
-		pushout(".ll $defll".'c');
-		pushout(".SP");
+		if ($inlist==0){
+			pushout(".ll $defll".'c');
+			pushout(".SP");
+		}
 		debug($DEB_IMG,"Processing $image");
 		my $epsfile=$image; $epsfile=~s/\.[^.]+$/.eps/;
 		debug($DEB_IMG,"convert $image $epsfile");
@@ -848,21 +851,29 @@ for (@in3){
 		$xn=$scale*$xn/100;
 		$y=$scale*$y/100;
 
-		alineatabend;
-		pushout(".br");
-		my $found=0;
-		my $yroom=$y+5;
-		for (my $i=0; $i<10;$i++){
-			my $qout=$#output;
-			if ($output[$qout-$i]=~/^\.ne/){
-				$output[$qout-$i]=".ne $yroom"."c";
-				$found=1;
-			}
+		if ($intable>0){
+			$xn=$xn/4;
+			$y=$y/4;
+			#push @thistable,".dospark $epsfile $xn"."c $y"."c";
+			push @thistable,$_;
 		}
-		if ($found == 0){pushout(".ne $yroom"."c");}
-		pushout(".ce 1");
-		pushout(".dospark $epsfile $xn"."c $y"."c");
-		pushout(".br");
+		else {
+			alineatabend;
+			pushout(".br");
+			my $found=0;
+			my $yroom=$y+5;
+			for (my $i=0; $i<10;$i++){
+				my $qout=$#output;
+				if ($output[$qout-$i]=~/^\.ne/){
+					$output[$qout-$i]=".ne $yroom"."c";
+					$found=1;
+				}
+			}
+			if ($found == 0){pushout(".ne $yroom"."c");}
+			pushout(".ce 1");
+			pushout(".dospark $epsfile $xn"."c $y"."c");
+			pushout(".br");
+		}
 	}
 	elsif (/^{LANGUAGE}/){
 	}
@@ -1193,6 +1204,47 @@ for (@in3){
 					$outline='';
 				}
     		}
+			elsif(/{IMAGE}([^ ]*).*([0-9]*)$/){
+				my $image=$1;
+				my $scale=25;
+				if(/{IMAGE}([^ ]*).*([0-9]+)$/){
+					$scale=$2;
+				}
+				debug($DEB_IMG,"Processing $image");
+				my $epsfile=$image; $epsfile=~s/\.[^.]+$/.eps/;
+				debug($DEB_IMG,"convert $image $epsfile");
+				#system("convert -trim $image $epsfile");
+				system("convert  $image  pnm:- | convert -trim - $epsfile");
+				my $imgsize=` imageinfo --geom $image`;
+				my $x; my $y; my $xn;
+				($x,$y)=split ('x',$imgsize);
+				$xn=$variables{'imgsize'}; $y=$y*$xn/$x;
+				$xn=$scale*$xn/100;
+				$y=$scale*$y/100;
+				my $endedcell=0;
+				$outline='' unless defined $outline;
+				chomp $outline;
+				if($outline=~/T}$/){
+					$outline=~s/T}$//;
+					$endedcell=1;
+				}
+				chomp $outline;
+				if ($outline=~/^[ 	]*$/){}
+				else {pushout ($outline);}
+				pushout(".sp 0.25");
+				pushout(".dospark $epsfile $xn"."c $y"."c");
+				pushout(".sp -0.25");
+				if ($endedcell==1){
+					$endedcell=0;
+					$outline='T}'
+				}
+				else {
+					$outline='';
+				}
+
+
+    		}
+
 			elsif(/{TABLEROWEND}/){
 				$outline='' unless defined $outline;
 				chomp $outline;

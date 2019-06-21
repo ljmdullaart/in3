@@ -37,6 +37,8 @@ test table with inline eqn and music.
 	c	a	.inline eqn c sub a
 	<cs=2>More complex	.inline eqn  sum from 1=0 to m i * a sub i
 	<cs=2>With music	.inline music \score { \relative { c'4 d e f } }
+	<cs=2>Or a picture	.inline pic circle "A" ; move; box "B"
+	<cs=2>Even an image	.img plaatje.png
 
 Erat ac erat viverra commodo sollicitudin ac lorem. Phasellus
 ut molestie nunc, sit amet vestibulum erat. Nunc vel enim quis
@@ -48,10 +50,21 @@ A test with a dashlist containing italic, an equation and music.
 - In lists, you can use
 .i all sorts of
 text
-- equations
+- Equations
 .inline eqn sum from i=a to b  i sup 2
-- 
+- Music:
 .inline music \score { \relative { c'4 a b c d e f g} }
+- Also a picture
+.inline pic circle; arrow; circle
+- the pic-picture is in pdf on a separate line
+- because pic+groff do not support in-line pic-drawings.
+- And an image:
+.img plaatje.png 25
+- Note that there is a difference between the 
+.fix html
+output and the pdf-version.
+- but that is due to the different output formats
+- and it is more-or-less intentional
 
 Pellentesque vitae condimentum massa. Vestibulum sodales, leo
 nec fermentum suscipit, lectus nibh ultricies nunc, eget porttitor

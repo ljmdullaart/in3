@@ -334,6 +334,7 @@ sub close_list {
 			elsif (/^\.fix / )               { s/^\.fix *//;     inpush ("{TEXTFIX}$_"); }
 			elsif (/^\.fixed / )             { s/^\.fixed *//;   inpush ("{TEXTFIX}$_"); }
 			elsif (/^\.inline / )            { inline($_,'force'); }
+			elsif (/^\.img / )               { s/^.img /{IMAGE}/;inpush ($_);}
 			elsif (!(/^[-#@ 	]/))         {                   inpush ("{TEXTNORMAL}$_"); }
 			elsif ($types[$listlevel] eq '-'){s/^[-#@ 	]*//;inpush("{LISTDASHITEM}$_");}
 			elsif ($types[$listlevel] eq '#'){s/^[-#@ 	]*//;inpush("{LISTNUMITEM}$_");}
@@ -465,6 +466,10 @@ sub close_table{
 				if ($output_table[$x][$y]=~/^\.inline/){
 					inpush("{TABLECEL}");
 					inline ($output_table[$x][$y]);
+				}
+				elsif($output_table[$x][$y]=~/^\.img (.*)/){
+					inpush("{TABLECEL}");
+					inpush("{IMAGE}$1");
 				}
 				else {
 					inpush("{TABLECEL}$output_table[$x][$y]");
@@ -957,8 +962,13 @@ for (@input){
 	}
 	elsif (/^\.img /) {
 		debug($TAGS,"Image tag: $_");
-		s/^\.img *//;
-		inpush("{IMAGE}$_");
+		if ($inlist>0){
+			push @thislist,$_;
+		}
+		else {
+			s/^\.img *//;
+			inpush("{IMAGE}$_");
+		}
 	}
 	elsif (/^\.lang /){
 		if (/^\.lang ([^ ]*)/){
