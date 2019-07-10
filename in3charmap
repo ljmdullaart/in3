@@ -21,7 +21,7 @@
 ¶	\[ps]	&para;
 ·	\[bu]	&middot;
 ¸	\[ac]	&cedil;
-¹	\[S1\	&sup1;
+¹	\[S1]	&sup1;
 º	\[Om]	&ordm;
 »	\[Fc]	&raquo;
 ¼	\[14]	&frac14;
@@ -83,10 +83,8 @@
 ô	\[^o]	&ocirc;
 õ	\[~o]	&otilde;
 ö	\[:o]	&ouml;
-÷	&divide;
-÷	\[di]
-ø	&oslash;
-ø	\[/o]
+÷	\[di]	&divide;
+ø	\[/o]	&oslash;
 ù	\[`u]	&ugrave;
 ú	\['u]	&uacute;
 û	\[^u]	&ucirc;
@@ -160,7 +158,7 @@
 ϑ	\[+h]	&thetasym;
 ϕ	\[*f]	&#981
 ϖ	\[+p]	&piv;
-ϵ	\[+e]	&#1013;
+ϵ	\[mo]	&#1013;
 ‐	\[hy]	&#8208;
 –	\[en]	&ndash;
 —	\[em]	&mdash;
@@ -192,10 +190,11 @@
 ⇒	\[rA]	&rArr;
 ⇓	\[dA]	&dArr;
 ⇔	\[hA]	&hArr;
-⇕	\[vA]	&#8661
-⎯	\[an]	&#9135
+⇕	\[vA]	&#8661;
+⎯	\[an]	&#9135;
+⊕	\0'O+'	&#8853;
 □	\[sq]	&#9633;
-◊	\[lz]	&loz
+◊	\[lz]	&loz;
 ○	\[ci]	&#9675;
 ☜	\[lh]	&#9756;
 ☞	\[rh]	&#9755;
