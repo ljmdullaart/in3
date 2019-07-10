@@ -10,19 +10,16 @@ HTMLDIR=html
 TXTDIR=text
 
 figlet in3 | sed 's/^/#  /' >> Makefile
-PWD=`pwd`
-WD=`basename $PWD`
+PWD=$(pwd)
+WD=$(basename $PWD)
 REST=''
-TOREMOVE=''
 REMOTE_DIR="WWW/$WD"
 HOST=shell.xs4all.nl
 DEST=xs4all
-VERBOSE=0
 CLEANFILE=/tmp/in.clean.$$
 UPLOADFILE=/tmp/in.upload.$$
 
 
-TMP=/tmp/in3.$$.tmp
 if [ -f destination ] ; then
 	. destination
 fi
@@ -37,11 +34,9 @@ flags:
 EOF
 }
 
-for argument in $* ; do
+for argument in "$@" ; do
 	case a$argument in
 	(a-h*)	hellup
-		;;
-	(a-v*)	verbose=1
 		;;
 	esac
 done
@@ -49,7 +44,6 @@ done
 
 cat <<EOF
 #  Starting configure with:
-#    verbose    = $VERBOSE
 #    host       = $HOST
 #    remote_dir = $REMOTE_DIR
 #    dest       = $DEST
@@ -57,7 +51,7 @@ cat <<EOF
 #    wd         = $WD
 EOF
   
-ODTS=`ls *.odt 2> /dev/null | wc -l `
+ODTS=$(ls *.odt 2> /dev/null | wc -l )
 if [ $ODTS != 0 ] ; then
 	for FILE in *.odt ; do
 		BASE=${FILE%%.odt}
@@ -68,9 +62,9 @@ if [ $ODTS != 0 ] ; then
 fi
 
 
-INFILES=`ls *.in  2> /dev/null | egrep -v 'total.in' | sort -n | paste -sd' '`
-INFILES_noindex=`ls *.in  2> /dev/null | egrep -v 'index.in|total.in' | sort -n | paste -sd' '`
-INBASE=`ls *.in  2> /dev/null | egrep -v 'configure.in' | sort -n | sed 's/.in$//' | paste -sd' '`
+INFILES=$(ls *.in  2> /dev/null | egrep -v 'total.in' | sort -n | paste -sd' ')
+INFILES_noindex=$(ls *.in  2> /dev/null | egrep -v 'index.in|total.in' | sort -n | paste -sd' ')
+INBASE=$(ls *.in  2> /dev/null | egrep -v 'configure.in' | sort -n | sed 's/.in$//' | paste -sd' ')
 
 if [ "$INFILES" = "" ] ; then
 	echo "No .in-files found"
@@ -179,7 +173,7 @@ if [ -d $HTMLDIR ] ; then
 	DONE_TOTAL=0
 	DONE_INDEX=0
 	
-	INHTML=`ls *.in  2> /dev/null | sort -n | sed 's/.in$/.html/' |sed "s/^/$HTMLDIR\//"| paste -sd' '`
+	INHTML=$(ls *.in  2> /dev/null | sort -n | sed 's/.in$/.html/' |sed "s/^/$HTMLDIR\//"| paste -sd' ')
 	if [ ! -f index.in ] ; then INHTML="$INHTML $HTMLDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $HTMLDIR/total.html" ; fi
 	echo "tag/in3.html: $INHTML $HTMLDIR/header.htm" >> Makefile
@@ -223,7 +217,7 @@ if [ -d $WWWDIR ] ; then
 	DONE_TOTAL=0
 	DONE_INDEX=0
 	
-	INHTML=`ls *.in  2> /dev/null | sort -n | sed 's/.in$/.html/' |sed "s/^/$WWWDIR\//"| paste -sd' '`
+	INHTML=$(ls *.in  2> /dev/null | sort -n | sed 's/.in$/.html/' |sed "s/^/$WWWDIR\//"| paste -sd' ')
 	if [ ! -f index.in ] ; then INHTML="$INHTML $WWWDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $WWWDIR/total.html" ; fi
 	echo "tag/in3.www: $INHTML" >> Makefile
@@ -281,20 +275,20 @@ if [ -d $EPUBDIR ] ; then
 	DONE_INDEX=0
 	pub_opt="--remove-paragraph-spacing-indent-size 0";
 	
-	INHTML=`ls *.in  2> /dev/null | sort -n | sed 's/.in$/.html/' |sed "s/^/$EPUBDIR\//"| paste -sd' '`
+	INHTML=$(ls *.in  2> /dev/null | sort -n | sed 's/.in$/.html/' |sed "s/^/$EPUBDIR\//"| paste -sd' ')
 	if [ ! -f index.in ] ; then INHTML="$INHTML $EPUBDIR/index.html" ; fi
 	if [ ! -f total.in ] ; then INHTML="$INHTML $EPUBDIR/total.html" ; fi
 
-	TITLE=`grep '^.title '  *in | sed 's/.*:.title //;s/"/''/g' | sort -u | head -1`
-	if [ "$TITLE" = "" ] ; then TITLE=$wd ; fi
+	TITLE=$(grep '^.title '  *in | sed 's/.*:.title //;s/"/''/g' | sort -u | head -1)
+	if [ "$TITLE" = "" ] ; then TITLE=$WD ; fi
 	pub_opt="$pub_opt --title \"$TITLE\"";
 
-	AUTHOR=`grep '^.author '  *in | sed 's/.*:.author //' | sort -u | head -1`
+	AUTHOR=$(grep '^.author '  *in | sed 's/.*:.author //' | sort -u | head -1)
 	if [ "$AUTHOR" != "" ] ; then 
-		pub_opt="$pub_opt --authors '$author'";
+		pub_opt="$pub_opt --authors '$AUTHOR'";
 	fi
 
-	COVER=`sed -n 's/^\.cover //p' *.in | head -1`
+	COVER=$(sed -n 's/^\.cover //p' *.in | head -1)
 	if [ "$COVER" != "" ] ; then
 		pub_opt="$pub_opt --cover $COVER"
 	fi
@@ -347,7 +341,7 @@ fi
   #   ###### #    #   #   
 
 if [ -d $TXTDIR ] ; then
-	INTXT=`ls *.in  2> /dev/null | sort -n | sed "s/.in$/.txt/;s/^/$TXTDIR\//" | paste -sd' '`
+	INTXT=$(ls *.in  2> /dev/null | sort -n | sed "s/.in$/.txt/;s/^/$TXTDIR\//" | paste -sd' ')
 	echo "tag/in3.txt: $TXTDIR/total.txt $INTXT" >> Makefile
 	echo "	touch tag/in3.txt" >> Makefile
 	DONE_TOTAL=0
@@ -387,7 +381,7 @@ fi
 #        #     #  #        
 #        ######   #     
 if [ -d $PDFDIR ] ; then
-	INPDF=`ls *.in  2> /dev/null | sort -n | sed "s/.in$/.pdf/;s/^/$PDFDIR\//" | paste -sd' '`
+	INPDF=$(ls *.in  2> /dev/null | sort -n | sed "s/.in$/.pdf/;s/^/$PDFDIR\//" | paste -sd' ')
 	echo "tag/in3.pdf: $PDFDIR/total.pdf $INPDF" >> Makefile
 	echo "	touch tag/in3.pdf" >> Makefile
 	DONE_TOTAL=0
@@ -469,7 +463,7 @@ mk_images(){
 	
 }
 
-CURIMG=`cat $INFILES | sed -n 's/^\.img *//p' | sed 's/ .*//'|sort -u`
+CURIMG=$(cat $INFILES | sed -n 's/^\.img *//p' | sed 's/ .*//'|sort -u)
 for IMAGE in $CURIMG ; do
 	mk_images
 	BASEIMAGE=${IMAGE%.*}
@@ -478,7 +472,7 @@ for IMAGE in $CURIMG ; do
 done
 echo "Images: $ALLIMAGE"
 
-CURIMG=`cat $INFILES | sed -n 's/^\.map image *//p' | sed 's/ .*//'|sort -u`
+CURIMG=$(cat $INFILES | sed -n 's/^\.map image *//p' | sed 's/ .*//'|sort -u)
 for IMAGE in $CURIMG ; do
 	mk_images
 	BASEIMAGE=${IMAGE%.*}
@@ -487,7 +481,7 @@ for IMAGE in $CURIMG ; do
 done
 echo "Images: $ALLIMAGE"
 
-CURIMG=`cat $INFILES | sed -n 's/^\.cover *//p' | sed 's/ .*//'|sort -u`
+CURIMG=$(cat $INFILES | sed -n 's/^\.cover *//p' | sed 's/ .*//'|sort -u)
 for IMAGE in $CURIMG ; do
 	mk_images
 	BASEIMAGE=${IMAGE%.*}
@@ -496,9 +490,9 @@ for IMAGE in $CURIMG ; do
 done
 echo "Images: $ALLIMAGE"
 
-IMGFILES=`cat $INFILES | sed -n 's/^.img //p'  | sed 's/ .*//'| paste -sd ' '`
-COVERS=`cat $INFILES | sed -n 's/^.cover //p'  | sed 's/ .*//'| paste -sd ' '`
-MAPFILES=`cat $INFILES | sed -n 's/^.map image *//p' | sed 's/ .*//'| paste -sd ' '`
+#IMGFILES=$(cat $INFILES | sed -n 's/^.img //p'  | sed 's/ .*//'| paste -sd ' ')
+#COVERS=$(cat $INFILES | sed -n 's/^.cover //p'  | sed 's/ .*//'| paste -sd ' ')
+#MAPFILES=$(cat $INFILES | sed -n 's/^.map image *//p' | sed 's/ .*//'| paste -sd ' ')
 
 echo "tag/in3.img: $ALLIMAGE|tag" >> Makefile
 if [ -d $EPUBDIR ] ; then
@@ -529,7 +523,7 @@ fi
  #####   ######      #           #     #   #####          #####    #####    #####   #     #   #####   #######  
 
 ## odt-to-in
-ODTS=`ls *.odt 2> /dev/null | wc -l `
+ODTS=$(ls *.odt 2> /dev/null | wc -l )
 if [ $ODTS != 0 ] ; then
 	for FILE in *.odt ; do
 		BASE=${FILE%%.odt}
@@ -574,9 +568,9 @@ if [ -f destination ] ; then
 		echo stylesheet.css >> $UPLOADFILE
 	fi
 	if [ -f UPLOAD ] ; then
-		UPLOADFILES=`cat $UPLOADFILE UPLOAD | paste -sd' '`
+		UPLOADFILES=$(cat $UPLOADFILE UPLOAD | paste -sd' ')
 	else
-		UPLOADFILES=`cat $UPLOADFILE | paste -sd' '`
+		UPLOADFILES=$(cat $UPLOADFILE | paste -sd' ')
 	fi
 	echo "tag/upload.in: $UPLOADFILES |tag">>Makefile
 	echo "	upload_all -f  $UPLOADFILES">>Makefile
