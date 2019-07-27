@@ -655,7 +655,7 @@ for (@in3){
 		if ($alineatype >0){$alineatype &=2;}
 	}
 	elsif (/^{IMAGE}(.*)/){
-		if ($inlist==0){
+		if (($inlist==0) && ($tcelopen==0)){
 			alineatabend;
 			pushout ("<br>");
 		}
@@ -670,22 +670,35 @@ for (@in3){
 		if (/^{IMAGE}([^ ]*) (.*)/){
 			$image=$1;$text=$2;
 			debug ($DEB_IMG, "scale=$scale  image=$image text=$text");
-			pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"image for $text>\">");
-			#pushout("<img src=\"$image\" width=\"$scale%\" height=\"$scale%\" alt=\"image for $text>\">");
-			pushout ("<br>");
-			pushout ($text);
+			if ($inlist==0){
+				pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"image for $text>\">");
+				#pushout("<img src=\"$image\" width=\"$scale%\" height=\"$scale%\" alt=\"image for $text>\">");
+				pushout ("<br>");
+				pushout ($text);
+			}
+			else {
+				pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"image for $text>\" align=\"middle\" >");
+				pushout ("<br>");
+				pushout ($text);
+			}
 		}
 		elsif (/^{IMAGE}([^ ]*)/) {
 			$image=$1;
 			debug ($DEB_IMG, "scale=$scale  image=$image");
-			pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"$image>\">");
-			#pushout("<img src=\"$image\" width=\"$scale%\" height=\"$scale%\" alt=\"$image>\">");
+			if ($inlist==0){
+				pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"$image>\">");
+			}
+			else {
+				pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"$image>\" align=\"middle\">");
+			}
 		}
 		else {
 			print "<!-- in3html could not do an image -->";
 		}
-		pushout ("<br>");
-		alineatabstart;
+		if (($inlist==0) && ($tcelopen==0)){
+			pushout ("<br>");
+			alineatabstart;
+		}
 	}
 	elsif (/^{LANGUAGE}/){
 	}
