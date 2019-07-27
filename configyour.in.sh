@@ -393,7 +393,7 @@ if [ -d $PDFDIR ] ; then
 		echo "$PDFDIR/$1.ps: $PDFDIR/$1.min">>Makefile
 		echo "	groff -min $PDFDIR/$1.min > $PDFDIR/$1.ps">>Makefile
 		echo "$PDFDIR/$1.min: $PDFDIR/$1.tbl">>Makefile
-		echo "	pic $PDFDIR/$1.tbl | tbl | eqn > $PDFDIR/$1.min">>Makefile
+		echo "	preconv $PDFDIR/$1.tbl | pic | tbl | eqn > $PDFDIR/$1.min">>Makefile
 		echo "$PDFDIR/$1.tbl: $1.in3 tag/in3.img |$PDFDIR">>Makefile
 		echo "	in3tbl $1.in3 > $PDFDIR/$1.tbl">>Makefile
 		echo "$PDFDIR/$1.pdf">>$CLEANFILE
