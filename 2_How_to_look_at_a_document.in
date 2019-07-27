@@ -55,7 +55,7 @@ In in3, if a side note column is present, all alineas must specify the side note
 
 In and in3 use constructs to create a document. Constructs may be stand-alone or embedded.
 Constructs that are exclusively stand-alone cannot be embedded (duh), but they can 
-have other contructs emedded. Construct that
+have other constructs embedded. Construct that
 can be embedded cannot have other constructs embedded.
 
 	construct	standalone	embedded	can have	comment

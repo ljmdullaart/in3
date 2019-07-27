@@ -25,7 +25,7 @@ The translation table for the % translations is the in3charmap.
 	back	none	Ends a section with left notes
 	br	none	force a line break
 	note	text	text is a footnote
-	side	side note text	Specifies a referral to sidenotes
+	side	side note text	Specifies a referral to side notes
 
 .h3 Lists
 
@@ -42,7 +42,7 @@ The translation table for the % translations is the in3charmap.
 	request	argument	meaning
 	b	text	text must be written in bold
 	fix	text	fixed font text
-	i	text	italized text
+	i	text	italicized text
 	u	text	Underline text
 	lst	text	Put the line as a separate line as fixed
 
@@ -61,7 +61,7 @@ The translation table for the % translations is the in3charmap.
 	cover	file name	use the image in file name as cover
 	global	variable value	set the variable to value globally
 	hr	none	horizontal line
-	img	image captiontext scale	include an image here; captiontext is optional; scale is optional, but it must be numbers only
+	img	image captiontext scale	include an image here; caption text is optional; scale is optional, but it must be numbers only
 	link	link text	provide a link
 	headerlink	link text	a link that is used only in the header
 	map	image  image_file	Map creates a clickable map in HTML or an image in PDF.
@@ -81,7 +81,7 @@ There are a few block-specific requests.
 	block	(without args)	close the block
 
 A block is a set of lines that are handled by an additional program. The output-handlers
-should provide a comparable output for HTML, text etcetera, but the format may vary 
+should provide a comparable output for HTML, text et cetera, but the format may vary 
 wildly.
 Output handlers may even crash if the block contents poses an impossible problem
 for them. The output handler for text has a problem with anything graphical.
@@ -95,7 +95,7 @@ silently ignored or honored. The general format of the format string is a number
 pairs, separated by spaces. 
 Currently implemented is:
 
-	variable	html	www	pdf	txt	meaning
+	variable	HTML	www	pdf	txt	meaning
 	scale=75	x	-	-	-	Scale the output of the block to 75%
 
 The following block types are implemented:

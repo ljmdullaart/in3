@@ -40,7 +40,7 @@ At some point, formatting requirements elaborate, using side-notes, tables and l
 There was also the requirement of getting a PDF document, which was produced using tbl
 and groff. I called this in2, having the nice pun in2html, in2groff etc.
 
-By now, the code got quite complex. The difference between tables in html and tables in 
+By now, the code got quite complex. The difference between tables in HTML and tables in 
 tbl made it necessary to duplicate a lot of code. Adding features became quite a 
 challenge.
 

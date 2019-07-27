@@ -198,7 +198,7 @@ The following equation
 .inline eqn a sub i = 4 + b sup 2 - i
 is quite useful.
 
-Like pic, the block is interpreted by the preprocessor for
+Like pic, the block is interpreted by the pre-processor for
 .fix groff.
 
 .h3 texeqn
@@ -265,5 +265,5 @@ produces:
 .block
 
 It must be said that, though in3 is able to include images produced by lilypond,
-if you want to do serious typesetting of music, liliypond is, as stand alone, 
+if you want to do serious typesetting of music, lilypond is, as stand alone, 
 extremely powerful.

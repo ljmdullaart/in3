@@ -40,7 +40,7 @@ should be fairly readable. The following tags are used:
 .h3 Alineas etc.
 	tag	Argument	meaning
 	ALINEA	notes flag	start of a new alinea; 0:no notes, 1:leftnote, 2:sidenote, 3:both
-	ALINEAEND	 	End of aalinea
+	ALINEAEND	 	End of alinea
 	LEFTNOTE	leftnote text 	start of the left note part
 	LINEBREAK	 	Forced line break
 	NOTE	text	Footnote
