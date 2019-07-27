@@ -12,7 +12,7 @@
 ©	\[co]	&copy;
 «	\[Fo]	&laquo;
 ®	\[rg]	&reg;
-¯	\[a-]	&hibar;
+¯	\[a-]	&macr;
 °	\[ao]	&deg;
 ±	\[+-]	&plusmn;
 ²	\[S2]	&sup2;
@@ -147,7 +147,7 @@
 ο	\[*o]	&omicron;
 π	\[*p]	&pi;
 ρ	\[*r]	&rho;
-ς	\[ts]	&sigmaf
+ς	\[ts]	&sigmaf;
 σ	\[*s]	&sigma;
 τ	\[*t]	&tau;
 υ	\[*u]	&upsilon;
@@ -176,7 +176,7 @@
 ‹	\[fo]	&lsaquo;
 ›	\[fc]	&rsaquo;
 ‾	\[rn]	&oline;
-€	\[eu]	\[Eu]
+€	\[eu]	&euro;
 ™	\[tm]	&trade;
 ←	\[<-]	&larr;
 ↑	\[ua]	&uarr;
@@ -192,7 +192,8 @@
 ⇔	\[hA]	&hArr;
 ⇕	\[vA]	&#8661;
 ⎯	\[an]	&#9135;
-⊕	\0'O+'	&#8853;
+⊕	\[c+]	&#8853;
+⊗	\[c*]	&#8855;
 □	\[sq]	&#9633;
 ◊	\[lz]	&loz;
 ○	\[ci]	&#9675;
