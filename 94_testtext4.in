@@ -1,19 +1,32 @@
 .header
 .h1 Pellentesque et velit at lorem porttitor faucibus.
-Praesent \o'+O' ligula
-ϵ 
-
-.block pic
-circle;
-.block
-
-
+Praesent ligula
 urna, pulvinar sed auctor sit amet, pellentesque id ante. Aliquam
 dignissim lacinia dui aliquet ultrices. Aliquam pharetra, quam
-nec tincidunt sodales, velit sapien mattis arcu, id pretium odio
-lorem vel metus. Cras vitae tincidunt orci. Donec dictum nibh
+nec tincidunt sodales, velit
+.inline eqn ( x + y ) sup 2 = x sup 2 + 2 x y + y sup 2
+sapien mattis arcu, id pretium odio
+lorem vel metus.
+
+Этот список был составлен для суммирования некоторых часто задаваемых
+вопросов (FAQ), вместе с ответами на них, в удобной форме.
+Структура этого FAQ кардинально изменилась по сравнению с последней версией.
+В разделе `Как читать этот FAQ и его структура' объяснены детали этой новой
+структуры.
+
+Cras vitae tincidunt orci. Donec dictum nibh
 vel consequat aliquet. Quisque ante enim, vehicula eget libero
-et, viverra dictum enim. Phasellus efficitur arcu et hendrerit
+et, viverra dictum enim.
+
+Ѐ Ё Ђ Ѓ Є Ѕ І Ї Ј Љ Њ Ћ Ќ Ѝ Ў Џ А Б В Г Д Е Ж З И Й К Л М Н О П Р С Т У Ф 
+Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я а б в г д е ж з и й к л м н о п р с т у ф х ц ч ш щ 
+ъ ы ь э ю я ѐ ё ђ ѓ є ѕ і ї ј љ њ ћ ќ ѝ ў џ Ѡ ѡ Ѣ ѣ Ѥ ѥ Ѧ ѧ Ѩ ѩ Ѫ ѫ Ѭ ѭ Ѯ 
+ѯ Ѱ ѱ Ѳ ѳ Ѵ ѵ Ѷ ѷ Ѹ ѹ Ѻ ѻ Ѽ ѽ Ѿ ѿ Ҁ ҁ ҂ Ҋ ҋ Ҍ ҍ Ҏ ҏ Ґ ґ Ғ ғ Ҕ ҕ Җ җ Ҙ ҙ Қ 
+қ Ҝ ҝ Ҟ ҟ Ҡ ҡ Ң ң Ҥ ҥ Ҧ ҧ Ҩ ҩ Ҫ ҫ Ҭ ҭ Ү ү Ұ ұ Ҳ ҳ Ҵ ҵ Ҷ ҷ Ҹ ҹ Һ һ Ҽ ҽ Ҿ ҿ
+Ӏ Ӂ ӂ Ӄ ӄ Ӆ ӆ Ӈ ӈ Ӊ ӊ Ӌ ӌ Ӎ ӎ ӏ Ӑ ӑ Ӓ ӓ Ӕ ӕ Ӗ ӗ Ә ә Ӛ ӛ Ӝ ӝ Ӟ ӟ Ӡ ӡ Ӣ ӣ Ӥ 
+ӥ Ӧ ӧ Ө ө Ӫ ӫ Ӭ ӭ Ӯ ӯ Ӱ ӱ Ӳ ӳ Ӵ ӵ Ӷ ӷ Ӹ ӹ Ӻ ӻ Ӽ ӽ Ӿ ӿ
+
+Phasellus efficitur arcu et hendrerit
 venenatis.
 
 œ Œ ¡ ¢ £ ¤ ¥ § ¨ © « ® ¯ ° ± ² ³ µ ¶ · ¸ ¹ º » ¼ ½ ¾ ¿ À Á
@@ -22,7 +35,7 @@ venenatis.
 ü ý þ ÿ Ć ć Š š Ÿ Ž ž ƒ ˇ ˘ ˙ ˚ ˛ ˝ Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ
 Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ ς
 σ τ υ φ χ ψ ω ϑ ϕ ϖ ϵ ‐ – — ‘ ’ ‚ “ ” „ † ‡ • … ‰ ‹ › ‾ € ™
-← ↑ → ↓ ↔ ↕ ↵ ⇐ ⇑ ⇒ ⇓ ⇔ ⇕ ⎯ ⊕ □ ◊ ○ ☜ ☞ ♠ ♣ ♥ ♦ ✓
+← ↑ → ↓ ↔ ↕ ↵ ⇐ ⇑ ⇒ ⇓ ⇔ ⇕ ⎯ ⊕ ⊗ □ ◊ ○ ☜ ☞ ♠ ♣ ♥ ♦ ✓
 
 Pellentesque in porttitor nunc. Aliquam ullamcorper
 consequat turpis, quis semper leo maximus sit amet. Praesent tempus

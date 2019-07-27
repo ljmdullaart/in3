@@ -1,0 +1,15 @@
+.header
+.h1 Special subjects
+
+.h2 Russian text
+
+Можешь писать по русски.
+To use Russian cyrilic characters in PDFs, you must first add
+a cyrillic font to your groff setup.
+This is not well documented and will probably take hours to research
+until you find the perfect set-up. The archive
+.link add_russian.tgz add_russian.tgz
+contains everything I used, including a set-up script. However,
+be warned: the 
+.fix install.sh
+works in MY environment and may need a little tweaking for YOUR environment.

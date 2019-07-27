@@ -2,6 +2,9 @@
 #INSTALL@ /usr/local/bin/in3tbl
 use strict;
 use warnings;
+use open ':std' => ':encoding(UTF-8)';
+use utf8;
+#
 #       _      _                 
 #    __| | ___| |__  _   _  __ _ 
 #   / _` |/ _ \ '_ \| | | |/ _` |
@@ -136,9 +139,22 @@ sub alineatabstart{
 #| .__/ \__,_|___/_| |_|\___/ \__,_|\__|
 #|_| 
 my @output;
+my $pushlang='none';
 sub pushout{
 	(my $txt)=@_;
 	debug ($DEB_PUSH,"--$txt--");
+	if ($txt=~/[Ѐ-ӿ]/){
+		if ($pushlang ne 'russian'){
+			$pushlang='russian';
+			push @output,".ft SFOR";
+		}
+	}
+	else {
+		if ($pushlang ne 'none'){
+			$pushlang='none';
+			push @output,".ft";
+		}
+	}
 	if ($txt=~/^ *$/){}
 	else {push @output,$txt;}
 }
