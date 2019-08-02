@@ -666,7 +666,7 @@ for (@in3){
 			my $defll=$variables{'linelength'}-$variables{'indent'};
 			pushout(".ll $defll".'c');
 			pushout(".B1");
-			pushout(".ft CR");
+			pushout(".ft 6");
 			pushout(".ps -2");
 			for my $i (0..$#litblock){
 				pushout(".br");
@@ -688,7 +688,7 @@ for (@in3){
 						pushout(".ne ".$litlines."v");
 					}
 					pushout(".B1");
-					pushout(".ft CR");
+					pushout(".ft 6");
 					pushout(".ps -2");
 				}
 					
@@ -964,7 +964,7 @@ for (@in3){
 		if ( $1 ne ''){
 			my $txt=$1;
 			$txt=~s/\\$/\\\\/;
-			pushout(".ft CR");
+			pushout(".ft 6");
 			pushout(".ps -2");
 			pushout("$txt");
 			pushout(".ps");
@@ -1297,7 +1297,7 @@ for (@in3){
 			if (($inalinea==0)&&($inlist==0)){
 				alineatabstart();
 			}
-			pushout(".ft CR");
+			pushout(".ft 6");
 			pushout(".ps -2");
 			pushout(" $1");
 			pushout(".ps");
