@@ -4,13 +4,19 @@
 Interdum et malesuada fames ac ante ipsum
 primis in faucibus. Etiam sodales arcu a nisl pretium pellentesque.
 Praesent eu dui a dui lacinia facilisis ac eu nisi. Maecenas ultrices,
+
+.block classtest
 magna a malesuada rhoncus, arcu enim aliquet sapien, sed congue
 augue leo vitae tellus. Duis auctor finibus accumsan. Mauris ut
-est magna. Pellentesque nisl orci, ullamcorper sed tempus sit
+est magna.
+.block
+
+Pellentesque nisl orci, ullamcorper sed tempus sit
 amet, porta rhoncus dolor. Suspendisse at nisi magna. Duis sodales,
 mauris vitae sollicitudin placerat, neque mi rutrum tellus, quis
 accumsan neque metus non eros. Aenean quis lectus efficitur, mollis
-turpis gravida, tempus ligula. Donec eros felis, pellentesque
+.inline classtest turpis gravida,
+tempus ligula. Donec eros felis, pellentesque
 eget malesuada lobortis, rutrum eu nisi.
 
 Aenean luctus, velit eu eleifend volutpat, tortor dolor finibus

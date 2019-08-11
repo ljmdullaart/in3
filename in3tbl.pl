@@ -425,7 +425,6 @@ sub block_end {
         else {
             print STDERR "in3tbl cannot open $blockname\n";
         }
-
 	}
 	elsif ($blocktype eq 'eqn'){
 		if ($blockinline==0){
@@ -466,6 +465,18 @@ sub block_end {
 		}
 		pushout (".PE");
 		if ($blockinline==0){pushout (".br");}
+
+	}
+	elsif($blocktype =~/^(class.*)/) {
+		pushout (".br");
+		pushout (".ev $1");
+		my $defll=$variables{'linelength'}-$variables{'indent'};
+		pushout(".ll $defll".'c');
+		for (@block){
+			pushout ($_);
+		}
+		pushout (".br");
+		pushout (".ev");
 
 	}
 	else {

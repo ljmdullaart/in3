@@ -49,6 +49,29 @@ creates div-containers for specific text-elements:
 	table·note	the layout of notes; mostly used to align notes	table·note td { vertical-allign: top; }
 	toc	Table of contents	·toc { color: #000000; background-color: #DDDDDD; width: 100%; } 
 
+For class blocks, a specific class is created, with the name of the block. These can
+be used in the css sheet, for example:
+
+.pre
+ div.classtest {
+    color: #BB0000;
+ }
+.pre
+
+with a block definition of
+
+.pre
+ .block classtest
+ this is in the block
+ .block
+.pre
+
+will produce:
+
+.block classtest
+this is in the block
+.block
+
 .h2 Groff style sheet
 
 Example:
@@ -81,7 +104,7 @@ supported is:
 	 .nr Hs n	Heading style; 0-> 1.1.1... , 1-> single
 	 .ds pg*header ''text''	Use text as page header
 
-In addition, fonts can be loaded at positions to change the appearance of the document. 
+Fonts can be loaded at positions to change the appearance of the document. 
 The font number can also be used the
 .fix HF
 definition of header-fonts. The following fonts are default:
@@ -95,3 +118,17 @@ definition of header-fonts. The following fonts are default:
 
 In addition, in3 will download the font SFOR to provide russian characters. The font is loaded
 and referenced by name, never by number.
+
+For class blocks, defined with
+.fix block classxxx,
+an environment can be created wth the class name. Within the environment, all things
+may be changed. AT the end of the block, the environment will be popped off the stack. 
+Because classes are implemented as environments, all class blocks will produce a line
+break in the pdf output.
+An example of the class block:
+
+.pre
+ .ev classtest
+ .gcolor red
+ .ev
+.pre

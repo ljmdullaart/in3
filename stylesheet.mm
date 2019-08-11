@@ -5,3 +5,6 @@
 .nr Hs 1
 .nr Hps 0
 .ds pg*header ''- \\nP -''
+.ev classtest
+.gcolor red
+.ev

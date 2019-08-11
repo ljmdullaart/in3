@@ -545,6 +545,21 @@ sub block_end {
 			pushout("<img src=\"$ffn.png\" alt=\"$ffn\" width=\"$x\">");
 		}
 	}
+	elsif($blocktype =~/^(class.*)/) {
+		if ($blockinline==1){
+			pushout ("<div style=\"display:inline\"  class=\"$1\">");
+		}
+		else {
+			pushout ("<p><div class=\"$1\">");
+		}
+		for (@block){ pushout ($_); }
+		pushout ('</div>');
+		if ($blockinline==0){
+			pushout('</p>');
+		}
+		$blockinline=0;
+
+	}
 	else {
 		pushout ('<p>');
 		for (@block){ pushout ($_); }
