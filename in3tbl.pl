@@ -687,6 +687,7 @@ for (@in3){
 					pushout("");
 					pushout("");
 					pushout(".ps");
+					pushout(".br");
 					pushout(".ft");
 					pushout(".B2");
 					pushout(".P");
@@ -706,6 +707,7 @@ for (@in3){
 			}
 			pushout("  ");
 			pushout(".ps");
+			pushout(".br");
 			pushout(".ft");
 			pushout(".B2");
 			undef @litblock;
