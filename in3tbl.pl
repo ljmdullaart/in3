@@ -239,6 +239,10 @@ sub block_push {
 sub block_end {
 	my $blockscale=$variables{'blockscale'};
 	$blockinline=$variables{'blockinline'};
+    if ($blockname eq 'none') {
+        my $random=int(rand(1000000));
+        $blockname="gen_$random";
+    }
 	if($blockformat ne ''){
 		if ($blockformat=~/scale=(\d+)/){ $blockscale=$1; }
 		if ($blockformat=~/inline/){ $blockinline=1;}
@@ -246,18 +250,16 @@ sub block_end {
 	if ($blockinline==0){
 		alineatabend;
 	}
+	#-------------------------------------------------------
 	if ($blocktype eq 'pre'){
 		# do nothing; pre is handled as {LITTERAL}
 	}
+	#-------------------------------------------------------
     elsif ($blocktype eq 'music'){
         debug($DEB_BLOCK,"block type music");
         my $density=1000;
-        if ($blockname eq 'none') {
-            my $random=int(rand(1000000));
-            $blockname="gen_$random";
-        }
-        system ("rm block_$blockname.*");
-        if (open (my $MUSIC, '>',"block_$blockname.ly")){
+        system ("rm block/$blockname.*");
+        if (open (my $MUSIC, '>',"block/$blockname.ly")){
             print $MUSIC "\\version \"2.18.2\"\n";
             print $MUSIC "\\book {\n";
             print $MUSIC "\\paper {\n";
@@ -277,12 +279,11 @@ sub block_end {
             print $MUSIC "}\n";
             close $MUSIC;
             my $b_image;
-            $b_image="block_$blockname.png";
-            system ("lilypond -dbackend=eps  -dresolution=500 -dpreview block_$blockname.ly");
+        	debug($DEB_BLOCK,"lilypond $blockname.ly");
+            system ("cd block; lilypond -dbackend=eps  -dresolution=500 -dpreview $blockname.ly");
 			my $scale=$blockscale;
-			my $epsfile="block_$blockname.eps";
-			debug($DEB_IMG,"Processing $epsfile");
-			my $imgsize=` imageinfo --geom $epsfile`;
+			debug($DEB_IMG,"Processing $blockname");
+			my $imgsize=` imageinfo --geom block/$blockname.eps`;
 			my $x; my $y; my $xn;
 			($x,$y)=split ('x',$imgsize);
 			$xn=$x/12; $y=$y/12;
@@ -305,7 +306,7 @@ sub block_end {
 			}
 			my $up=$y/20;
 			pushout("\\v'$up"."c'");
-			pushout(".dospark $epsfile $xn"."v $y"."v");
+			pushout(".dospark block/$blockname.eps $xn"."v $y"."v");
 			pushout("\\v'-$up"."c'");
 			if ($blockinline==0){
 				pushout(".br");
@@ -317,24 +318,17 @@ sub block_end {
         }
     }
 
+	#-------------------------------------------------------
 	elsif ($blocktype eq 'gnuplot'){
-        if ($blockname eq 'none') {
-            my $random=int(rand(1000000));
-            $blockname="gen_$random";
-        }
-
-        if (open (my $GNUPLOT,'>',"block_$blockname.gnuplot")){
+        if (open (my $GNUPLOT,'>',"block/$blockname.gnuplot")){
             print $GNUPLOT 'set terminal postscript eps';
-            print $GNUPLOT "\nset output 'block_$blockname.eps'\n";
+            print $GNUPLOT "\nset output 'block/$blockname.eps'\n";
             for (@block){ print $GNUPLOT "$_\n"; }
             close $GNUPLOT;
-            my $b_image;
-            system("gnuplot block_$blockname.gnuplot");
-            $b_image="block_$blockname.eps";
+            system("gnuplot block/$blockname.gnuplot");
 			my $scale=$blockscale;
-			my $epsfile="block_$blockname.eps";
-			debug($DEB_IMG,"Processing $epsfile");
-			my $imgsize=` imageinfo --geom $epsfile`;
+			debug($DEB_IMG,"Processing $blockname");
+			my $imgsize=` imageinfo --geom block/$blockname.eps`;
 			my $x; my $y; my $xn;
 			($x,$y)=split ('x',$imgsize);
 			$xn=($x*150+2000)/($x*5+1000); $y=$y*$xn/$x;
@@ -354,20 +348,17 @@ sub block_end {
 			}
 			if ($found == 0){pushout(".ne $y"."v");}
 			pushout(".ce 1");
-			pushout(".dospark $epsfile $xn"."v $y"."v");
+			pushout(".dospark block/$blockname.eps $xn"."v $y"."v");
 			pushout(".br");
         }
         else {
-            print STDERR "in3tbl cannot open $blockname.gnuplot\n";
+            print STDERR "in3tbl cannot open block/$blockname.gnuplot\n";
         }
 
 	}
+	#-------------------------------------------------------
 	elsif ($blocktype eq 'texeqn'){
 		my $density=1000;
-        if ($blockname eq 'none') {
-            my $random=int(rand(1000000));
-            $blockname="gen_$random";
-        }
         if (open (my $TEXEQN,'>',"block_$blockname.tex")){
 		
 			print $TEXEQN "\\documentclass{article}\n";
@@ -385,16 +376,20 @@ sub block_end {
 			print $TEXEQN "\\end{titlepage}\n";
 			print $TEXEQN "\\end{document}\n";
             close $TEXEQN;
-            my $b_image;
-            my $d_image;
-            $b_image="block_$blockname.eps";
-            $d_image="block_$blockname.dvi";
-            system("echo '' |latex block_$blockname.tex > /dev/null 2>/dev/null");
-			system("convert  -trim  -density $density  $d_image  $b_image");
+            system("echo '' |latex block/$blockname.tex -output-directory=block -aux-directory=block > /dev/null 2>/dev/null");
+			system ("[ -f $blockname.aux   ] && mv $blockname.aux block");
+			system ("[ -f $blockname.count ] && mv $blockname.count block");
+			system ("[ -f $blockname.dvi   ] && mv $blockname.dvi block");
+			system ("[ -f $blockname.eps   ] && mv $blockname.eps block");
+			system ("[ -f $blockname.log   ] && mv $blockname.log block");
+			system ("[ -f $blockname.pdf   ] && mv $blockname.pdf block");
+			system ("[ -f $blockname.png   ] && mv $blockname.png block");
+			system ("[ -f $blockname.tex   ] && mv $blockname.tex block");
+			system ("[ -f $blockname.texi  ] && mv $blockname.texi block");
+			system("convert  -trim  -density $density  block/$blockname.dvi  block/$blockname.eps");
 			my $scale=$blockscale;
-			my $epsfile="block_$blockname.eps";
-			debug($DEB_IMG,"Processing $epsfile");
-			my $imgsize=` imageinfo --geom $epsfile`;
+			debug($DEB_IMG,"Processing block/$blockname.eps");
+			my $imgsize=` imageinfo --geom block/$blockname.eps`;
 			my $x; my $y; my $xn;
 			($x,$y)=split ('x',$imgsize);
 			$xn=$x/12; $y=$y/12;
@@ -416,7 +411,7 @@ sub block_end {
 				pushout(".ce 1");
 			}
 			pushout("\\v'.1'");
-			pushout(".dospark $epsfile $xn"."v $y"."v");
+			pushout(".dospark block/$blockname.eps $xn"."v $y"."v");
 			pushout("\\v'-.1'");
 			if ($blockinline==0){
 				pushout(".br");
@@ -426,6 +421,7 @@ sub block_end {
             print STDERR "in3tbl cannot open $blockname\n";
         }
 	}
+	#-------------------------------------------------------
 	elsif ($blocktype eq 'eqn'){
 		if ($blockinline==0){
 			pushout (".br");
@@ -456,6 +452,7 @@ sub block_end {
 		}
 
 	}
+	#-------------------------------------------------------
 	elsif ($blocktype eq 'pic'){
 		# pic does not support in-line pictures. Therefore, in3tbl does not support them either.
 		if ($blockinline==0){pushout (".br");}
@@ -467,6 +464,7 @@ sub block_end {
 		if ($blockinline==0){pushout (".br");}
 
 	}
+	#-------------------------------------------------------
 	elsif($blocktype =~/^(class.*)/) {
 		pushout (".br");
 		pushout (".ev $1");
@@ -479,6 +477,7 @@ sub block_end {
 		pushout (".ev");
 
 	}
+	#-------------------------------------------------------
 	else {
 		for (@block){
 			pushout ($_);
@@ -687,7 +686,6 @@ for (@in3){
 					pushout("");
 					pushout("");
 					pushout(".ps");
-					pushout(".br");
 					pushout(".ft");
 					pushout(".B2");
 					pushout(".P");
@@ -707,7 +705,6 @@ for (@in3){
 			}
 			pushout("  ");
 			pushout(".ps");
-			pushout(".br");
 			pushout(".ft");
 			pushout(".B2");
 			undef @litblock;

@@ -178,7 +178,8 @@ if [ -d $HTMLDIR ] ; then
 	if [ ! -f total.in ] ; then INHTML="$INHTML $HTMLDIR/total.html" ; fi
 	echo "tag/in3.html: $INHTML $HTMLDIR/header.htm" >> Makefile
 
-	echo "	cp block_*.png $HTMLDIR" >> Makefile
+	echo "	@cp block_*.png $HTMLDIR || echo 'no blocks to copy'" >> Makefile
+	echo "	@cp block/*.png $HTMLDIR || echo 'no blocks in dir to copy'" >> Makefile
 	echo "	touch tag/in3.html" >> Makefile
 	echo "tag/in3.html">>$CLEANFILE
 	
@@ -226,7 +227,7 @@ if [ -d $WWWDIR ] ; then
 
 	if [ -f stylesheet.css ] ; then
 		echo "$WWWDIR/stylesheet.css: stylesheet.css |$WWWDIR ">>Makefile
-		echo "	cp stylesheet.css $WWWDIR ">>Makefile
+		echo "	@cp stylesheet.css $WWWDIR || echo 'no stylesheet to copy'">>Makefile
 		echo "$WWWDIR/stylesheet.css">>$CLEANFILE
 		echo "$WWWDIR/stylesheet.css">>$UPLOADFILE
 	fi
@@ -235,7 +236,8 @@ if [ -d $WWWDIR ] ; then
 		echo "$WWWDIR/$1.html: $1.in3 header |$WWWDIR ">>Makefile
 		echo "	in3html $1.in3 > $WWWDIR/$1.html">>Makefile
 		if grep '^\.BLOCK' $1.in3  > /dev/null ; then
-			echo "	cp block_*.png $WWWDIR" >> Makefile
+			echo "	@cp block_*.png $WWWDIR || echo 'No blocks to copy'" >> Makefile
+			echo "	@cp block/*.png $WWWDIR || echo 'No blocks in dir to copy'" >> Makefile
 			echo "$WWWDIR/block_*png">>$CLEANFILE
 		fi
 		echo "$WWWDIR/$1.html">>$CLEANFILE
@@ -296,11 +298,12 @@ if [ -d $EPUBDIR ] ; then
 	echo "tag/in3.epub: $EPUBDIR/$WD.epub" >> Makefile
 	echo "	touch tag/in3.epub" >> Makefile
 	echo "$EPUBDIR/$WD.epub: $INHTML $EPUBDIR/index.html" >> Makefile
-	echo "	cp *.png $EPUBDIR" >> Makefile
+	echo "	@cp *.png $EPUBDIR|| echo 'no png to copy'" >> Makefile
+	echo "	@cp block/*.png $EPUBDIR|| echo 'no png from blockdir to copy'" >> Makefile
 	if [ -f epubstylesheet.css ] ; then
-		echo "	cp epubstylesheet.css $EPUBDIR/stylesheet.css" >> Makefile
+		echo "	@cp epubstylesheet.css $EPUBDIR/stylesheet.css||echo 'no epub stylesheet to copy'" >> Makefile
 	elif [ -f stylesheet.css ] ; then
-		echo "	cp stylesheet.css $EPUBDIR" >> Makefile
+		echo "	@cp stylesheet.css $EPUBDIR||echo 'no epub stylesheet to copy'" >> Makefile
 	fi
 	echo "	cd $EPUBDIR ; ebook-convert index.html $WD.epub $pub_opt" >> Makefile
 	echo "tag/in3.epub">>$CLEANFILE
@@ -496,13 +499,13 @@ echo "Images: $ALLIMAGE"
 
 echo "tag/in3.img: $ALLIMAGE|tag" >> Makefile
 if [ -d $EPUBDIR ] ; then
-	echo "	cp $ALLIMAGE $EPUBDIR">> Makefile
+	echo "	@cp $ALLIMAGE $EPUBDIR || echo 'No files to copy'">> Makefile
 	echo "	rm -f $EPUBDIR/*.eps">> Makefile
 
 fi
 if [ -d $WWWDIR ] ; then
 	if [ "$ALLIMAGE" != "" ] ; then
-		echo "	cp $ALLIMAGE $WWWDIR">> Makefile
+		echo "	@cp $ALLIMAGE $WWWDIR || echo 'No files to copy'">> Makefile
 		echo "	rm -f $WWWDIR/*.eps">> Makefile
 	fi
 fi
@@ -547,6 +550,7 @@ echo "tag/clean.in:" >> Makefile
 cat $CLEANFILE | while read F ; do
 	echo "	rm -f $F" >> Makefile
 done
+echo "	rm -f block/*"
 
 echo "	rm -f block_* */block_*" >> Makefile
 echo "	touch tag/clean.in" >> Makefile

@@ -26,6 +26,8 @@ sub pushout{
 sub debug {
 	(my $level,my $msg)=@_;
 	if ($level & $DEBUG){
+
+		print "<!-- DEBUG $level: $msg-->\n";
 		pushout ("<!-- DEBUG $level: $msg-->");
 	}
 	if ($DEB_PUSH & $DEBUG){
@@ -47,14 +49,15 @@ A single - represents the filename of STDIN.
 FLAGS:
 -d <value>
 --debug <value> :Set debugging level; or of the following:
-                 4   All input lines
-                 8   All push-outs
-                 16  Put headers in the debug-stream
-                 32  alinea processing
-                 64  replace characters with escapes
-                 128 Image processing
-                 256 interpret and other vars
-                 512 debug table processing
+                 2     debug block processing
+                 4     All input lines
+                 8     All push-outs
+                 16    Put headers in the debug-stream
+                 32    alinea processing
+                 64    replace characters with escapes
+                 128   Image processing
+                 256   interpret and other vars
+                 512   debug table processing
 
 -h
 --help          :Produce this explanation.
@@ -361,8 +364,13 @@ sub block_push {
 	push @block,$text;
 }
 sub block_end {
+	if (! (-d 'block')){ system ("mkdir block");}
 	my $density;
 	$blockinline=$variables{'blockinline'};
+	if ($blockname eq 'none') {
+		my $random=int(rand(1000000));
+		$blockname="gen_$random";
+	}
 	my $blockscale=$variables{'blockscale'};;
 	if($blockformat ne ''){
 		debug($DEB_BLOCK,"block format $blockformat");
@@ -373,18 +381,17 @@ sub block_end {
 		alineatabend;
 	}
 
+	#------------------------------------------------------------
 	if ($blocktype eq 'pre'){ 
 		debug($DEB_BLOCK,"block type pre");
 		# Do nothing; pre-blocks are handled as {LITTERAL}
 	}
+	#------------------------------------------------------------
 	elsif ($blocktype eq 'music'){
 		debug($DEB_BLOCK,"block type music");
 		$density=1000;
-		if ($blockname eq 'none') {
-			my $random=int(rand(1000000));
-			$blockname="gen_$random";
-		}
-		if (open (my $MUSIC, '>',"block_$blockname.ly")){
+		if (open (my $MUSIC, '>',"block/$blockname.ly")){
+			debug($DEB_BLOCK,"Opened music block block/$blockname.ly");
 			print $MUSIC "\\version \"2.18.2\"\n";
 			print $MUSIC "\\book {\n";
   			print $MUSIC "\\paper {\n";
@@ -403,17 +410,17 @@ sub block_end {
 			}
   			print $MUSIC "}\n";
 			close $MUSIC;
-            my $b_image;
-            $b_image="block_$blockname.png";
-			system ("lilypond --png  -dresolution=500  block_$blockname.ly");
-			system ("convert -trim block_$blockname.png block_$blockname.tmp.png");
-			system ("mv block_$blockname.tmp.png block_$blockname.png");
-			my $imgsize=` imageinfo --geom $b_image`;
+			#$b_image="block/$blockname.png";
+			system ("lilypond --png  -dresolution=500  block/$blockname.ly");
+			system ("mv *$blockname.png block/$blockname.png");
+			system ("convert -trim block/$blockname.png block/$blockname.tmp.png");
+			system ("mv block/$blockname.tmp.png block/$blockname.png");
+			my $imgsize=` imageinfo --geom block/$blockname.png`;
             my $x; my $y; my $yn;
             ($x,$y)=split ('x',$imgsize);
 			$yn=$y*$blockscale/14000;
 			my $ysize=$yn.'em';
-			pushout("<img src=\"$b_image\" alt=\"$b_image\" style=\"height:$ysize;vertical-align:middle\">");
+			pushout("<img src=\"$blockname.png\" alt=\"$blockname.png\" style=\"height:$ysize;vertical-align:middle\">");
 		}
 		else {
 			print STDERR "in3html cannot open $blockname\n";
@@ -426,7 +433,7 @@ sub block_end {
 			my $random=int(rand(1000000));
 			$blockname="gen_$random";
 		}
-		if (open (my $TEXEQN,'>',"block_$blockname.tex")){
+		if (open (my $TEXEQN,'>',"block/$blockname.tex")){
 			print $TEXEQN "\\documentclass{article}\n";
 			print $TEXEQN "\\usepackage{amsmath}\n";
 			print $TEXEQN "\\usepackage{amssymb}\n";
@@ -443,11 +450,12 @@ sub block_end {
 			close $TEXEQN;
             my $b_image;
             my $d_image;
-            $b_image="block_$blockname.png";
-            $d_image="block_$blockname.dvi";
-            debug($DEB_BLOCK,"latex block_$blockname.tex > /dev/null 2>/dev/null");
+            $b_image="block/$blockname.png";
+            $d_image="block/$blockname.dvi";
+            debug($DEB_BLOCK,"latex block/$blockname.tex > /dev/null 2>/dev/null");
             debug($DEB_BLOCK,"convert  -trim  -density $density  $d_image  $b_image");
-            system("echo '' | latex block_$blockname.tex > /dev/null 2>/dev/null");
+            system("echo '' | latex block/$blockname.tex > /dev/null 2>/dev/null");
+			system("mv $blockname.dvi block");
             system("convert  -trim  -density $density  $d_image  $b_image");
 			debug ($DEB_IMG, "  image=$b_image");
 			my $imgsize=` imageinfo --geom $b_image`;
@@ -455,12 +463,13 @@ sub block_end {
             ($x,$y)=split ('x',$imgsize);
 			$yn=$y*$blockscale/14000;
 			my $ysize=$yn.'em';
-			pushout("<img src=\"$b_image\" alt=\"$b_image\" style=\"height:$ysize;vertical-align:middle\">");
+			pushout("<img src=\"$blockname.png\" alt=\"$blockname.png\" style=\"height:$ysize;vertical-align:middle\">");
 		}
 		else {
 			print STDERR "in3html cannot open $blockname\n";
 		}
 	}
+	#------------------------------------------------------------
 	elsif ($blocktype eq 'gnuplot'){
 		debug($DEB_BLOCK,"block type gnuplot");
 		if ($blockname eq 'none') {
@@ -468,18 +477,18 @@ sub block_end {
 			$blockname="gen_$random";
 		}
 
-		if (open (my $GNUPLOT,'>',"block_$blockname.gnuplot")){
+		if (open (my $GNUPLOT,'>',"block/$blockname.gnuplot")){
 			my $x=800*$blockscale/100;
 			my $y=600*$blockscale/100;
 			print $GNUPLOT "set terminal png size $x,$y enhanced font \"Helvetica,8\"";
-			print $GNUPLOT "\nset output 'block_$blockname.png'\n";
+			print $GNUPLOT "\nset output 'block/$blockname.png'\n";
 			for (@block){ print $GNUPLOT "$_\n"; }
 			close $GNUPLOT;
 			my $b_image;
-			system("gnuplot block_$blockname.gnuplot");
-			$b_image="block_$blockname.png";
+			system("gnuplot block/$blockname.gnuplot");
+			$b_image="block/$blockname.png";
 			debug ($DEB_IMG, "  image=$b_image");
-			pushout("<img src=\"$b_image\" alt=\"$b_image>\" width=\"$x\">");
+			pushout("<img src=\"$blockname.png\" alt=\"$blockname.png>\" width=\"$x\">");
 		}
 		else {
 			print STDERR "in3html cannot open $blockname.gnuplot\n";
@@ -488,31 +497,31 @@ sub block_end {
 	elsif ($blocktype eq 'eqn'){
 		debug($DEB_BLOCK,"block type eqn");
 		$density=1000;
-		if ($blockname eq 'none') {
-			my $random=int(rand(1000000));
-			$blockname="gen_$random";
-		}
-		my $ffn="block_$blockname";
+		my $ffn="block/$blockname";
 		if (open my $EQN, '>',"$ffn.eqn"){
+			debug ($DEB_BLOCK, "eqn block opened $ffn.eqn");
 			print $EQN ".EQ\n";
 			for (@block){
 				print $EQN "$_\n";
 			}
 			print $EQN ".EN\n";
 			close $EQN;
+			debug ($DEB_BLOCK,"eqn $ffn.eqn > $ffn.groff");
 			system ("eqn $ffn.eqn > $ffn.groff");
+			debug ($DEB_BLOCK,"groff $ffn.groff > $ffn.ps");
 			system ("groff $ffn.groff > $ffn.ps");
-			system ("ps2pdf $ffn.ps > $ffn.pdf");
+			debug ($DEB_BLOCK,"ps2pdf $ffn.ps  $ffn.pdf");
+			system ("ps2pdf $ffn.ps  $ffn.pdf");
+			debug ($DEB_BLOCK,"convert -trim -density $density $ffn.pdf  $ffn.png");
 			system ("convert -trim -density $density $ffn.pdf  $ffn.png");
-			system ("rm $ffn.groff $ffn.ps $ffn.pdf");
-			debug ($DEB_IMG, "  image=$ffn.png");
-			debug ($DEB_IMG, "  image=$ffn.png");
+			debug ($DEB_BLOCK,$DEB_IMG, "  image=$ffn.png");
+			system ("rm -f $ffn.groff $ffn.ps $ffn.pdf");
 			my $imgsize=` imageinfo --geom $ffn.png`;
             my $x; my $y; my $yn;
             ($x,$y)=split ('x',$imgsize);
 			$yn=$y*$blockscale/14000;
 			my $ysize=$yn.'em';
-			pushout("<img src=\"$ffn.png\" alt=\"$ffn>\" style=\"height:$ysize;vertical-align:middle\">");
+			pushout("<img src=\"$blockname.png\" alt=\"$blockname>\" style=\"height:$ysize;vertical-align:middle\">");
 		}
 	}
 	elsif ($blocktype eq 'pic'){
@@ -522,7 +531,7 @@ sub block_end {
 			my $random=int(rand(1000000));
 			$blockname="gen_$random";
 		}
-		my $ffn="block_$blockname";
+		my $ffn="block/$blockname";
 		if (open my $PIC, '>',"$ffn.pic"){
 			print $PIC ".PS\n";
 			for (@block){
@@ -532,7 +541,7 @@ sub block_end {
 			close $PIC;
 			system ("pic $ffn.pic > $ffn.groff");
 			system ("groff $ffn.groff > $ffn.ps");
-			system ("ps2pdf $ffn.ps > $ffn.pdf");
+			system ("ps2pdf $ffn.ps  $ffn.pdf");
 			system ("convert -trim -density $density $ffn.pdf  $ffn.png");
 			system ("rm $ffn.groff $ffn.ps $ffn.pdf");
 			debug ($DEB_IMG, "  image=$ffn.png");
@@ -542,7 +551,7 @@ sub block_end {
 				(my $xsize, my $ysize)=split('x',$imgsize);
 				$x=$xsize*40/$ysize;
 			}
-			pushout("<img src=\"$ffn.png\" alt=\"$ffn\" width=\"$x\">");
+			pushout("<img src=\"$blockname.png\" alt=\"$blockname\" width=\"$x\">");
 		}
 	}
 	elsif($blocktype =~/^(class.*)/) {
