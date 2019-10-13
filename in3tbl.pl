@@ -53,6 +53,7 @@ $variables{'linelength'}=17;
 $variables{'indent'}=2;
 $variables{'leftnote'}=2;
 $variables{'sidenote'}=2;
+$variables{'font'}='none';
 
 #         _ _                  
 #    __ _| (_)_ __   ___  __ _ 
@@ -75,6 +76,7 @@ my $BODYTEXT=10;
 my $SIDENOTE=4;
 my $actualbody=$LEFTNOTE+$BODYTEXT+$SIDENOTE;
 my $appendix=0;
+my $delayed='';		# Delayed text for the next paragraph.
 
 debug($DEB_ALINEA,"Initial alinea=-1");
 
@@ -129,6 +131,10 @@ sub alineatabstart{
 		pushout("lw($variables{'leftnote'}c) lw($actualbody"."c) lp6.");
 		pushout("T{");
 		$inalineacel=1;
+	}
+	if ($delayed ne ''){
+		pushout($delayed);
+		$delayed='';
 	}
 }
 
@@ -736,10 +742,19 @@ for (@in3){
 				$inalineacel=1;
 			}
 		}
+		if ($delayed ne ''){
+			pushout($delayed);
+			$delayed='';
+		}
 		pushout(".ne 3");
 			
 	}
 	elsif (/^{ALINEAEND}/){
+		if ($variables{'font'} ne 'none'){
+			pushout ('.ft');
+			$variables{'font'}='none';
+			$delayed='';
+		}
 		if ($alineatype<0){$alineatype=0;}
 		elsif ($alineatype==0){
 			pushout(".P");
@@ -904,6 +919,10 @@ for (@in3){
 	elsif (/^{LANGUAGE}/){
 	}
 	elsif (/^{LEFTNOTE}(.*)/){
+		if ($delayed ne ''){
+			pushout($delayed);
+			$delayed='';
+		}
 		pushout("$1");
 		debug ($DEB_NOTE,"leftnote --$1-- type=$alineatype, inalinea=$inalinea, inalineacel=$inalineacel");
 		pushout("T}\@T{");
@@ -1035,19 +1054,41 @@ for (@in3){
 	}
 	elsif (/^{SET}([^ ]+) (.*)/){
 		my $val;
-		$variables{$1}=$2;
-		if ($1 eq 'H1'){ $val=$2-1; pushout(".nr H1 $val");}
-		elsif ($1 eq 'H2'){ $val=$2-1; pushout(".nr H2 $val");}
-		elsif ($1 eq 'H3'){ $val=$2-1; pushout(".nr H3 $val");}
-		elsif ($1 eq 'H4'){ $val=$2-1; pushout(".nr H4 $val");}
-		elsif ($1 eq 'H5'){ $val=$2-1; pushout(".nr H5 $val");}
-		elsif ($1 eq 'H6'){ $val=$2-1; pushout(".nr H6 $val");}
+		my $variable=$1;
+		my $value=$2;
+		if ($variable eq 'font'){
+			if ($delayed ne ''){ $delayed=$delayed . "\n";}
+			if ($variables{'font'} ne 'none'){
+				$delayed=$delayed.".ft\n";
+			}
+			if (lc($value) eq 'times'){ 
+				$delayed=$delayed.'.ft 1';
+			}
+			elsif (lc($value) eq 'courier'){ 
+				$delayed=$delayed.'.ft 6';
+			}
+			elsif (lc($value) eq 'none'){ 
+			}
+		}
+
+		$variables{$variable}=$value;
+
+		if ($variable eq 'H1'){ $val=$value-1; pushout(".nr H1 $val");}
+		elsif ($variable eq 'H2'){ $val=$value-1; pushout(".nr H2 $val");}
+		elsif ($variable eq 'H3'){ $val=$value-1; pushout(".nr H3 $val");}
+		elsif ($variable eq 'H4'){ $val=$value-1; pushout(".nr H4 $val");}
+		elsif ($variable eq 'H5'){ $val=$value-1; pushout(".nr H5 $val");}
+		elsif ($variable eq 'H6'){ $val=$value-1; pushout(".nr H6 $val");}
 	}
 	elsif (/^{SIDENOTE}(.*)/){
 		debug ($DEB_NOTE,"sidenote --$1-- type=$alineatype, inalinea=$inalinea, inalineacel=$inalineacel");
 		if ($inalinea>0){
 			pushout("T}\@T{");
 			$inalineacel=1;
+			if ($delayed ne ''){
+				pushout($delayed);
+				$delayed='';
+			}
 			pushout("$1");
 		}
 	}

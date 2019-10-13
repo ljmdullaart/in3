@@ -157,6 +157,7 @@ my @note;
 my $language='en';
 
 $variables{'interpret'}=1;
+$variables{'font'}='none';
 
 my $notes;
 sub pushnote{
@@ -257,18 +258,31 @@ if ($cover ne ''){
 
 my $inalinea=0;
 my $inalineatab=0;
+my $delayed='';
 
 sub alineatabstart {
 	if ($inalineatab==0){
 		debug($DEB_ALINEA,"ALINEA TABLE START { alineatype=$alineatype;inalinea=$inalinea");
 		if ($alineatype==0){
-			pushout ( "<p><div class=\"alinea\">");
+			if ($variables{'font'} eq 'none'){
+				pushout ( "<p><div class=\"alinea\">");
+			}
+			else {
+				pushout ( "<p><div class=\"alinea$variables{'font'}\">");
+				$variables{'font'}='none';
+			}
 		}
 		elsif ($alineatype==1){
 			pushout ( "<table class=note><tr><td></td><td></td></tr><tr><td><div class=\"leftnote\">");
 		}
 		elsif ($alineatype==2){
-			pushout ( "<table class=note><tr><td></td><td></td></tr><tr><td><div class=\"alinea\">");
+			if ($variables{'font'} eq 'none'){
+				pushout ( "<table class=note><tr><td></td><td></td></tr><tr><td><div class=\"alinea\">");
+			}
+			else {
+				pushout ( "<table class=note><tr><td></td><td></td></tr><tr><td><div class=\"alinea$variables{'font'}\">");
+				$variables{'font'}='none';
+			}
 		}
 		elsif ($alineatype==3){
 		pushout ( "<table class=note><tr><td></td><td></td><td></td></tr><tr><td><div class=\"leftnote\">");
@@ -327,12 +341,21 @@ sub startalinea {
 		alineatabstart;
 	}
 	else {
-		if ($alineatype==0){pushout("<p><div class=\"alinea\">")}
-		# below, sizes of the columns must be given
-		elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
-		elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
-		elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
-		$inalinea=1;
+		if($variables{'font'} eq 'none'){
+			if ($alineatype==0){pushout("<p><div class=\"alinea\">")}
+			elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
+			$inalinea=1;
+		}
+		else {
+			if ($alineatype==0){pushout("<p><div class=\"alinea$variables{'font'}\">")}
+			elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea$variables{'font'}\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea$variables{'font'}\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea$variables{'font'}\"><!--type-==$alineatype-->");}
+			$inalinea=1;
+			$variables{'font'}='none';
+		}
 	}
 	debug($DEB_ALINEA,"ALINEA START} alineatype=$alineatype; new type=$newalineatype");
 }
@@ -454,8 +477,8 @@ sub block_end {
             $d_image="block/$blockname.dvi";
             debug($DEB_BLOCK,"latex block/$blockname.tex > /dev/null 2>/dev/null");
             debug($DEB_BLOCK,"convert  -trim  -density $density  $d_image  $b_image");
-            system("echo '' | latex block/$blockname.tex > /dev/null 2>/dev/null");
-			system("mv $blockname.dvi block");
+            system("cd block; echo '' | latex $blockname.tex > /dev/null 2>/dev/null");
+			#system("mv $blockname.dvi block");
             system("convert  -trim  -density $density  $d_image  $b_image");
 			debug ($DEB_IMG, "  image=$b_image");
 			my $imgsize=` imageinfo --geom $b_image`;
@@ -840,6 +863,9 @@ for (@in3){
 	elsif (/^{NOP}/){
 	}
 	elsif (/^{SET}([^ ]+) (.*)/){
+		my $variable=$1;
+		my $value=$2;
+		$variables{$variable}=$value;
 	}
 	elsif (/^{SIDENOTE}(.*)/){
 		my $text=$1;
