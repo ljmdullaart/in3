@@ -27,6 +27,11 @@ div.side {
 div.classtest {
 	color: #BB0000;
 }
+div.alinea {
+}
+div.alineacourier {
+	font-family: "Courier New", Courier;
+}
 
 
 table.normal {
