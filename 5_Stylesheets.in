@@ -41,6 +41,7 @@ creates div-containers for specific text-elements:
 
 	class/style	text element	example
 	alinea	standard alinea	·alinea { background-color: #DDDD00; }
+	alinea<font>	alinea with a specific font	·alineacourier { font-family: "Courier New", Courier; }
 	fixed	font for fixed character-width	·fixed { font-family:courier, "courier new", monospace; }
 	cel	cell in a normal table	·cel { background-color: #DD00DD; }
 	left	left notes	·left { font-size: 80%; }

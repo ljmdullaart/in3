@@ -111,19 +111,6 @@ The following block types are implemented:
 If the name of the block is missing, there will be some random name, which is
 most likely relatively unique.
 
-.h2 Markdown
-Enthusiastic markdown users would like to use mark-down syntax. The following requests 
-are implemented.
-
-	*markdown* *format* *request*	*allowed* *when*
-	use of _ or * emphasis	markdown=1 or inlineemp=1
-	use of [] links	markdown=1 or inlineemp=1
-	use of > instead of .pre	markdown=1
-	==== for chapters	markdown=1
-	---- for sections	markdown=1
-	hashes for titles	markdown=1
-	lists with 1. oe a.	markdown=1
-
 .h2 Variables
 
 The concept of variables is used to control the behavior of the in-scripts. Variables may be
@@ -142,6 +129,7 @@ Variables have consequences.
 	H4	direct	Number for the next sub-paragraph
 	markdown	direct	if 1, accept markdown format requests, 0=don't
 	inlineemp	direct	1=accept underscore underlining, star bolding and markdown links; 0=don't
+	font	next alinea	The next alinea uses the specified font.
 
 Variables may have initial values
 
@@ -151,3 +139,61 @@ Variables may have initial values
 	markdown	0, but if -m is given: 1
 	inlineemp	1
 
+.h3 Interpret, markdown and inlineemp
+
+Intrepret does an interpretation of character combinations. The character translations are governed by
+character maps in
+.fix /usr/local/share.
+The character maps are also used to translate non-asii characters to the different output channels.
+This means that the translation is done by
+.fix in4html
+and
+.fix in3tbl
+(the second pass).
+There are currently no real %%-translations, except for the %%.
+
+
+Enthusiastic markdown users would like to use mark-down syntax. The following requests 
+are implemented. Inlineemp allows a subset of markdown to be used.
+
+	*markdown* *format* *request*	*allowed* *when*
+	use of _ or * emphasis	markdown=1 or inlineemp=1
+	use of [] links	markdown=1 or inlineemp=1
+	use of > instead of .pre	markdown=1
+	==== for chapters	markdown=1
+	---- for sections	markdown=1
+	hashes for titles	markdown=1
+	lists with 1. or a.	markdown=1
+
+.h3 Notes
+
+Notes allows you to change the notes-style. 
+You may be tempted to do so, but most of the times, it is unnecessary and a bad idea.
+
+.h3 H1, H2 etc.
+
+These are the chapter numbers. Chapter numbers can be set in different ways:
+
+- via -c on the command line of
+.fix in3
+- via the 1_-prefix on the filename (1 for chapter number 1 etc.)
+- via
+.fix set H1 2
+
+This also  makes it possible to, for example, skip paragraph numbers to confuse the readers.
+
+.h3 font
+
+Font allows you to specify the font for the next alinea. Font is changed back to
+.fix none
+at the end of the alinea. Font changes are implemented differently for the different
+output processors.
+
+.fix in3tbl
+will change the font to 1 if the font is times, 6 if the font is courier, or to the named
+font otherwise. 
+
+.fix in3html
+will change the style of the alinea to alinea<fontname>, for example, alineatimes, alineaheletica
+etc. It is up to the css to select the correct font and its alternatives.
+fonts 
