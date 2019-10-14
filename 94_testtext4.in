@@ -44,5 +44,28 @@ hendrerit ultrices. Pellentesque vel urna lectus. Nulla mattis
 %test
 
 ultrices pharetra. Phasellus erat massa, dignissim non gravida
+
+-----%8x---------
+-----%8X---------
+
 in, tincidunt ut ligula. In hac habitasse platea dictumst. Nunc
 sollicitudin tincidunt commodo.
+
+%test
+%8x
+%8X
+%phone
+%plane
+%mail
+%write
+%pen
+%check
+%CHECK
+%wrong
+%WRONG
+%cross
+%CROSS
+%david
+%star
+%snow
+

@@ -150,7 +150,23 @@ This means that the translation is done by
 and
 .fix in3tbl
 (the second pass).
-There are currently no real %%-translations, except for the %%.
+	% argument	translation
+	8x	%8x
+	8X	%8X
+	phone	%phone
+	plane	%plane
+	mail	%mail
+	write	%write
+	pen	%pen
+	check	%check
+	CHECK	%CHECK
+	wrong	%wrong
+	WRONG	%WRONG
+	cross	%cross
+	CROSS	%CROSS
+	david	%david
+	star	%star
+	snow	%snow
 
 
 Enthusiastic markdown users would like to use mark-down syntax. The following requests 
