@@ -365,8 +365,8 @@ sub block_end {
 	#-------------------------------------------------------
 	elsif ($blocktype eq 'texeqn'){
 		my $density=1000;
-        if (open (my $TEXEQN,'>',"block_$blockname.tex")){
-		
+        if (open (my $TEXEQN,'>',"block/$blockname.tex")){
+			debug($DEB_IMG,"Opening block block/$blockname.tex");
 			print $TEXEQN "\\documentclass{article}\n";
 			print $TEXEQN "\\usepackage{amsmath}\n";
 			print $TEXEQN "\\usepackage{amssymb}\n";
@@ -382,7 +382,10 @@ sub block_end {
 			print $TEXEQN "\\end{titlepage}\n";
 			print $TEXEQN "\\end{document}\n";
             close $TEXEQN;
+			debug($DEB_IMG,"Closed block block/$blockname.tex");
             system("echo '' |latex block/$blockname.tex -output-directory=block -aux-directory=block > /dev/null 2>/dev/null");
+			debug($DEB_IMG,"Latexed block/$blockname.tex");
+
 			system ("[ -f $blockname.aux   ] && mv $blockname.aux block");
 			system ("[ -f $blockname.count ] && mv $blockname.count block");
 			system ("[ -f $blockname.dvi   ] && mv $blockname.dvi block");
@@ -392,6 +395,7 @@ sub block_end {
 			system ("[ -f $blockname.png   ] && mv $blockname.png block");
 			system ("[ -f $blockname.tex   ] && mv $blockname.tex block");
 			system ("[ -f $blockname.texi  ] && mv $blockname.texi block");
+			debug($DEB_IMG,"convert  -trim  -density $density  block/$blockname.dvi  block/$blockname.eps");
 			system("convert  -trim  -density $density  block/$blockname.dvi  block/$blockname.eps");
 			my $scale=$blockscale;
 			debug($DEB_IMG,"Processing block/$blockname.eps");
