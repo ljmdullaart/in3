@@ -335,6 +335,7 @@ sub close_list {
 			elsif (/^\.fixed / )             { s/^\.fixed *//;   inpush ("{TEXTFIX}$_"); }
 			elsif (/^\.inline / )            { inline($_,'force'); }
 			elsif (/^\.img / )               { s/^.img /{IMAGE}/;inpush ($_);}
+			elsif (/^\.rimg / )               { s/^.img /{RIMAGE}/;inpush ($_);}
 			elsif (!(/^[-#@ 	]/))         {                   inpush ("{TEXTNORMAL}$_"); }
 			elsif ($types[$listlevel] eq '-'){s/^[-#@ 	]*//;inpush("{LISTDASHITEM}$_");}
 			elsif ($types[$listlevel] eq '#'){s/^[-#@ 	]*//;inpush("{LISTNUMITEM}$_");}
