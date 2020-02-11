@@ -9,7 +9,8 @@ EPUBDIR=epub
 HTMLDIR=html
 TXTDIR=text
 
-figlet in3 | sed 's/^/#  /' >> Makefile
+LOG=configyour.log
+echo "configour.in3 starting" >>$LOG
 PWD=$(pwd)
 WD=$(basename $PWD)
 REST=''
@@ -19,6 +20,14 @@ DEST=xs4all
 CLEANFILE=/tmp/in.clean.$$
 UPLOADFILE=/tmp/in.upload.$$
 
+if [ -x /usr/local/bin/my_banner ] ; then
+    banner=/usr/local/bin/my_banner
+else
+    banner=banner
+fi
+
+
+$banner in3 >> Makefile
 
 if [ -f destination ] ; then
 	. destination
@@ -42,7 +51,7 @@ for argument in "$@" ; do
 done
 
 
-cat <<EOF
+cat >> $LOG  <<EOF
 #  Starting configure with:
 #    host       = $HOST
 #    remote_dir = $REMOTE_DIR
@@ -67,7 +76,7 @@ INFILES_noindex=$(ls *.in  2> /dev/null | egrep -v 'index.in|total.in' | sort -n
 INBASE=$(ls *.in  2> /dev/null | egrep -v 'configure.in' | sort -n | sed 's/.in$//' | paste -sd' ')
 
 if [ "$INFILES" = "" ] ; then
-	echo "No .in-files found"
+	echo "No .in-files found" >>$LOG
 	echo 'tag/in: |tag' >> Makefile
 	echo '	touch tag/in' >> Makefile
 	echo 'tag/in'>>$CLEANFILE
@@ -75,6 +84,7 @@ if [ "$INFILES" = "" ] ; then
 	echo '	touch tag/clean.in' >> Makefile
 	echo 'tag/upload.in: |tag' >> Makefile
 	echo '	touch tag/upload.in' >> Makefile
+	echo "configour.in3 finishing" >>$LOG
 	exit 0
 fi
 
@@ -235,11 +245,11 @@ if [ -d $WWWDIR ] ; then
 	add_www(){
 		echo "$WWWDIR/$1.html: $1.in3 header |$WWWDIR ">>Makefile
 		echo "	in3html $1.in3 > $WWWDIR/$1.html">>Makefile
-		if grep '^\.BLOCK' $1.in3  > /dev/null ; then
-			echo "	@cp block_*.png $WWWDIR || echo 'No blocks to copy'" >> Makefile
-			echo "	@cp block/*.png $WWWDIR || echo 'No blocks in dir to copy'" >> Makefile
-			echo "$WWWDIR/block_*png">>$CLEANFILE
-		fi
+	#	if grep '^\.BLOCK' $1.in*  > /dev/null ; then
+	#		echo "	@cp block_*.png $WWWDIR || echo 'No blocks to copy'" >> Makefile
+	#		echo "	@cp block/*.png $WWWDIR || echo 'No blocks in dir to copy'" >> Makefile
+	#		echo "$WWWDIR/block_*png">>$CLEANFILE
+	#	fi
 		echo "$WWWDIR/$1.html">>$CLEANFILE
 		echo "$WWWDIR/$1.html">>$UPLOADFILE
 	}
@@ -473,7 +483,6 @@ for IMAGE in $CURIMG ; do
 	TMPA="$ALLIMAGE $IMAGE"
 	ALLIMAGE=$TMPA
 done
-echo "Images: $ALLIMAGE"
 
 CURIMG=$(cat $INFILES | sed -n 's/^\.map image *//p' | sed 's/ .*//'|sort -u)
 for IMAGE in $CURIMG ; do
@@ -482,7 +491,6 @@ for IMAGE in $CURIMG ; do
 	TMPA="$ALLIMAGE $IMAGE"
 	ALLIMAGE=$TMPA
 done
-echo "Images: $ALLIMAGE"
 
 CURIMG=$(cat $INFILES | sed -n 's/^\.cover *//p' | sed 's/ .*//'|sort -u)
 for IMAGE in $CURIMG ; do
@@ -491,7 +499,6 @@ for IMAGE in $CURIMG ; do
 	TMPA="$ALLIMAGE $IMAGE"
 	ALLIMAGE=$TMPA
 done
-echo "Images: $ALLIMAGE"
 
 #IMGFILES=$(cat $INFILES | sed -n 's/^.img //p'  | sed 's/ .*//'| paste -sd ' ')
 #COVERS=$(cat $INFILES | sed -n 's/^.cover //p'  | sed 's/ .*//'| paste -sd ' ')
@@ -550,7 +557,7 @@ echo "tag/clean.in:" >> Makefile
 cat $CLEANFILE | while read F ; do
 	echo "	rm -f $F" >> Makefile
 done
-echo "	rm -f block/*"
+echo "	rm -f block/*"  >> Makefile
 
 echo "	rm -f block_* */block_*" >> Makefile
 echo "	touch tag/clean.in" >> Makefile
@@ -589,6 +596,7 @@ fi
 
 rm -f $CLEANFILE
 rm -f $UPLOADFILE
+echo "configour.in3 finishing" >>$LOG
 exit 0
 
 
