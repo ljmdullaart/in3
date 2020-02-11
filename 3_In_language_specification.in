@@ -111,6 +111,10 @@ The following block types are implemented:
 If the name of the block is missing, there will be some random name, which is
 most likely relatively unique.
 
+In addition, a request
+.fix codefile
+can be used to generate a pre-formated block of text from an external file.
+
 .h2 Variables
 
 The concept of variables is used to control the behavior of the in-scripts. Variables may be

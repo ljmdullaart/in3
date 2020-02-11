@@ -683,6 +683,15 @@ for (@input){
 			inpush("{BLOCK $blocktype}$_");
 		}
 	}
+	elsif (/^\.codefile *(.*)/){
+		if (open(my $CODE, '<', $1)){
+			while (<$CODE>){
+				chomp;
+				inpush("{LITTERAL}$_");
+			}
+			close $CODE
+		}
+	}
 	elsif (/^\.pre/){
 		debug ($TAGS,"Pre-tag (was: $inpre)");
 		if ($inpre==0){
