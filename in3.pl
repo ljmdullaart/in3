@@ -20,7 +20,7 @@ $variables{"markdown"}=0;
 $variables{"inlineemp"}=1;	# Allow inline emphasis _underline_ and *bold*
 $variables{"appendix"}=0;	# We're in an appendix
 my $tm=localtime;
-my $datestring=sprintf("The current date is %04d-%02d-%02d\n", $tm->year+1900, ($tm->mon)+1, $tm->mday);
+my $datestring=sprintf("%04d-%02d-%02d\n", $tm->year+1900, ($tm->mon)+1, $tm->mday);
 
 my @input;			# array containing all input lines
 my $leftnote;
@@ -111,12 +111,22 @@ else {
 			if (1==0){}
 			elsif (/^--$/){ while (<STDIN>){push @input,$_;}}
 			elsif (/^-d([0-9]+)/){ $variables{"DEBUG"}=$1; }
+			elsif (/^--debug([0-9]+)/){ $variables{"DEBUG"}=$1; }
+			elsif (/^--debug=([0-9]+)/){ $variables{"DEBUG"}=$1; }
 			elsif (/^-d$/){$what='debug';}
+			elsif (/^--debug$/){$what='debug';}
 			elsif (/^-c([0-9]+)/){ $variables{"H1"}=$1;}
+			elsif (/^--chapter([0-9]+)/){ $variables{"H1"}=$1;}
+			elsif (/^--chapter=([0-9]+)/){ $variables{"H1"}=$1;}
 			elsif (/^-c$/){$what='chapter';}
+			elsif (/^--chapter$/){$what='chapter';}
 			elsif (/^-i([0-9]+)/){ $variables{"interpret"}=$1;}
+			elsif (/^--interpret([0-9]+)/){ $variables{"interpret"}=$1;}
+			elsif (/^--interpret=([0-9]+)/){ $variables{"interpret"}=$1;}
 			elsif (/^-i$/){$what='interpret';}
+			elsif (/^--interpret$/){$what='interpret';}
 			elsif (/^-m/){$variables{"markdown"}=1;}
+			elsif (/^--markdown/){$variables{"markdown"}=1;}
 			elsif (/^-+h/){ hellup; }
 			elsif (/^-/){ print STDERR "$_ is not known as a flag; ignored.\n";}
 			else {
@@ -634,7 +644,9 @@ for (@input){
 	debug (128, "== $_");
 	debug (128,"========================================================");
 	
-	if (/^\.block/){
+	if (/^\#\!/) { print STDERR "$_\n";}
+	if (/^\#\--/) { print STDERR "$_\n";}
+	elsif (/^\.block/){
 		debug ($TAGS,"Block-tag (was: $inblock)");
 
 		if ($inblock==0){

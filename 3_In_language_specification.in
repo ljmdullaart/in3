@@ -10,12 +10,20 @@ Some characters have a special meaning.
 	..	beginning of line	A dot at the beginning of a line indicates a request
 	%	when interpret=2	Next characters are interpreted
 	 -	beginning of line or after tab(s)	list item in a dash-list
-	 #	beginning of line or after tab(s)	list item in a numbered-list
+	 #	beginning of line or after tab(s)	list item in a numbered-list (unless #-- or #!)
 	 @	beginning of line or after tab(s)	list item in a alpha-list
 
 The translation table for the % translations is the in3charmap.
 
 .h2 Implemented requests
+
+.h3 Comments
+
+Lines starting with
+.fix #!
+or 
+.fix #--
+are treated as comments and are written to STDERR.
 
 .h3 General formatting
 
