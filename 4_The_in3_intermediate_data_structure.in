@@ -31,6 +31,7 @@ should be fairly readable. The following tags are used:
 	SET	variable value	Set variable to value
 	SUBTITLE	text	Create a subtitle for the document
 	TITLE	text	The title of this document
+	KEYWORDS	comma separated list	List of keywords for the HTML-header
 
 .h3 Headers
 	HEADER level	text	Header at level with text.
