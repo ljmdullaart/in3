@@ -66,6 +66,9 @@ are treated as comments and are written to STDERR.
 
 	request	argument	meaning
 	author	text	specify the name(s) of the author(s)
+	title	text	specify the title for the documen
+	subtitle	text	specify the subtitle for the documen
+	keywords	comma separates list	set a list of keywords for HTML-meta
 	cover	file name	use the image in file name as cover
 	global	variable value	set the variable to value globally
 	hr	none	horizontal line

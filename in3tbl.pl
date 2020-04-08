@@ -920,6 +920,8 @@ for (@in3){
 			pushout(".br");
 		}
 	}
+	elsif (/^{KEYWORDS}/){
+	}
 	elsif (/^{LANGUAGE}/){
 	}
 	elsif (/^{LEFTNOTE}(.*)/){

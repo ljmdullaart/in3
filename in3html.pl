@@ -153,6 +153,7 @@ my $side=0;
 my %variables=();
 my $mapnr=0;
 my $cover='';
+my $keywords='';
 my @note;
 my $language='en';
 
@@ -187,6 +188,7 @@ for (@in3){
 		}
 	}
 	if (/^{COVER}(.*)/){ $cover=$1; }
+	if (/^{KEYWORDS}(.*)/){ $keywords=$1; }
 	if (/^{LIKE}/){$like=1;}
 	if (/^{LANGUAGE} ([^ ])/){$language=$1;}
 	if (/^{SIDE/){$side=1;}
@@ -226,6 +228,9 @@ if ($part_only==0){
 	}
 	else {
 		pushout ( "<title>Untitled</title>");
+	}
+	if ($keywords ne ''){
+		pushout ("<meta name=\"keywords\" content=\"$keywords\">")
 	}
 	pushout ( "</head>");
 	pushout ( "<body>");
@@ -746,6 +751,8 @@ for (@in3){
 			pushout ("<br>");
 			alineatabstart;
 		}
+	}
+	elsif (/^{KEYWORDS}/){
 	}
 	elsif (/^{LANGUAGE}/){
 	}

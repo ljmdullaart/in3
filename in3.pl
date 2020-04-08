@@ -992,6 +992,9 @@ for (@input){
 			inpush("{IMAGE}$_");
 		}
 	}
+	elsif (/^\.keywords (.*)/) {
+		inpush("{KEYWORDS}$1");
+	}
 	elsif (/^\.lang /){
 		if (/^\.lang ([^ ]*)/){
 			inpush ("{LANGUAGE}$1");
