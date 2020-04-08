@@ -19,18 +19,23 @@ accumsan neque metus non eros. Aenean quis lectus efficitur, mollis
 tempus ligula. Donec eros felis, pellentesque
 eget malesuada lobortis, rutrum eu nisi.
 
+.codefile codefile
+
 Aenean luctus, velit eu eleifend volutpat, tortor dolor finibus
 nulla, vitae consectetur turpis neque ut dui. Suspendisse potenti.
 Praesent sit amet efficitur lectus. Sed at diam sit amet nisi
 commodo tincidunt eu eget diam. Praesent sodales nisi tempus erat
 efficitur rutrum vel in ante. Proin sapien nulla, mollis at molestie
 a, blandit vel leo. Donec commodo nibh vel egestas facilisis.
+#-- Comment line 1 ---------------------------------------------------
 Ut ante nulla, vestibulum vel odio eu, ullamcorper fringilla ipsum.
+#-- Comment line 2 ---------------------------------------------------
 Pellentesque sed tortor tincidunt, dapibus est ut, ullamcorper
 lectus. Nam id ultricies erat. Nulla hendrerit ligula non velit
 dapibus bibendum. Aliquam imperdiet, quam ut ullamcorper pharetra,
 sem risus mattis elit, sed fringilla leo tellus ut nisi. Quisque
 quis turpis lobortis metus consequat consequat vitae et felis.
+#-- Comment line 3 ---------------------------------------------------
 
 Vivamus eu arcu molestie, tempus nulla eget, mattis dui. Nulla
 fermentum at arcu nec egestas. Suspendisse pellentesque ultrices
