@@ -1090,12 +1090,14 @@ for (@in3){
 		debug ($DEB_NOTE,"sidenote --$1-- type=$alineatype, inalinea=$inalinea, inalineacel=$inalineacel");
 		if ($inalinea>0){
 			pushout("T}\@T{");
+			pushout (".na");
 			$inalineacel=1;
 			if ($delayed ne ''){
 				pushout($delayed);
 				$delayed='';
 			}
 			pushout("$1");
+			pushout (".ad");
 		}
 	}
 	elsif (/^{SUBSCRIPT}(.*)/){
