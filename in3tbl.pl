@@ -287,6 +287,8 @@ sub block_end {
             my $b_image;
         	debug($DEB_BLOCK,"lilypond $blockname.ly");
             system ("cd block; lilypond -dbackend=eps  -dresolution=500 -dpreview $blockname.ly");
+            system ("cd block; sed -i 's/\(%%BeginProcSet: .*\)/\1 0 0/' $blockname.eps");
+			system ("cd block; sed -i 's/%%IncludeResource: ProcSet (FontSetInit)/%%IncludeResource: ProcSet (FontSetInit) 0 0/' $blockname.eps");
 			my $scale=$blockscale;
 			debug($DEB_IMG,"Processing $blockname");
 			my $imgsize=` imageinfo --geom block/$blockname.eps`;
@@ -420,9 +422,9 @@ sub block_end {
 				if ($found == 0){pushout(".ne $y"."v");}
 				pushout(".ce 1");
 			}
-			pushout("\\v'.1'");
+			pushout("\\v'0.1'");
 			pushout(".dospark block/$blockname.eps $xn"."v $y"."v");
-			pushout("\\v'-.1'");
+			pushout("\\v'-0.1'");
 			if ($blockinline==0){
 				pushout(".br");
 			}
