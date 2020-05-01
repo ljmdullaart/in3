@@ -28,6 +28,7 @@ my $level;
 my $bodytext;
 my @reflist;		# all references with .ref
 my $blockcount=0;
+my $linenumber=0;
 ########################################################
 
 #     #  #######  #        ######   
@@ -86,6 +87,7 @@ sub debug{
 	my $level;my $message;
 	($level,$message)=@_;
 	if ($variables{"DEBUG"} & $level){
+		if ($linenumber>0){ print "$linenumber: ";}
 		print "{variables{'DEBUG'} $level}$message\n";
 	}
 }
@@ -639,13 +641,15 @@ for (@input){
 
 debug($GENERAL,"Start the input processing");
 for (@input){
+	$linenumber++;
 	chomp;
+	if (/^[ 	]*$/) { print STDERR "####### $linenumber: Only tabs and spaces! are you sure?\n"; }
 	debug (128,"========================================================");
 	debug (128, "== $_");
 	debug (128,"========================================================");
 	
-	if (/^\#\!/) { print STDERR "$_\n";}
-	if (/^\#\--/) { print STDERR "$_\n";}
+	if (/^\#\!/) { print STDERR "$linenumber: $_\n";}
+	if (/^\#\--/) { print STDERR "$linenumber: $_\n";}
 	elsif (/^\.block/){
 		debug ($TAGS,"Block-tag (was: $inblock)");
 
@@ -905,6 +909,10 @@ for (@input){
 		debug($TAGS,".back (end of leftnotes)");
 		$variables{'notes'}=$variables{'notes'}&2;
 	}
+	elsif (/^\.center (.+)/){
+		inpush("{CENTER}$1");
+		debug($TAGS,".center set");
+	}
 	elsif (/^\.cover (.+)/){
 		inpush("{COVER}$1");
 		debug($TAGS,".cover: set cover to $1");
@@ -1010,7 +1018,7 @@ for (@input){
 			inpush ("{LINK}$1 $1");
 			debug ($TAGS,"Link: $1 $1");
 		}
-		else { print STDERR "Unknown link command $_\n"; }
+		else { print STDERR "$linenumber: Unknown link command $_\n"; }
 	}
 	elsif (/^\.lst(.*)/){
 		start_alinea;
@@ -1025,7 +1033,7 @@ for (@input){
 		elsif ($1 eq 'picture') {$inmap=1; $mappict=$2;}
 		elsif ($1 eq 'field') {$inmap=1; push @thismap,$2;}
 		elsif ($1 eq 'link') {$inmap=1; push @thismap,$2;}
-		else { print "ERROR-- UNKNOWN MAP $1 $2\n";}
+		else { print "$linenumber: ERROR-- UNKNOWN MAP $1 $2\n";}
 	}
 	elsif (/^\.note (.*)/){
 		my $text=$1;
@@ -1129,7 +1137,7 @@ for (@input){
 		inpush("{TEXTNORMAL}$_");
 	}
 	elsif(/^\./){
-		print STDERR "Unknown request $_\n";
+		print STDERR "$linenumber: Unknown request $_\n";
 	}
 	else {
 		debug($TAGS,"Normal text $_");
