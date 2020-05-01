@@ -643,7 +643,7 @@ debug($GENERAL,"Start the input processing");
 for (@input){
 	$linenumber++;
 	chomp;
-	if (/^[ 	]*$/) { print STDERR "####### $linenumber: Only tabs and spaces! are you sure?\n"; }
+	if (/^[ 	]+$/) { print STDERR "####### $linenumber: Only tabs and spaces! are you sure?\n"; }
 	debug (128,"========================================================");
 	debug (128, "== $_");
 	debug (128,"========================================================");
