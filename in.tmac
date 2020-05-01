@@ -1073,7 +1073,9 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .SA
 .\"	do break or space
 .if \\n[hd*htype] .br
-.if \\n[hd*htype]>1 .SP (u;\\n[Lsp]*\\n[Hss])
+.\" For some reason, the next line suddenly started ejecting pages after each header
+.\" therefore it is commented-out (ljm)
+.\" .if \\n[hd*htype]>1 .SP (u;\\n[Lsp]*\\n[Hss])
 .if \\n[hd*htype] \{\
 .	\"	indent if Hi=1 and Pt=1
 .	if (\\n[Hi]=1)&(\\n[Pt]=1) .ti +\\n[Pi]n
