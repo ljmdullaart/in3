@@ -181,7 +181,6 @@
 •	\[bu]	&#8226;
 …	...	&hellip;
 ‰	\[%0]	&permil;
-′	\[fm]	'
 ‹	\[fo]	&lsaquo;
 ›	\[fc]	&rsaquo;
 ‾	\[rn]	&oline;
@@ -221,7 +220,6 @@
 ∏	\[product]	&prod;
 ∐	\[coproduct]	&coprod;
 ∑	\[sum]	&sum;
-−	\[mi]	-
 ∓	\[-+]	&mnplus;
 ∗	\[**]	&lowast;
 √	\[sr]	&radic;
