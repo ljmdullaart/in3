@@ -663,6 +663,9 @@ for (@in3){
 	elsif (/^{BLOCKEND}/){
 		block_end();
 	}
+	elsif (/^{CENTER}(.*)/){
+		pushout("<br><div style=\"text-align:center;\">$1</div><br>");
+	}
 	elsif (/^{COVER}(.*)/){ }
 	elsif (/^{INCLUDE}(.*)/){
 		if ($do_includes==1){

@@ -32,6 +32,7 @@ are treated as comments and are written to STDERR.
 	text{tab}	text	a text with a left note
 	back	none	Ends a section with left notes
 	br	none	force a line break
+	center	text	center the text on a new line
 	note	text	text is a footnote
 	side	side note text	Specifies a referral to side notes
 

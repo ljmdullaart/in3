@@ -30,11 +30,13 @@ efficitur rutrum vel in ante. Proin sapien nulla, mollis at molestie
 a, blandit vel leo. Donec commodo nibh vel egestas facilisis.
 
 Ut ante nulla, vestibulum vel odio eu, ullamcorper fringilla ipsum.
-Pellentesque sed tortor tincidunt, dapibus est ut, ullamcorper
-lectus. Nam id ultricies erat. Nulla hendrerit ligula non velit
-dapibus bibendum. Aliquam imperdiet, quam ut ullamcorper pharetra,
-sem risus mattis elit, sed fringilla leo tellus ut nisi. Quisque
-quis turpis lobortis metus consequat consequat vitae et felis.
+
+	Pellentesque sed tortor	tincidunt, dapibus est ut,	ullamcorper
+	lectus. Nam id	ultricies erat. Nulla hendrerit ligula non	 velit
+	dapibus bibendum.	Aliquam imperdiet, quam ut	ullamcorper pharetra,
+	sem risus mattis elit,	sed fringilla	leo tellus ut nisi. Quisque
+	quis turpis lobortis metus	consequat consequat vitae	et felis.
+
 Vivamus eu arcu molestie, tempus nulla eget, mattis dui. Nulla
 fermentum at arcu nec egestas. Suspendisse pellentesque ultrices
 rhoncus. Mauris ultrices, lectus non varius aliquam, neque quam
@@ -49,8 +51,7 @@ ipsum, dapibus malesuada nisi mauris non tortor. Donec viverra
 purus ac nulla malesuada vehicula. Mauris ut urna nec nibh consectetur
 egestas.
 
-.center
-Ut non orci vel nisl fermentum gravida.
+.center Ut non orci vel nisl fermentum gravida.
 
 Nunc ultricies
 facilisis finibus. In urna tellus, accumsan sed auctor non, lacinia

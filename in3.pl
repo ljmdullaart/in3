@@ -909,8 +909,18 @@ for (@input){
 		debug($TAGS,".back (end of leftnotes)");
 		$variables{'notes'}=$variables{'notes'}&2;
 	}
-	elsif (/^\.center (.+)/){
-		inpush("{CENTER}$1");
+	elsif (/^\.center  *(.+)/){
+		debug($TAGS,"Centered $1");
+		if ($inlist>0){
+			print STDERR "####### $linenumber: in a list; center $1 ignored\n";
+		}
+		else {
+			start_alinea;
+			inpush("{CENTER}$1");
+		}
+	}
+	elsif (/^\.center/){
+		print STDERR "####### $linenumber: empty center ingored\n";
 		debug($TAGS,".center set");
 	}
 	elsif (/^\.cover (.+)/){

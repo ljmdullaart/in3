@@ -813,6 +813,25 @@ for (@in3){
 			block_end();
 		}
 	}
+	elsif (/^{CENTER}(.*)/){
+		if ($intable>0){
+			push @thistable,$_;
+		}
+		else {
+			if (($inalinea==0)&&($inlist==0)){
+				alineatabstart();
+			}
+			#----------------ehm,... check if this is correct...
+			if (/^{CENTER}(\..*)/){
+				pushout(".ce");
+				pushout(" $1");
+			}
+			else {
+				pushout(".ce");
+				pushout("$1");
+			}
+		}
+	}
 	elsif (/^{COVER}/){
 	}
 	elsif (/^{INCLUDE}/){
@@ -1227,6 +1246,13 @@ for (@in3){
 				my $text=$1;
 				if ($text ne ''){
 					$outline=~s/T}$/.B "$text"\nT}/;
+				}
+				debug($DEB_TABLE,"BOLD: outline=$outline");
+			}
+			elsif (/{CENTER}(.*)/){
+				my $text=$1;
+				if ($text ne ''){
+					$outline=~s/T}$/.ce\n$text\nT}/;
 				}
 				debug($DEB_TABLE,"BOLD: outline=$outline");
 			}
