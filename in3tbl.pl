@@ -814,6 +814,7 @@ for (@in3){
 		}
 	}
 	elsif (/^{CENTER}(.*)/){
+		my $txt=$1;
 		if ($intable>0){
 			push @thistable,$_;
 		}
@@ -823,10 +824,12 @@ for (@in3){
 			}
 			#----------------ehm,... check if this is correct...
 			if (/^{CENTER}(\..*)/){
+				pushout (".ne 3v");
 				pushout(".ce");
 				pushout(" $1");
 			}
 			else {
+				pushout (".ne 3v");
 				pushout(".ce");
 				pushout("$1");
 			}
@@ -892,6 +895,8 @@ for (@in3){
 			pushout(".P");
 			pushout("");
 		}
+	}
+	elsif (/^{HTML}(.*)/){
 	}
 	elsif (/^{IMAGE}(.*)/){
 		my $image=$1;
@@ -1252,7 +1257,7 @@ for (@in3){
 			elsif (/{CENTER}(.*)/){
 				my $text=$1;
 				if ($text ne ''){
-					$outline=~s/T}$/.ce\n$text\nT}/;
+					$outline=~s/T}$/\n.ce\n$text\nT}/;
 				}
 				debug($DEB_TABLE,"BOLD: outline=$outline");
 			}

@@ -709,6 +709,9 @@ for (@in3){
 		pushout("<h$num>$text</h$num>");
 		if ($alineatype >0){$alineatype &=2;}
 	}
+	elsif (/^{HTML}(.*)/){
+		pushout("$1");
+	}
 	elsif (/^{IMAGE}(.*)/){
 		if (($inlist==0) && ($tcelopen==0)){
 			alineatabend;

@@ -962,6 +962,10 @@ for (@input){
 	elsif (/^\.header/){
 		inpush("{INCLUDE}header");
 	}
+	elsif (/^\.html (.*)/){
+		my $html=$1;
+		inpush ("{HTML}$html");
+	}
 	elsif (/^\.hu ([0-9]) (.*)/){
 		my $level=$1;
 		$bodytext=$2;
