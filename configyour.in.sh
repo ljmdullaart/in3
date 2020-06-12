@@ -404,7 +404,7 @@ if [ -d $PDFDIR ] ; then
 		echo "$PDFDIR/$1.pdf: $PDFDIR/$1.ps">>Makefile
 		echo "	cat $PDFDIR/$1.ps | ps2pdf - - > $PDFDIR/$1.pdf">>Makefile
 		echo "$PDFDIR/$1.ps: $PDFDIR/$1.min">>Makefile
-		echo "	groff -min $PDFDIR/$1.min > $PDFDIR/$1.ps">>Makefile
+		echo "	groff -min  -Kutf8 $PDFDIR/$1.min > $PDFDIR/$1.ps">>Makefile
 		echo "$PDFDIR/$1.min: $PDFDIR/$1.tbl">>Makefile
 		echo "	preconv $PDFDIR/$1.tbl | pic | tbl | eqn > $PDFDIR/$1.min">>Makefile
 		echo "$PDFDIR/$1.tbl: $1.in3 tag/in3.img |$PDFDIR">>Makefile
@@ -465,7 +465,7 @@ mk_images(){
 	elif [ -f $BASEIMAGE.eqn ] ; then
 		echo "$IMAGE: $BASEIMAGE.eqn" >> Makefile
 		echo "	eqn $BASEIMAGE.eqn > $BASEIMAGE.groff" >> Makefile
-		echo "	groff $BASEIMAGE.groff > $BASEIMAGE.ps" >> Makefile
+		echo "	groff  -Kutf8 $BASEIMAGE.groff > $BASEIMAGE.ps" >> Makefile
 		echo "	ps2pdf $BASEIMAGE.ps > $BASEIMAGE.pdf" >> Makefile
 		echo "	convert -trim -density 600 $BASEIMAGE.pdf  $IMAGE" >> Makefile
 		echo "	rm $BASEIMAGE.groff $BASEIMAGE.ps $BASEIMAGE.pdf" >> Makefile
