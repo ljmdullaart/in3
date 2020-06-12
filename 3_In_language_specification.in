@@ -73,6 +73,7 @@ are treated as comments and are written to STDERR.
 	cover	file name	use the image in file name as cover
 	global	variable value	set the variable to value globally
 	hr	none	horizontal line
+	html	htmlcode	insert the htmlcode in the HTML-documents only
 	img	image captiontext scale	include an image here; caption text is optional; scale is optional, but it must be numbers only
 	link	link text	provide a link
 	headerlink	link text	a link that is used only in the header

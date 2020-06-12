@@ -19,6 +19,7 @@ should be fairly readable. The following tags are used:
 	AUTHOR	name(s)	Name of the authors
 	COVER	imagefile	Use the image in imagefile as cover
 	DEBUG level	message	Debugging information. Discarded.
+	HTML	htmlcode	insert html code only into HTML output.
 	IMAGE	filename	Include an image here
 	LINE	 	Draw a horizontal line
 	LINK	destination text	Generate a hyperlink, if applicable
