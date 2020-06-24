@@ -347,6 +347,7 @@ sub close_list {
 			elsif (/^\.fixed / )             { s/^\.fixed *//;   inpush ("{TEXTFIX}$_"); }
 			elsif (/^\.inline / )            { inline($_,'force'); }
 			elsif (/^\.img / )               { s/^.img /{IMAGE}/;inpush ($_);}
+			elsif (/^\.video / )               { s/^.video /{VIDEO}/;inpush ($_);}
 			elsif (/^\.rimg / )               { s/^.img /{RIMAGE}/;inpush ($_);}
 			elsif (!(/^[-#@ 	]/))         {                   inpush ("{TEXTNORMAL}$_"); }
 			elsif ($types[$listlevel] eq '-'){s/^[-#@ 	]*//;inpush("{LISTDASHITEM}$_");}
@@ -483,6 +484,10 @@ sub close_table{
 				elsif($output_table[$x][$y]=~/^\.img (.*)/){
 					inpush("{TABLECEL}");
 					inpush("{IMAGE}$1");
+				}
+				elsif($output_table[$x][$y]=~/^\.video (.*)/){
+					inpush("{TABLECEL}");
+					inpush("{VIDEO}$1");
 				}
 				else {
 					inpush("{TABLECEL}$output_table[$x][$y]");
@@ -1002,6 +1007,16 @@ for (@input){
 		}
 		else {
 			inpush ("{TEXTITALIC}$textbody");
+		}
+	}
+	elsif (/^\.video /) {
+		debug($TAGS,"Image tag: $_");
+		if ($inlist>0){
+			push @thislist,$_;
+		}
+		else {
+			s/^\.video *//;
+			inpush("{VIDEO}$_");
 		}
 	}
 	elsif (/^\.img /) {

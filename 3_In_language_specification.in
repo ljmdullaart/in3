@@ -75,6 +75,7 @@ are treated as comments and are written to STDERR.
 	hr	none	horizontal line
 	html	htmlcode	insert the htmlcode in the HTML-documents only
 	img	image captiontext scale	include an image here; caption text is optional; scale is optional, but it must be numbers only
+	video	video file	add a video (in www) or an image from a video (in pdf)
 	link	link text	provide a link
 	headerlink	link text	a link that is used only in the header
 	map	image  image_file	Map creates a clickable map in HTML or an image in PDF.

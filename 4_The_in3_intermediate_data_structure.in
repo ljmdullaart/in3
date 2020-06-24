@@ -21,6 +21,7 @@ should be fairly readable. The following tags are used:
 	DEBUG level	message	Debugging information. Discarded.
 	HTML	htmlcode	insert html code only into HTML output.
 	IMAGE	filename	Include an image here
+	VIDEO	filename	Include a video here
 	LINE	 	Draw a horizontal line
 	LINK	destination text	Generate a hyperlink, if applicable
 	LST	text	The line is in fixed on a separate line

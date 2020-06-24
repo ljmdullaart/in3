@@ -565,6 +565,22 @@ $variables{'cp7'}=4;
 $variables{'cp8'}=4;
 $variables{'cp9'}=2;
 
+#        _     _            
+# __   _(_) __| | ___  ___  
+# \ \ / / |/ _` |/ _ \/ _ \ 
+#  \ V /| | (_| |  __/ (_) |
+#   \_/ |_|\__,_|\___|\___/ 
+# 
+for (@in3){
+	if (/{VIDEO}(.*)/){
+		system("echo ''|mplayer   -dumpfile images/fullsize/MVI_5586.jpg $1 -vo jpeg -ss 3 -frames 1 1>/dev/null 2>/dev/null");
+		system ("mv 00000001.jpg $1.jpg");
+		s/VIDEO/IMAGE/;
+		s/$/.jpg/;
+	}
+}
+
+
 #                          
 #   ___ _____   _____ _ __ 
 #  / __/ _ \ \ / / _ \ '__|

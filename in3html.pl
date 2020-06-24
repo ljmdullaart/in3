@@ -2,6 +2,7 @@
 #INSTALL@ /usr/local/bin/in3html
 use strict;
 use warnings;
+use File::Basename;
 
 
 my $DEBUG=0;
@@ -711,6 +712,24 @@ for (@in3){
 	}
 	elsif (/^{HTML}(.*)/){
 		pushout("$1");
+	}
+	elsif (/^{VIDEO}(.*)/){
+		if (($inlist==0) && ($tcelopen==0)){
+			alineatabend;
+			pushout ("<br>");
+		}
+		system ("cp $1 www");
+		my $base=basename($1);
+		pushout("<video width=\"500\" controls>");
+		pushout ("<source src=\"$base\">");
+		pushout ("Sorry: no video for you");
+		pushout ("</video>");
+		if (($inlist==0) && ($tcelopen==0)){
+			pushout ("<br>");
+			alineatabstart;
+		}
+
+
 	}
 	elsif (/^{IMAGE}(.*)/){
 		if (($inlist==0) && ($tcelopen==0)){
