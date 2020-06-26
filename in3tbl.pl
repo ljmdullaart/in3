@@ -853,6 +853,10 @@ for (@in3){
 	}
 	elsif (/^{COVER}/){
 	}
+	elsif (/^{EMPTYLINE}/){
+		pushout(".br");
+		pushout(".sp 1");
+	}
 	elsif (/^{INCLUDE}/){
 	}
 	elsif (/^{HEADER ([0-9])}(.*)/){
@@ -1133,12 +1137,15 @@ for (@in3){
 		if ($inalinea>0){
 			pushout("T}\@T{");
 			pushout (".na");
+			pushout (".vs 0.6v");
 			$inalineacel=1;
 			if ($delayed ne ''){
 				pushout($delayed);
 				$delayed='';
 			}
 			pushout("$1");
+			pushout (".br");
+			pushout (".vs");
 			pushout (".ad");
 		}
 	}
@@ -1176,7 +1183,7 @@ for (@in3){
 		$alineatype=-1;
 		pushout(".ne 20v");
 		pushout(".TS H");
-		my $outline="allbox,center;";
+		my $outline="expand,allbox,center;";
 		debug($DEB_TABLE,"Start a table");
 		pushout ($outline);
 		my $frst=1;
@@ -1485,8 +1492,14 @@ else {
 
 my @charmap;
 if ( open (my $CHARMAP,'<',$charmapfile)){
-      @charmap=<$CHARMAP>;
-      close $CHARMAP;
+	while (<$CHARMAP>){
+		if (/^\#/){ #comment line
+		}
+		else {
+      		push @charmap,$_
+		}
+	}
+	close $CHARMAP;
 }
 else { print STDERR "in3tbl Cannot open in3charmap\n"; }
 
