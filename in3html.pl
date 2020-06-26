@@ -279,14 +279,14 @@ sub alineatabstart {
 			}
 		}
 		elsif ($alineatype==1){
-			pushout ( "<table class=note><tr><td></td><td></td></tr><tr><td><div class=\"leftnote\">");
+			pushout ( "<table class=note><tr><td class=leftcol><td class=alineacol></td><td class=sidecol></td></tr><tr><td><div class=\"leftnote\">");
 		}
 		elsif ($alineatype==2){
 			if ($variables{'font'} eq 'none'){
-				pushout ( "<table class=note><tr><td></td><td></td></tr><tr><td><div class=\"alinea\">");
+				pushout ( "<table class=note><tr><td class=alineacol></td><td class=sidecol></td></tr><tr><td><div class=\"alinea\">");
 			}
 			else {
-				pushout ( "<table class=note><tr><td></td><td></td></tr><tr><td><div class=\"alinea$variables{'font'}\">");
+				pushout ( "<table class=note><tr><td class=leftcol><td class=alineacol></td><td class=sidecol></td></tr><tr><td></td><td></td></tr><tr><td><div class=\"alinea$variables{'font'}\">");
 				$variables{'font'}='none';
 			}
 		}
@@ -788,6 +788,11 @@ for (@in3){
 	}
 	elsif (/^{LIKE}/){
 		pushout("<div class=\"fb-like\" data-href=\"http://ljm.name\" data-layout=\"standard\" data-action=\"like\" data-show-faces=\"true\" data-share=\"true\"></div>");
+	}
+	elsif (/^{EMPTYLINE}/){
+		alineatabend;
+		pushout("<br>");
+		alineatabstart;
 	}
 	elsif (/^{LINE}/){
 		alineatabend;
