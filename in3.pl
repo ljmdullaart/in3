@@ -171,6 +171,8 @@ if (open(my $META, '<', "meta.in")){
 	while (<$META>){
 		chomp;
 		if (/^\.set ([^ ][^ ]*) ([^ ]*)/){
+			$variables{$1}=$2;
+			inpush("{SET}$1 $2");
 			push @input,".set $1 $2";
 		}
 	}
@@ -654,7 +656,7 @@ for (@input){
 	debug (128,"========================================================");
 	
 	if (/^\#\!/) { print STDERR "$linenumber: $_\n";}
-	if (/^\#\--/) { print STDERR "$linenumber: $_\n";}
+	elsif (/^\#\--/) { print STDERR "$linenumber: $_\n";}
 	elsif (/^\.block/){
 		debug ($TAGS,"Block-tag (was: $inblock)");
 
@@ -742,7 +744,7 @@ for (@input){
 	}
 	elsif (/^\.$/){
 		debug($TAGS,"Single dot.");
-		close_alinea;
+		inpush("{EMPTYLINE}");
 	}
 	elsif (/^$/){
 		debug($TAGS,"Empty line found");
