@@ -164,7 +164,7 @@ character maps in
 .fix /usr/local/share.
 The character maps are also used to translate non-asii characters to the different output channels.
 This means that the translation is done by
-.fix in4html
+.fix in3html
 and
 .fix in3tbl
 (the second pass).
