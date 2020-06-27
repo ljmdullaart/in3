@@ -279,19 +279,19 @@ sub alineatabstart {
 			}
 		}
 		elsif ($alineatype==1){
-			pushout ( "<table class=note><tr><td class=leftcol><td class=alineacol></td><td class=sidecol></td></tr><tr><td><div class=\"leftnote\">");
+			pushout ( "<table class=note><tr><td class=leftcol><td class=alineacol></td><td class=sidecol></td></tr><tr><td class=leftcol>");
 		}
 		elsif ($alineatype==2){
 			if ($variables{'font'} eq 'none'){
-				pushout ( "<table class=note><tr><td class=alineacol></td><td class=sidecol></td></tr><tr><td><div class=\"alinea\">");
+				pushout ( "<table class=note><tr><td class=alineacol></td><td class=sidecol></td></tr><tr><td class=alineacol><div class=\"alinea\">");
 			}
 			else {
-				pushout ( "<table class=note><tr><td class=leftcol><td class=alineacol></td><td class=sidecol></td></tr><tr><td></td><td></td></tr><tr><td><div class=\"alinea$variables{'font'}\">");
+				pushout ( "<table class=note><tr><td class=alineacol></td><td class=sidecol></td></tr><tr><td class=alineacol><div class=\"alinea$variables{'font'}\">");
 				$variables{'font'}='none';
 			}
 		}
 		elsif ($alineatype==3){
-		pushout ( "<table class=note><tr><td></td><td></td><td></td></tr><tr><td><div class=\"leftnote\">");
+		pushout ( "<table class=note><tr><td class=leftcol><td class=alineacol></td><td class=sidecol></td></tr><tr><td class=leftcol>");
 		}
 		$inalinea=1;
 		debug($DEB_ALINEA,"ALINEA TABLE START } alineatype=$alineatype;inalinea=$inalinea");
@@ -336,6 +336,10 @@ sub alineatabend {
 	}
 }
 
+#	0	simple alinea (no side or left note
+#	1	leftnote only
+#	2	side note only
+#	3	left and side note.
 sub startalinea {
 	(my $newalineatype)=@_;
 	if ($inalineatab==0){ alineatabstart;}
@@ -349,16 +353,16 @@ sub startalinea {
 	else {
 		if($variables{'font'} eq 'none'){
 			if ($alineatype==0){pushout("<p><div class=\"alinea\">")}
-			elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
-			elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
-			elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==1){pushout("<tr><td class=\"leftcol\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==2){pushout("<tr><td class=\"alineacol\"><div class=\"alinea\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==3){pushout("<tr><td class=\"leftcol\"><!--type-==$alineatype-->");}
 			$inalinea=1;
 		}
 		else {
 			if ($alineatype==0){pushout("<p><div class=\"alinea$variables{'font'}\">")}
-			elsif ($alineatype==1){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea$variables{'font'}\"><!--type-==$alineatype-->");}
-			elsif ($alineatype==2){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea$variables{'font'}\"><!--type-==$alineatype-->");}
-			elsif ($alineatype==3){pushout("<tr><td style=\"vertical-align:top;\"><div class=\"alinea$variables{'font'}\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==1){pushout("<tr><td class=\"leftcol\"><div class=\"alinea$variables{'font'}\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==2){pushout("<tr><td class=\"alineacol\"><div class=\"alinea$variables{'font'}\"><!--type-==$alineatype-->");}
+			elsif ($alineatype==3){pushout("<tr><td class=\"leftcol\"><div class=\"alinea$variables{'font'}\"><!--type-==$alineatype-->");}
 			$inalinea=1;
 			$variables{'font'}='none';
 		}
@@ -783,8 +787,8 @@ for (@in3){
 	}
 	elsif (/^{LEFTNOTE}(.*)/){
 		my $text=$1;
-		pushout("<div class=left>$text</div>");
-		pushout("</td><td style=\"vertical-align:top;\">");
+		pushout("<div class=leftnote>$text</div>");
+		pushout("</td><td class=alineacol >");
 	}
 	elsif (/^{LIKE}/){
 		pushout("<div class=\"fb-like\" data-href=\"http://ljm.name\" data-layout=\"standard\" data-action=\"like\" data-show-faces=\"true\" data-share=\"true\"></div>");
@@ -907,7 +911,7 @@ for (@in3){
 	elsif (/^{SIDENOTE}(.*)/){
 		my $text=$1;
 		if ($inalinea>0){
-			pushout("</div></td><td style=\"vertical-align:top;width:25%\">");
+			pushout("</div></td><td class=sidecol>");
 			pushout("<div class=side>$text");
 		}
 	}
