@@ -79,6 +79,10 @@ this is in the block
 
 .h2 Groff style sheet
 
+For Groff, a modified set of mm macros, called
+.fix in,
+is used. 
+
 Example:
 .p
 .pre
@@ -102,12 +106,14 @@ supported is:
 
 	 .ds licon txt	Use txt as the header of the table of contents.
 	 .nr Ej n	Eject a page before a header at level n
+	 .nr Eo n	Eject to make sure separator pages and H1 are on odd numbered pages.
 	 .ds HF l1 l2 ...	Define the header font for level l1, l2, ... Use either numerical font or by groff abbreviation
 	 .ds HP l1 l2 ...	Define the header pitch size for level l1, l2, ... 0 is the same size as normal text.
 	 .nr Hb n	Heading break level
 	 .nr Hc n	Heading center level
 	 .nr Hs n	Heading style; 0-> 1.1.1... , 1-> single
 	 .ds pg*header ''text''	Use text as page header
+	 .ds pg*footer ''text''	Use text as page footer
 
 Fonts can be loaded at positions to change the appearance of the document. 
 The font number can also be used the
@@ -127,9 +133,9 @@ and referenced by name, never by number.
 For class blocks, defined with
 .fix block classxxx,
 an environment can be created wth the class name. Within the environment, all things
-may be changed. AT the end of the block, the environment will be popped off the stack. 
+may be changed. At the end of the block, the environment will be popped off the stack. 
 Because classes are implemented as environments, all class blocks will produce a line
-break in the pdf output.
+break in the pdf output. This means that the PDF output does not support inline class blocks.
 An example of the class block:
 
 .pre

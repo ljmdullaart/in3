@@ -55,8 +55,10 @@ Updates by ljm
 .nr Df 5
 .\"	space before and after display if == 1 [0:1]
 .nr Ds 1
-.\"	Eject page
+.\"	Eject page before header at this level
 .nr Ej 0
+.\" Enforce odd page for header level 1
+.nr Eo 0
 .\"	Equation label adjust 0=left, 1=right
 .nr Eq 0
 .\"	Bullet string (for .BL)
@@ -973,6 +975,13 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .\"	Check if it's time for new page. Only if text has
 .\"	appeared before.
 .if \\n[Ej]&(\\n[Ej]>=\\n[hd*level])&(\\n[nl]>\\n[hd*cur-bline]) .pg@next-page
+.\"
+.if \\n[Eo]&(\\n[Eo]>0)&(\\n[hd*level]<2) \{
+.if e \{
+   
+.pg@next-page
+\}
+\}
 .\"
 .\" increment current counter
 .nr H\\n[hd*level] +1
@@ -2522,7 +2531,7 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .nr toc*i \\n[toc*hl!\\$1]-\w@\\$2@
 .\"
 .ll \\n[@ll]u-\w@\\$4@u-2m
-.ne 2v
+.ne 15v
 .\" ragged right ---------------------------------
 .ie \\$1>\\n[toc*tlevel] \{\
 \\$2
