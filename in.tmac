@@ -1332,14 +1332,16 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .\" user defined end-of-page macro
 .ie d EOP .EOP
 .el \{\
-.	ie o .tl \\*[pg*odd-footer]
-.	el .tl \\*[pg*even-footer]
-.	ds hd*format \\g[P]
-.	af P 0
-.	ie (\\n[P]=1)&(\\n[N]=1) .tl \\*[pg*header]
-.	el .tl \\*[pg*footer]
-.	af P \\*[hd*format]
-.	tl ''\\*[Pg_type!\\n[@copy_type]]''
+.	ie \\n[P]>0 \{\
+.		ie o .tl \\*[pg*odd-footer]
+.		el .tl \\*[pg*even-footer]
+.		ds hd*format \\g[P]
+.		af P 0
+.		ie (\\n[P]=1)&(\\n[N]=1) .tl \\*[pg*header]
+.		el .tl \\*[pg*footer]
+.		af P \\*[hd*format]
+.		tl ''\\*[Pg_type!\\n[@copy_type]]''
+.	\}
 .\}
 .vpt 1
 .ev

@@ -215,11 +215,14 @@ sub stylesheet {
 	else {
 		debug ($DEB_FILE,"No stylesheet found");
 		push @output, ".nr Ej 0";
+		push @output, ".nr Eo 0";
 		push @output, ".ds HF  3 3 2 2 2 2 2 ";
 		push @output, ".nr Hb 4";
 		push @output, ".nr Hs 1";
 		push @output, ".nr Hps 0";
 		push @output, ".ds HP  14 12 12 0 0 0 0";
+		push @output, ".ds pg*header";
+		push @output, ".ds pg*footer ''- \\nP -''";
 	}
 }
 ################################################################################
@@ -588,16 +591,16 @@ for (@in3){
 #  \___\___/ \_/ \___|_|   
 #  
 
+img_macro;
 for (@in3){
 	if (/^{COVER}(.*)/){ $cover=$1;}
 }
 if ($cover ne ''){
 	pushout(".PGNH");
 	pushout(".ds pg*header");
+	pushout(".ds pg*footer");
 }
 
-img_macro;
-stylesheet;
 
 if ($cover ne ''){
 	my $epsfile=$cover; $epsfile=~s/\.[^.]+$/.eps/;
@@ -668,11 +671,12 @@ if ($coversheet > 0){
 
 		}
 	}
+	pushout(".bp 2");
 	pushout(".nr P 0");
-	pushout(".bp");
 	
 }
 
+stylesheet;
 ################################################################################
 #pushout(".ll 21"."c");
 
