@@ -605,8 +605,10 @@ if ($cover ne ''){
 if ($cover ne ''){
 	my $epsfile=$cover; $epsfile=~s/\.[^.]+$/.eps/;
 	system("convert $cover $epsfile");
+	pushout(".po 0");
 	pushout(".ce 1");
-	pushout(".dospark $epsfile 19c 27.5c");
+	pushout(".dospark $epsfile 21c 29.7c");
+	pushout(".po");
 	pushout(".nr P 0");
 
 }
