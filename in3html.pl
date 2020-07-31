@@ -886,7 +886,7 @@ for (@in3){
 	}
 	elsif (/^{NOTE}(.*)/){
 		my $text=$1;
-		pushout("$notenum");
+		pushout("<sup>$notenum</sup>");
 		pushnote("$notenum: $text");
 		$notenum++;
 	}
@@ -985,6 +985,10 @@ for (@in3){
 	elsif (/^{.*}/){
 		print STDERR "Unknown $_\n";
 	}
+}
+
+for (@note){
+	pushout($_);
 }
 
 alineatabend;
