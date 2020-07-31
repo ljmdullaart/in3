@@ -245,6 +245,7 @@ if [ -d $WWWDIR ] ; then
 	add_www(){
 		echo "$WWWDIR/$1.html: $1.in3 header |$WWWDIR ">>Makefile
 		echo "	in3html $1.in3 > $WWWDIR/$1.html">>Makefile
+		echo "	@cp block/*.png $WWWDIR || echo 'No blocks to copy'" >> Makefile
 	#	if grep '^\.BLOCK' $1.in*  > /dev/null ; then
 	#		echo "	@cp block_*.png $WWWDIR || echo 'No blocks to copy'" >> Makefile
 	#		echo "	@cp block/*.png $WWWDIR || echo 'No blocks in dir to copy'" >> Makefile
