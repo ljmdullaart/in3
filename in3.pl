@@ -655,8 +655,8 @@ for (@input){
 	debug (128, "== $_");
 	debug (128,"========================================================");
 	
-	if (/^\#\!/) { print STDERR "$linenumber: $_\n";}
-	elsif (/^\#\--/) { print STDERR "$linenumber: $_\n";}
+	if ((/^\#\!/) && ($inpre==0) &&($inblock==0)) { print STDERR "$linenumber: $_\n";}
+	elsif ((/^\#\--/)  && ($inpre==0) &&($inblock==0)){ print STDERR "$linenumber: $_\n";}
 	elsif (/^\.block/){
 		debug ($TAGS,"Block-tag (was: $inblock)");
 
