@@ -20,6 +20,19 @@ you generally provide information like:
 	cover	The image that should be on the cover. Using an image that is 1200x1600 gives the best results.
 	set cp2, cp3 ...	set conditional new page to keep headers with their text.
 
+As an example, 
+.link https://dullaart.website/oevres_literaires_francaises/total.pdf
+uses the following 
+.fix meta.in:
+.pre
+ .cover cover.jpg
+ .title Sélection d'oevres littéraires
+ .subtitle Condensées et annotées à l'usage de l'enseignement secondaire
+ .author L. Dullaart
+ .keywords French litterature, abstracts, literature français, enseignement, uittreksel Frans
+ .set cp2 15
+ .set cp3 12
+.pre
 
 .h2 HTML style sheet
 
@@ -114,6 +127,24 @@ supported is:
 	 .nr Hs n	Heading style; 0-> 1.1.1... , 1-> single
 	 .ds pg*header ''text''	Use text as page header
 	 .ds pg*footer ''text''	Use text as page footer
+
+As an example, 
+.link https://dullaart.website/oevres_literaires_francaises/total.pdf
+uses the following 
+.fix stylesheet.mm:
+
+.pre
+ .nr Ej 1
+ .nr Eo 1
+ .ds HF  3 3 2 2 2 2 2
+ .nr Hb 4
+ .nr Hs 1
+ .nr Hps 0
+ .ds HP  14 12 12 0 0 0 0
+ .ds Licon "Table des mati\[`e]res
+ .ds pg*header
+ .ds pg*footer ''- \\nP -''
+.pre
 
 Fonts can be loaded at positions to change the appearance of the document. 
 The font number can also be used the
