@@ -151,7 +151,7 @@ my $tablestate=0;
 my $title='';
 my $like=0;
 my $side=0;
-my %variables=();
+my %variables;
 my $mapnr=0;
 my $cover='';
 my $keywords='';
@@ -247,7 +247,7 @@ if ($part_only==0){
 	}
 }
 if ($cover ne ''){
-	pushout ( "<img src=$cover alt=\"Cover\"><br>");
+	pushout ( "<img src=\"$cover\" alt=\"Cover\"><br>");
 }
 
 #       _ _                  
@@ -279,19 +279,20 @@ sub alineatabstart {
 			}
 		}
 		elsif ($alineatype==1){
-			pushout ( "<table class=note><tr><td class=leftcol><td class=alineacol></td><td class=sidecol></td></tr><tr><td class=leftcol>");
+			pushout ( "<table class=\"note\"><tr><td class=\"leftcol\"><td class=\"alineacol\"></td><td class=\"sidecol\"></td></tr><tr><td class=\"leftcol\">");
 		}
 		elsif ($alineatype==2){
 			if ($variables{'font'} eq 'none'){
-				pushout ( "<table class=note><tr><td class=alineacol></td><td class=sidecol></td></tr><tr><td class=alineacol><div class=\"alinea\">");
+				pushout ( "<table class=\"note\"><tr><td class=\"alineacol\"></td><td class=\"sidecol\"></td></tr><tr><td class=\"alineacol\"><div class=\"alinea\">");
 			}
 			else {
-				pushout ( "<table class=note><tr><td class=alineacol></td><td class=sidecol></td></tr><tr><td class=alineacol><div class=\"alinea$variables{'font'}\">");
+				pushout ( "<table class=\"note\"><tr><td class=\"alineacol\"></td><td class=\"sidecol\"></td></tr>");
+				pushout ( "<tr><td class=\"alineacol\"><div class=\"alinea$variables{'font'}\">");
 				$variables{'font'}='none';
 			}
 		}
 		elsif ($alineatype==3){
-		pushout ( "<table class=note><tr><td class=leftcol><td class=alineacol></td><td class=sidecol></td></tr><tr><td class=leftcol>");
+		pushout ( "<table class=\"note\"><tr><td class=\"leftcol\"><td class=\"alineacol\"></td><td class=\"sidecol\"></td></tr><tr><td class=\"leftcol\">");
 		}
 		$inalinea=1;
 		debug($DEB_ALINEA,"ALINEA TABLE START } alineatype=$alineatype;inalinea=$inalinea");
@@ -554,7 +555,7 @@ sub block_end {
             ($x,$y)=split ('x',$imgsize);
 			$yn=$y*$blockscale/14000;
 			my $ysize=$yn.'em';
-			pushout("<img src=\"$blockname.png\" alt=\"$blockname>\" style=\"height:$ysize;vertical-align:middle\">");
+			pushout("<img src=\"$blockname.png\" alt=\"$blockname\" style=\"height:$ysize;vertical-align:middle\">");
 		}
 	}
 	elsif ($blocktype eq 'pic'){
@@ -704,7 +705,7 @@ for (@in3){
 		pushout ("<h$num id=\"a$titnr\">$titnr $text</h$num>");
 		if ($alineatype >0){
 			$alineatype &=2;
-			#pushout ("<table class=note>");
+			#pushout ("<table class=\"note\">");
 		}
 	}
 	elsif (/^{HEADUNNUM ([0-9])}(.*)/){
@@ -767,10 +768,10 @@ for (@in3){
 			$image=$1;
 			debug ($DEB_IMG, "scale=$scale  image=$image");
 			if ($inlist==0){
-				pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"$image>\">");
+				pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"$image\">");
 			}
 			else {
-				pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"$image>\" align=\"middle\">");
+				pushout("<img src=\"$image\" width=\"$scale%\"  alt=\"$image\" align=\"middle\">");
 			}
 		}
 		else {
@@ -787,8 +788,8 @@ for (@in3){
 	}
 	elsif (/^{LEFTNOTE}(.*)/){
 		my $text=$1;
-		pushout("<div class=leftnote>$text</div>");
-		pushout("</td><td class=alineacol >");
+		pushout("<div class=\"leftnote\">$text</div>");
+		pushout("</td><td class=\"alineacol\" >");
 	}
 	elsif (/^{LIKE}/){
 		pushout("<div class=\"fb-like\" data-href=\"http://ljm.name\" data-layout=\"standard\" data-action=\"like\" data-show-faces=\"true\" data-share=\"true\"></div>");
@@ -894,7 +895,7 @@ for (@in3){
 	}
 	elsif (/^{QUOTE}/){
 		if ($inquote==0){
-			pushout("<div class=quote>");
+			pushout("<div class=\"quote\">");
 			$inquote=1;
 		}
 		s/^{QUOTE}//;
@@ -911,8 +912,8 @@ for (@in3){
 	elsif (/^{SIDENOTE}(.*)/){
 		my $text=$1;
 		if ($inalinea>0){
-			pushout("</div></td><td class=sidecol>");
-			pushout("<div class=side>$text");
+			pushout("</div></td><td class=\"sidecol\">");
+			pushout("<div class=\"side\">$text");
 		}
 	}
 	elsif (/^{SUBTITLE}(.*)/){
