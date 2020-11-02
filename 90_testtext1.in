@@ -27,7 +27,7 @@ Duis aute irure  dolor in reprehenderit in voluptate velit esse cillum dolore eu
 Fugiat nulla pariatur. Excepteur [http://ljm.name](markdown link) occaecat cupidatat
 non proident, sunt in culpa qui officia deserunt mollit
 anim id est laborum. Below is a table with some markdown requests.
- 
+
 	Vestibulum	non	risus eget purus semper	interdum. Etiam tincidunt
 	eu mi sed	pellentesque.	Maecenas	euismod massa nec nisl vulputate
 	mattis.	Morbi _luctus_ nisl	justo,	et scelerisque elit sollicitudin
@@ -48,6 +48,7 @@ And a test with a mark-down block.
 >amet magna. Mauris interdum pellentesque urna vel pulvinar.
 
 Curabitur id sodales risus. Sed a congue est.
+
 
 Aenean rhoncus metus diam, vel aliquam risus suscipit in. Sed
 arcu risus, vehicula eu felis sed, placerat placerat ipsum. Nam
@@ -108,6 +109,34 @@ voluptatem. Ut enim ad minima veniam,
 voluptas nulla pariatur?
 
 
+And nested lists:
+
+- ut perspiciatis unde omnis iste natus error
+- voluptatem accusantium doloremque
+	@ totam rem aperiam
+	@ eaque ipsa quae ab illo inventore veritatis
+- quasi architecto
+- beatae vitae
+
+and nested at the end:
+
+- ut perspiciatis unde omnis iste natus error
+- voluptatem accusantium doloremque
+	@ totam rem aperiam
+	@ eaque ipsa quae ab illo inventore veritatis
+
+Nested even further:
+
+- level 0
+	- level 1
+		@ level 2
+		@ level 2 again
+			# level 3
+			# level 3
+		@ back at 2
+- back at 0
+
+
 Lorem ipsum dolor sit amet,
 .b consectetur adipiscing test bold text
 elit. Sed vitae
@@ -147,6 +176,9 @@ erat a justo lacinia fringilla quis quis purus. Nulla et vehicula
 nisl, nec gravida ligula. Quisque porta aliquam maximus. Aliquam 
 test lst for listings without box.
 
+
+
+
 .lst	iaculis massa ante, ac
 .lst		vestibulum risus
 .lst			Aliquam in
@@ -158,3 +190,4 @@ test lst for listings without box.
 
 porta orci tempus, ultricies ligula. Sed laoreet eros sapien,
 vitae dictum nulla tincidunt quis.
+
