@@ -8,21 +8,38 @@ PRE {
 	margin: 20px;
 	padding: 20px;
 }
+table.table {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+td.table {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+td.sidenote {
+	width: 15%;
+	font-size: 75%
+}
+
 .toc {
 	color: #000000;
 	background-color: #DDDDDD;
 	width: 100%;
 }
 div.cel {
-	color: #111111;
-	background-color: #BBBBBB;
-	border: 1px solid black;
+	color: #111188;
 }
 div.list {
 	background-color: #FEFEFE;
 }
+div.sidenote{
+	font-size: 75%
+}
 div.side {
 	font-size: 75%
+}
+div.test {
+	color: #BB00BB;
 }
 div.classtest {
 	color: #BB0000;
@@ -42,6 +59,9 @@ table.normal {
 }
 p.quote {
       color:blue;
+}
+.lst {
+	font-family:"Courier New";
 }
 .fixed {
 	font-family:"Courier New";
