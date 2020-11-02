@@ -1,4 +1,6 @@
 .header
+.set debug 256
+.set interpret 1
 .h1 Special characters
 Praesent ligula
 urna, pulvinar sed auctor sit amet, pellentesque id ante. Aliquam
@@ -45,8 +47,8 @@ hendrerit ultrices. Pellentesque vel urna lectus. Nulla mattis
 
 ultrices pharetra. Phasellus erat massa, dignissim non gravida
 
------%8x---------
------%8X---------
+ -----%8x---------
+ -----%8X---------
 
 in, tincidunt ut ligula. In hac habitasse platea dictumst. Nunc
 sollicitudin tincidunt commodo.
@@ -69,3 +71,4 @@ sollicitudin tincidunt commodo.
 %star
 %snow
 %1O
+

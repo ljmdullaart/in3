@@ -10,10 +10,10 @@ ligula malesuada. Nunc sagittis et mi vel egestas.
 A test for images of different sizes.
 
 .img tsteqn.png
-.img tsteqn.png 50
-.img tsteqn.png 25
-.img tsteqn.png 10
-.img tsteqn.png  5
+.img tsteqn.png scale=50
+.img tsteqn.png scale=25
+.img tsteqn.png scale=10
+.img tsteqn.png scale=5
 
 Vivamus mollis
 elementum purus, pharetra blandit elit suscipit ac.
@@ -125,6 +125,7 @@ side notes and leftnotes.
 Aliquam	erat volutpat. Vestibulum bibendum, tellus vel sodales
 ultrices, risus dolor tristique mi, vitae porta nisl est condimentum
 dui.
+
 Curabitur	ut orci lorem. Morbi ullamcorper tincidunt urna
 sit amet luctus. Donec elementum lectus finibus, pellentesque
 felis vel.

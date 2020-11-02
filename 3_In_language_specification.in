@@ -1,7 +1,11 @@
+#!/usr/local/bin/in3xml
 .header
+.set markdown 1
 
 .h1 In language specification
 .h2 Special Characters
+
+
 
 Some characters have a special meaning.
 

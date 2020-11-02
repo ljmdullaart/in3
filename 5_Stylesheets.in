@@ -24,6 +24,7 @@ As an example,
 .link https://dullaart.website/oevres_literaires_francaises/total.pdf
 uses the following 
 .fix meta.in:
+
 .pre
  .cover cover.jpg
  .title Sélection d'oevres littéraires
@@ -41,17 +42,17 @@ If a
 exists in the current directory, it is called in the HTML code. You can 
 create styles for all the normal HTML elements.
 Example:
-.p
+
 .pre
 table.normal {
    border: 1px solid #ddd;
 }
 .pre
-.p
+
 In addition, 
 .fix in3html
 creates div-containers for specific text-elements:
-.p
+
 
 	class/style	text element	example
 	alinea	standard alinea	·alinea { background-color: #DDDD00; }
@@ -97,7 +98,7 @@ For Groff, a modified set of mm macros, called
 is used. 
 
 Example:
-.p
+
 .pre
  .ds Licon "Table of Contents"
  .nr Ej 1
@@ -108,7 +109,7 @@ Example:
  .nr Hps 0
  .ds pg*header ''- \\nP -''
 .pre
-.p
+
 
 The stylesheet for groff, which is called
 .fix stylesheet.mm,
