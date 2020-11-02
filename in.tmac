@@ -3586,3 +3586,20 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .de class
 .ie d class\\$1 .class\\$1
 ..
+.\" dospark macro by Ted Harding
+.\" See http://www.zen89632.zen.co.uk/Misc/do_spark_howto.pdf
+.de dospark
+.psbb \\$1
+.nr ht0 \\n[ury]-\\n[lly]
+.nr wd0 \\n[urx]-\\n[llx]
+.nr deswd (\\n[.ps]/\\n[ht0])*\\n[wd0]
+.if \\$2&(\\$2>0) .nr deswd (u; \\$2p)
+.nr desht \\n[.ps]
+.if \\$3 .nr desht (u; \\$3p)
+.nr xht 0
+.if (\\n[desht]>\\n[.ps]) .nr xht \\n[desht]-\\n[.ps]
+\X’ps: import \\$1 \
+\\n[llx] \\n[lly] \\n[urx] \\n[ury] \
+\\n[deswd] \\n[desht]’\
+\h’\\n[deswd]u’\x’-\\n[xht]u’
+..
