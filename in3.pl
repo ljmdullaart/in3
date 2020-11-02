@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+#
 #INSTALL@ /usr/local/bin/in3
 use strict;
 use warnings;
@@ -889,6 +890,9 @@ for (@input){
 		if ($intable==0){close_alinea;}
 		$intable=1;
 		push @thistable,$_;
+	}
+	elsif (/^\.appendix *([0-9]*)/) {
+		# this is to prepare for the XML-version
 	}
 	elsif (/^\.appendix *(.*)/) {
 
