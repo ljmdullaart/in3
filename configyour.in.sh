@@ -71,9 +71,9 @@ if [ $ODTS != 0 ] ; then
 fi
 
 
-INFILES=$(ls *.in  2> /dev/null | egrep -v 'total.in' | sort -n | paste -sd' ')
-INFILES_noindex=$(ls *.in  2> /dev/null | egrep -v 'index.in|total.in' | sort -n | paste -sd' ')
-INBASE=$(ls *.in  2> /dev/null | egrep -v 'configure.in' | sort -n | sed 's/.in$//' | paste -sd' ')
+INFILES=$(ls *.in  2> /dev/null | egrep -v 'total.in|complete.in' | sort -n | paste -sd' ')
+INFILES_noindex=$(ls *.in  2> /dev/null | egrep -v 'index.in|total.in|complete.in' | sort -n | paste -sd' ')
+INBASE=$(ls *.in  2> /dev/null | egrep -v 'configure.in|complete.in' | sort -n | sed 's/.in$//' | paste -sd' ')
 
 if [ "$INFILES" = "" ] ; then
 	echo "No .in-files found" >>$LOG
