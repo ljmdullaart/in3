@@ -77,6 +77,7 @@ INBASE=$(ls *.in  2> /dev/null | egrep -v 'configure.in' | sort -n | sed 's/.in$
 
 if [ "$INFILES" = "" ] ; then
 	echo "No .in-files found" >>$LOG
+	echo "No .in-files found" 
 	echo 'tag/in: |tag' >> Makefile
 	echo '	touch tag/in' >> Makefile
 	echo 'tag/in'>>$CLEANFILE
@@ -89,7 +90,8 @@ if [ "$INFILES" = "" ] ; then
 fi
 
 if [ -d in3xml ] ; then
-	echo "No .in-files found" >>$LOG
+	echo "Superior in3xml found" >>$LOG
+	echo "Superior in3xml found"
 	echo 'tag/in: |tag' >> Makefile
 	echo '	touch tag/in' >> Makefile
 	echo 'tag/in'>>$CLEANFILE
